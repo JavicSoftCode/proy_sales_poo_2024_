@@ -31,11 +31,11 @@ El sistema se ha diseñado siguiendo los principios de la programación orientad
 <ul>
     <li>Python 3.9: Lenguaje de programación principal utilizado para el desarrollo del sistema.</li>
     <li>Programación Orientada a Objetos (POO): Paradigma de programación utilizado para estructurar y organizar el código del sistema.</li>
-    <li>PyQt 5.15 / <img src="https://simpleicons.org/icons/qt.svg" alt="PySide" class="tech-icon" width="20" height="20"> PySide 6: Bibliotecas de widgets y herramientas GUI para crear la interfaz de usuario gráfica.</li>
-    <li>SQLite 3.35 / <img src="https://simpleicons.org/icons/postgresql.svg" alt="PostgreSQL" class="tech-icon" width="20" height="20"> PostgreSQL 13: Sistemas de gestión de bases de datos relacionales utilizados para almacenar y administrar los datos del sistema.</li>
-    <li>Git 2.31 / <img src="https://simpleicons.org/icons/github.svg" alt="GitHub" class="tech-icon" width="20" height="20"> GitHub: Sistema de control de versiones y plataforma de alojamiento del código fuente del proyecto.</li>
-    <li>HTML 5 / <img src="https://simpleicons.org/icons/css3.svg" alt="CSS" class="tech-icon" width="20" height="20"> CSS 3 / <img src="https://simpleicons.org/icons/javascript.svg" alt="JavaScript" class="tech-icon" width="20" height="20"> JavaScript ES6: Tecnologías web utilizadas para el diseño y la interactividad de la interfaz de usuario.</li>
-    <li>Pandas 1.2 / <img src="https://simpleicons.org/icons/matplotlib.svg" alt="Matplotlib" class="tech-icon" width="20" height="20"> Matplotlib 3.4: Bibliotecas de análisis de datos y visualización utilizadas en los módulos de reportes.</li>
+    <li>PyQt PySide 6: Bibliotecas de widgets y herramientas GUI para crear la interfaz de usuario gráfica.</li>
+    <li>SQLite 3.35PostgreSQL 13: Sistemas de gestión de bases de datos relacionales utilizados para almacenar y administrar los datos del sistema.</li>
+    <li>GitHub: Sistema de control de versiones y plataforma de alojamiento del código fuente del proyecto.</li>
+    <li>HTML 5 CSS 3  JavaScript ES6: Tecnologías web utilizadas para el diseño y la interactividad de la interfaz de usuario.</li>
+    <li>Pandas 1.2 Matplotlib 3.4: Bibliotecas de análisis de datos y visualización utilizadas en los módulos de reportes.</li>
 </ul>
 
 

@@ -32,7 +32,6 @@ El sistema se ha diseñado siguiendo los principios de la programación orientad
     <li>Programación Orientada a Objetos (POO): Paradigma de programación utilizado para estructurar y organizar el código del sistema.</li>
     <li>Python 3.9: Lenguaje de programación principal utilizado para el desarrollo del sistema.    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" height="30" alt="python logo"  /></li>
     <li>PyQt PySide 6: Bibliotecas de widgets y herramientas GUI para crear la interfaz de usuario gráfica.    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/qt/qt-original.svg" height="30" alt="PyQt logo" />
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/qt/qt-original.svg" height="30" alt="PySide 6 logo" />
 </li>
     <li>PostgreSQL 13: Sistema de gestión de bases de datos relacionales utilizado para almacenar y administrar los datos del sistema.    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" height="30" alt="postgresql logo"  /></li>
     <li>GitHub: Sistema de control de versiones y plataforma de alojamiento del código fuente del proyecto.    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" height="30" alt="github logo"  /></li>

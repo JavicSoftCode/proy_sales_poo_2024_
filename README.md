@@ -29,13 +29,13 @@ El sistema se ha diseñado siguiendo los principios de la programación orientad
 
 ## Tecnologías Utilizadas
 <ul>
-    <li><img src="https://simpleicons.org/icons/python.svg" alt="Python" class="tech-icon" width="20" height="20"> Python 3.9: Lenguaje de programación principal utilizado para el desarrollo del sistema.</li>
-    <li><img src="https://simpleicons.org/icons/programming.svg" alt="POO" class="tech-icon" width="20" height="20"> Programación Orientada a Objetos (POO): Paradigma de programación utilizado para estructurar y organizar el código del sistema.</li>
-    <li><img src="https://simpleicons.org/icons/qt.svg" alt="PyQt" class="tech-icon" width="20" height="20"> PyQt 5.15 / <img src="https://simpleicons.org/icons/qt.svg" alt="PySide" class="tech-icon" width="20" height="20"> PySide 6: Bibliotecas de widgets y herramientas GUI para crear la interfaz de usuario gráfica.</li>
-    <li><img src="https://simpleicons.org/icons/sqlite.svg" alt="SQLite" class="tech-icon" width="20" height="20"> SQLite 3.35 / <img src="https://simpleicons.org/icons/postgresql.svg" alt="PostgreSQL" class="tech-icon" width="20" height="20"> PostgreSQL 13: Sistemas de gestión de bases de datos relacionales utilizados para almacenar y administrar los datos del sistema.</li>
-    <li><img src="https://simpleicons.org/icons/git.svg" alt="Git" class="tech-icon" width="20" height="20"> Git 2.31 / <img src="https://simpleicons.org/icons/github.svg" alt="GitHub" class="tech-icon" width="20" height="20"> GitHub: Sistema de control de versiones y plataforma de alojamiento del código fuente del proyecto.</li>
-    <li><img src="https://simpleicons.org/icons/html5.svg" alt="HTML" class="tech-icon" width="20" height="20"> HTML 5 / <img src="https://simpleicons.org/icons/css3.svg" alt="CSS" class="tech-icon" width="20" height="20"> CSS 3 / <img src="https://simpleicons.org/icons/javascript.svg" alt="JavaScript" class="tech-icon" width="20" height="20"> JavaScript ES6: Tecnologías web utilizadas para el diseño y la interactividad de la interfaz de usuario.</li>
-    <li><img src="https://simpleicons.org/icons/pandas.svg" alt="Pandas" class="tech-icon" width="20" height="20"> Pandas 1.2 / <img src="https://simpleicons.org/icons/matplotlib.svg" alt="Matplotlib" class="tech-icon" width="20" height="20"> Matplotlib 3.4: Bibliotecas de análisis de datos y visualización utilizadas en los módulos de reportes.</li>
+    <li>Python 3.9: Lenguaje de programación principal utilizado para el desarrollo del sistema.</li>
+    <li>Programación Orientada a Objetos (POO): Paradigma de programación utilizado para estructurar y organizar el código del sistema.</li>
+    <li>PyQt 5.15 / <img src="https://simpleicons.org/icons/qt.svg" alt="PySide" class="tech-icon" width="20" height="20"> PySide 6: Bibliotecas de widgets y herramientas GUI para crear la interfaz de usuario gráfica.</li>
+    <li>SQLite 3.35 / <img src="https://simpleicons.org/icons/postgresql.svg" alt="PostgreSQL" class="tech-icon" width="20" height="20"> PostgreSQL 13: Sistemas de gestión de bases de datos relacionales utilizados para almacenar y administrar los datos del sistema.</li>
+    <li>Git 2.31 / <img src="https://simpleicons.org/icons/github.svg" alt="GitHub" class="tech-icon" width="20" height="20"> GitHub: Sistema de control de versiones y plataforma de alojamiento del código fuente del proyecto.</li>
+    <li>HTML 5 / <img src="https://simpleicons.org/icons/css3.svg" alt="CSS" class="tech-icon" width="20" height="20"> CSS 3 / <img src="https://simpleicons.org/icons/javascript.svg" alt="JavaScript" class="tech-icon" width="20" height="20"> JavaScript ES6: Tecnologías web utilizadas para el diseño y la interactividad de la interfaz de usuario.</li>
+    <li>Pandas 1.2 / <img src="https://simpleicons.org/icons/matplotlib.svg" alt="Matplotlib" class="tech-icon" width="20" height="20"> Matplotlib 3.4: Bibliotecas de análisis de datos y visualización utilizadas en los módulos de reportes.</li>
 </ul>
 
 

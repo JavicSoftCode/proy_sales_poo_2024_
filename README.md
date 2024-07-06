@@ -48,11 +48,5 @@ El sistema se ha diseñado siguiendo los principios de la programación orientad
 ## Estado Actual del Proyecto
 El proyecto se encuentra en una etapa inicial de desarrollo, con solo un commit realizado hasta el momento. Se espera que en las próximas semanas se avance en la implementación de las funcionalidades clave y se establezca una estructura sólida para el sistema.
 
-## Contribución
-Si deseas contribuir a este proyecto, te invitamos a que revises las [pautas de contribución](CONTRIBUTING.md) y te pongas en contacto con el equipo de desarrollo. Todas las contribuciones son bienvenidas, ya sea en forma de informes de problemas, solicitudes de funciones, correcciones de errores o mejoras en el código.
-
-## Licencia
-Este proyecto aún no ha especificado una licencia. Se determinará una licencia apropiada, como MIT o Apache 2.0, en una etapa posterior del desarrollo, una vez que se haya consolidado la estructura y las funcionalidades principales del sistema.
-
 ## Repositorio
 Puedes encontrar el repositorio del proyecto en [GitHub](https://github.com/JavicSoftCode/proy_sales_poo_2024_.git).

@@ -1,5 +1,5 @@
 from django.urls import path
-from app.core.views import supplier, brand, category, product
+from app.core.views import supplier, brand, category, product, customer
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -30,10 +30,11 @@ urlpatterns = [
                 path('product_update/<int:pk>/', product.ProductUpdateView.as_view(), name='product_update'),
                 path('product_delete/<int:pk>/', product.ProductDeleteView.as_view(), name='product_delete'),
 
-                # path('product_list/', views.product_List, name='product_list'),
-                # path('product_create/', views.product_create, name='product_create'),
-                # path('product_update/<int:id>/', views.product_update, name='product_update'),
-                # path('product_delete/<int:id>/', views.product_delete, name='product_delete'),
+                # #     # URLs de clientes
+                path('customer_list/', customer.CustomerListView.as_view(), name='customer_list'),
+                path('customer_create/', customer.CustomerCreateView.as_view(), name='customer_create'),
+                path('customer_update/<int:pk>/', customer.CustomerUpdateView.as_view(), name='customer_update'),
+                path('customer_delete/<int:pk>/', customer.CustomerDeleteView.as_view(), name='customer_delete'),
 
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

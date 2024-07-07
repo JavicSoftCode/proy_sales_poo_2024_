@@ -31,6 +31,7 @@ class ProductListView(PermissionMixin, ListViewMixin, ListView):
         # Si no es un número, busca por descripción
         queryset = queryset.filter(description__icontains=q)
 
+
     return queryset
 
   def get_context_data(self, **kwargs):
@@ -96,54 +97,26 @@ class ProductUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
     return response
 
 
-# class ProductDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
-#   model = Product
-#   template_name = 'core/delete.html'
-#   success_url = reverse_lazy('core:product_list')
-#   permission_required = 'delete_product'
-#
-#   def __init__(self, *args, **kwargs):
-#     super().__init__(*args, **kwargs)
-#     self.object = None
-#
-#   def get_context_data(self, **kwargs):
-#     context = super().get_context_data(**kwargs)
-#     context['title'] = 'Eliminar Producto'
-#     context['description'] = f"¿Desea eliminar el producto: {self.object.description}?"
-#     context['back_url'] = self.success_url
-#     return context
-#
-#   def delete(self, request, *args, **kwargs):
-#     self.object = self.get_object()
-#     success_message = f"Éxito al eliminar el producto {self.object.description}."
-#     self.object.delete()
-#     messages.success(self.request, success_message)
-#     return super().delete(request, *args, **kwargs)
-
 class ProductDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
-    model = Product
-    template_name = 'core/delete.html'
-    success_url = reverse_lazy('core:product_list')
-    permission_required = 'delete_product'
+  model = Product
+  template_name = 'core/delete.html'
+  success_url = reverse_lazy('core:product_list')
+  permission_required = 'delete_product'
 
-    def __init__(self, *args, **kwargs):
-      super().__init__(*args, **kwargs)
-      self.object = None
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    self.object = None
 
-    def get_context_data(self, **kwargs):
-      context = super().get_context_data(**kwargs)
-      context['title'] = 'Eliminar Producto'
-      context['description'] = f"¿Desea eliminar el producto: {self.object.description}?"
-      context['back_url'] = self.success_url
-      return context
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['title'] = 'Eliminar Producto'
+    context['description'] = f"¿Desea eliminar el producto: {self.object.description}?"
+    context['back_url'] = self.success_url
+    return context
 
-    def delete(self, request, *args, **kwargs):
-      self.object = self.get_object()
-      success_message = f"Éxito al eliminar el producto {self.object.description}."
-
-      # Marcar el producto como inactivo en lugar de eliminarlo
-      self.object.active = False
-      self.object.save()
-
-      messages.success(self.request, success_message)
-      return super().delete(request, *args, **kwargs)
+  def delete(self, request, *args, **kwargs):
+    self.object = self.get_object()
+    success_message = f"Éxito al eliminar el producto {self.object.description}."
+    self.object.delete()
+    messages.success(self.request, success_message)
+    return super().delete(request, *args, **kwargs)

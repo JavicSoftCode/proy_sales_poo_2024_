@@ -2,23 +2,18 @@
 {% block content %}
     {% load static %}
     <title>{% block title %} {{ title1 }} {% endblock title %}</title>
-    <section class="dark:bg-principal">
+  <section class="dark:bg-principal">
         <div class="text-center" data-aos="fade-up" data-aos-delay="200">
             <div class="sm:pt-28 lg:pt-24">
                 <div class="flex flex-col items-center justify-center">
-                <span class="rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
-                    {{ title1 }}
-                </span>
+                    <span class="rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
+                        {{ title1 }}
+                    </span>
                 </div>
                 <h1 class="dark:text-white text-4xl text-center mt-6 font-Pacifico">
                     {{ title2 }}
                 </h1>
-                <p class="dark:text-gray-400 text-center mt-6 text-lg font-light">
-                    Gestione con facilidad cada uno de sus productos.
-                </p>
             </div>
-            <div class="mx-4" data-aos="fade-up" data-aos-delay="200">
-                <div class="">
                     <!-- Barra de busqueda -->
                     <div class="p-4 flex justify-center">
                         <label for="table-search" class="sr-only">Search</label>
@@ -70,10 +65,7 @@
                                     <td class="w-4 p-4">{{ item.id }}</td>
                                     <th>
                                         <img class="mx-auto w-16 h-16 object-contain rounded-2xl"
-                                             src="
-                                                     
-                                                     
-                                                     {% if item.image %}{{ item.image.url }}{% else %}{% static 'img/default_product.png' %}{% endif %}"
+                                             src="{% if item.image %}{{ item.image.url }}{% else %}{% static 'img/default_product.jpg' %}{% endif %}"
                                              alt="Imagen del producto">
                                     </th>
                                     <td class="px-2 py-4">{{ item.description }}</td>
@@ -121,23 +113,23 @@
                 <div class="flex justify-center mt-4">
                     <nav aria-label="Page navigation example">
                         <ul class="inline-flex -space-x-px">
-                            {% if products.has_previous %}
+                            {% if page_obj.has_previous %}
                                 <li>
-                                    <a href="?page={{ products.previous_page_number }}"
+                                    <a href="?page=1"
                                        class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-[#0b1121] dark:border-secundario dark:text-gray-400 dark:hover:bg-[#121c33] dark:hover:text-white">Anterior</a>
                                 </li>
                             {% endif %}
-                            {% for num in products.paginator.page_range %}
+                            {% for num in page_obj.paginator.page_range %}
                                 <li>
                                     <a href="?page={{ num }}"
-                                       class="flex items-center justify-center px-3 h-8 leading-tight {% if num == products.number %}text-blue-600 bg-blue-50 border border-gray-300 hover:bg-blue-100 hover:text-blue-700 dark:bg-secundario dark:border-principal dark:text-blue-300{% else %}text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-[#0b1121] dark:border-secundario dark:text-gray-400 dark:hover:bg-[#121c33] dark:hover:text-white{% endif %}">
+                                       class="flex items-center justify-center px-3 h-8 leading-tight {% if num == page_obj.number %}text-blue-600 bg-blue-50 border border-gray-300 hover:bg-blue-100 hover:text-blue-700 dark:bg-secundario dark:border-principal dark:text-blue-300{% else %}text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-[#0b1121] dark:border-secundario dark:text-gray-400 dark:hover:bg-[#121c33] dark:hover:text-white{% endif %}">
                                         {{ num }}
                                     </a>
                                 </li>
                             {% endfor %}
-                            {% if products.has_next %}
+                            {% if page_obj.has_next %}
                                 <li>
-                                    <a href="?page={{ products.next_page_number }}"
+                                    <a href="?page={{ page_obj.next_page_number }}"
                                        class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-[#0b1121] dark:border-secundario dark:text-gray-400 dark:hover:bg-[#121c33] dark:hover:text-white">Siguiente</a>
                                 </li>
                             {% endif %}
@@ -162,64 +154,18 @@
         </div>
     </section>
 
+     {% include 'fragments/delete.html' %}
     <script>
-        function toggleDropdown(id) {
-            var dropdown = document.getElementById('dropdown' + id);
-            var allDropdowns = document.querySelectorAll('.dropdown-content');
-
-            // Oculta todos los menús desplegables excepto el actual
-            allDropdowns.forEach(function (dd) {
-                if (dd !== dropdown) {
-                    dd.classList.add('hidden');
-                }
-            });
-
-            // Toggle the current dropdown
-            dropdown.classList.toggle('hidden');
-        }
-
-        // Cierra el menú desplegable si se hace clic fuera de él
-        window.onclick = function (event) {
-            if (!event.target.matches('.dropdown-button') && !event.target.closest('.dropdown-content')) {
-                var dropdowns = document.querySelectorAll('.dropdown-content');
-                dropdowns.forEach(function (dropdown) {
-                    dropdown.classList.add('hidden');
-                });
-            }
-        }
-    </script>
-
-    <!-- Modal de eliminación -->
-    {% include 'fragments/delete.html' %}
-    <script>
-        function openDeleteModal(id, description) {
+        function openDeleteModal(id, name) {
             const deleteForm = document.getElementById('deleteForm');
             deleteForm.action = `{% url 'core:product_delete' 0 %}`.replace('0', id);
-            document.getElementById('Description').textContent = `ID: ${id} - ${description}`;
+            document.getElementById('Description').textContent = `ID: ${id} - ${name}`;
             document.getElementById('deleteModal').classList.remove('hidden');
         }
 
         function closeModal() {
             document.getElementById('deleteModal').classList.add('hidden');
         }
-
-        function confirmDelete() {
-            const deleteForm = document.getElementById('deleteForm');
-            deleteForm.submit();
-        }
     </script>
-
-    {#    <script>#}
-    {#        function openDeleteModal(id, description) {#}
-    {#            const deleteForm = document.getElementById('deleteForm');#}
-    {#            deleteForm.action = `{% url 'core:product_delete' 0 %}`.replace('0', id);#}
-    {#            document.getElementById('Description').textContent = `ID: ${id} - ${description}`;#}
-    {#            document.getElementById('deleteModal').classList.remove('hidden');#}
-    {#        }#}
-    {##}
-    {#        function closeModal() {#}
-    {#            document.getElementById('deleteModal').classList.add('hidden');#}
-    {#        }#}
-    {#    </script>#}
 
 {% endblock %}

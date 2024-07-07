@@ -62,9 +62,9 @@
                             </th>
 
                             <td class="px-2 py-4">
-    <span class="reveal-dni" onclick="revealDNI(this)">
-        <i class="far fa-eye" style="cursor: pointer"></i>
-    </span>
+                              <span class="reveal-dni" onclick="revealDNI(this)">
+                                <i class="far fa-eye" style="cursor: pointer"></i>
+                                   </span>
                                 <span class="dni-hidden" style="display: none;">{{ customer.dni }}</span>
                             </td>
 
@@ -158,26 +158,26 @@
         </div>
     </section>
 
-    {% include 'fragments/delete.html' %}
-    <script>
-        function openDeleteModal(id, name) {
-            const deleteForm = document.getElementById('deleteForm');
-            deleteForm.action = `{% url 'core:customer_delete' 0 %}`.replace('0', id);
-            document.getElementById('Description').textContent = `ID: ${id} - ${name}`;
-            document.getElementById('deleteModal').classList.remove('hidden');
-        }
+        {% include 'fragments/delete.html' %}
+        <script>
+            function openDeleteModal(id, name) {
+                const deleteForm = document.getElementById('deleteForm');
+                deleteForm.action = `{% url 'core:customer_delete' 0 %}`.replace('0', id);
+                document.getElementById('Description').textContent = `ID: ${id} - ${name}`;
+                document.getElementById('deleteModal').classList.remove('hidden');
+            }
 
-        function revealDNI(icon) {
-            var dniElement = icon.nextElementSibling; // Obtener el siguiente elemento que contiene el número de cédula
-            dniElement.style.display = 'inline'; // Mostrar el número de cédula
+            function revealDNI(icon) {
+                var dniElement = icon.nextElementSibling; // Obtener el siguiente elemento que contiene el número de cédula
+                dniElement.style.display = 'inline'; // Mostrar el número de cédula
 
-            icon.style.display = 'none'; // Ocultar el icono de ojo
+                icon.style.display = 'none'; // Ocultar el icono de ojo
 
-            setTimeout(function () {
-                dniElement.style.display = 'none'; // Ocultar el número de cédula después de 5 segundos
-                icon.style.display = 'inline'; // Mostrar nuevamente el icono de ojo
-            }, 5000);
-        }
-    </script>
+                setTimeout(function () {
+                    dniElement.style.display = 'none'; // Ocultar el número de cédula después de 5 segundos
+                    icon.style.display = 'inline'; // Mostrar nuevamente el icono de ojo
+                }, 5000);
+            }
+        </script>
 
 {% endblock %}

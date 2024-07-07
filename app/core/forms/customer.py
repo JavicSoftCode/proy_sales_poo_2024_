@@ -110,11 +110,6 @@ class CustomerForm(ModelForm):
       "active": "Activo",
     }
 
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-    if not self.instance.pk:
-      self.fields["date_of_birth"].initial = (timezone.now() + datetime.timedelta(days=30)).date().isoformat()
-
   def clean_first_name(self):
     first_name = self.cleaned_data.get("first_name")
     return first_name.upper() if first_name else first_name

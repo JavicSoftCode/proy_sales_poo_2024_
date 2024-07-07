@@ -14,7 +14,7 @@
                     {{ title2 }}
                 </h1>
             </div>
-            <!-- Barra de busqueda -->
+            <!-- Barra de búsqueda -->
             <div class="p-4 flex justify-center">
                 <label for="table-search" class="sr-only">Search</label>
                 <div class="relative mt-1">
@@ -25,10 +25,10 @@
                                   d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                         </svg>
                     </div>
-                    <form method="GET" action="{% url 'core:customer_list' %}">
+                    <form method="GET" action="{% url 'core:company_list' %}">
                         <input type="text" name="q" id="table-search"
                                class="text-center pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                               placeholder="ID o Nombre" value="{{ request.GET.q }}">
+                               placeholder="ID o Nombre Empresa" value="{{ request.GET.q }}">
                     </form>
                 </div>
             </div>
@@ -38,75 +38,93 @@
                     <thead class="uppercase font-Tiny5 bg-gray-50 dark:bg-secundario dark:text-blue-300">
                     <tr>
                         <th scope="col" class="px-6 py-3">ID</th>
-                        <th scope="col" class="px-6 py-3">Imagen</th>
+                        <th scope="col" class="px-6 py-3">Logo</th>
                         <th scope="col" class="px-6 py-3">Dni</th>
-                        <th scope="col" class="px-6 py-3">Nombre</th>
-                        <th scope="col" class="px-6 py-3">Apellido</th>
-                        <th scope="col" class="px-6 py-3">Email</th>
-                        <th scope="col" class="px-6 py-3">Teléfono</th>
+                        <th scope="col" class="px-6 py-3">Empresa</th>
                         <th scope="col" class="px-6 py-3">Dirección</th>
-                        <th scope="col" class="px-6 py-3">Fecha Nac.</th>
-                        <th scope="col" class="px-6 py-3">Género</th>
-                        <th scope="col" class="px-6 py-3">Activo</th>
-                        <th scope="col" class="px-6 py-3">Acciones</th>
+                        <th scope="col" class="px-6 py-3">Responsable</th>
+                        <th scope="col" class="px-6 py-3">Tel.</th>
+                        <th scope="col" class="px-6 py-3">Web</th>
+                        <th scope="col" class="px-6 py-3">Email</th>
+                        <th scope="col" class="px-6 py-3">Código Est.</th>
+                        <th scope="col" class="px-6 py-3">Código P. Emisión</th>
+                        <th scope="col" class="px-6 py-3">N. de Autorización</th>
+                        <th scope="col" class="px-6 py-3">Tipo de Contribuyente</th>
+                        <th scope="col" class="px-6 py-3">Llevar Contabilidad</th>
+                        <th scope="col" class="px-6 py-3">Código Act. Económica</th>
+                        <th scope="col" class="px-6 py-3">Opc.</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for customer in customers %}
+                    {% for company in companies %}
                         <tr class="dark:text-gray-400 bg-white border-b dark:bg-[#0b1121] dark:border-secundario hover:bg-gray-50 dark:hover:bg-[#121c33]">
-                            <td class="w-4 p-4">{{ customer.id }}</td>
-                            <th>
-                                <img class="mx-auto w-16 h-16 object-contain rounded-2xl" src="
-                                        {% if customer.image %}{{ customer.image.url }}{% else %}{% static 'img/default_customer.jpg' %}{% endif %}"
-                                     alt="Imagen del cliente">
-                            </th>
-
-                            <td class="px-2 py-4">
-    <span class="reveal-dni" onclick="revealDNI(this)">
-        <i class="far fa-eye" style="cursor: pointer"></i>
-    </span>
-                                <span class="dni-hidden" style="display: none;">{{ customer.dni }}</span>
+                            <td class="w-4 p-4">{{ company.id }}</td>
+                            <td>
+                                <img class="mx-auto w-16 h-16 object-contain rounded-2xl"
+                                     src="
+                                             {% if company.logo %}{{ company.logo.url }}{% else %}{% static 'img/default_company.jpg' %}{% endif %}"
+                                     alt="Logo de la empresa">
                             </td>
-
-
-                            <td class="px-2 py-4">{{ customer.first_name }}</td>
-                            <td class="px-2 py-4">{{ customer.last_name }}</td>
-                            <td class="px-2 py-4">
-                                <a href="https://mail.google.com/mail/?view=cm&to={{ customer.email }}" target="_blank"
-                                   rel="noopener noreferrer"
-                                   title="{{ customer.email }}">
-                                    <i class="fas fa-envelope"></i> <!-- Reemplaza con el icono de tu elección -->
-                                </a>
+                              <td class="px-2 py-4">
+                              <span class="reveal-dni" onclick="revealDNI(this)">
+                                <i class="far fa-eye" style="cursor: pointer"></i>
+                                   </span>
+                                <span class="dni-hidden" style="display: none;">{{ company.dni }}</span>
                             </td>
-                            <td class="px-2 py-4">{{ customer.phone }}</td>
+                        
+                            <td class="px-2 py-4">{{ company.name }}</td>
+                            {#                            <td class="px-2 py-4">{{ company.address }}</td>#}
+
                             <td class="px-2 py-4">
-                                <a href="https://www.google.com/maps/search/?api=1&query={{ customer.address }}"
+                                <a href="https://www.google.com/maps/search/?api=1&query={{ company.address }}"
                                    target="_blank" rel="noopener noreferrer"
-                                   title="Ver en Google Maps: {{ customer.address }}">
+                                   title="Ver en Google Maps: {{ company.address }}">
                                     <i class="fas fa-map-marker-alt"></i> <!-- Reemplaza con el icono de tu elección -->
                                 </a>
                             </td>
+
+
+                            <td class="px-2 py-4">{{ company.representative }}</td>
+                            <td class="px-2 py-4">{{ company.landline }}</td>
                             <td class="px-2 py-4">
-                                {{ customer.date_of_birth|date:"d/m/y" }}
+                                <a href="{{ company.website }}" target="_blank" rel="noopener noreferrer">
+                                    <i class="fas fa-globe"></i>
+                                </a>
                             </td>
-                            <td class="px-2 py-4">{{ customer.get_gender_display }}</td>
-                            <td class="px-6 py-4">
-                                {% if customer.active %}
+
+                            {#                            <td class="px-2 py-4">{{ company.email }}</td>#}
+
+                            <td class="px-2 py-4">
+                                <a href="https://mail.google.com/mail/?view=cm&to={{ company.email }}" target="_blank"
+                                   rel="noopener noreferrer"
+                                   title="{{ company.email }}">
+                                    <i class="fas fa-envelope"></i> <!-- Reemplaza con el icono de tu elección -->
+                                </a>
+                            </td>
+
+
+                            <td class="px-2 py-4">{{ company.establishment_code }}</td>
+                            <td class="px-2 py-4">{{ company.emission_point_code }}</td>
+                            <td class="px-2 py-4">{{ company.authorization_number }}</td>
+                            <td class="px-2 py-4">{{ company.get_taxpayer_type_display }}</td>
+                            <td class="px-2 py-4">
+                                {% if company.required_to_keep_accounting %}
                                     <i class="fa-solid fa-check text-green-500"></i>
                                 {% else %}
                                     <i class="fa-solid fa-square-minus text-red-500"></i>
                                 {% endif %}
                             </td>
-                            <td class="px-6 py-4 text-2xl">
-                                <a href="{% url 'core:customer_update' customer.id %}"
-                                   class="text-blue-600 dark:text-blue-500">
-                                    <i class="ri-edit-fill"></i>
-                                </a>
-                                <button class="text-red-600 dark:text-red-500 ml-2"
-                                        onclick="openDeleteModal('{{ customer.id }}', '{{ customer.first_name }} {{ customer.last_name }}')">
-                                    <i class="ri-delete-bin-2-fill"></i>
-                                </button>
-                            </td>
+                            <td class="px-2 py-4">{{ company.economic_activity_code }}</td>
+                     <td class="px-6 py-4 text-2xl">
+    <a href="{% url 'core:company_update' company.id %}"
+       class="text-blue-600 dark:text-blue-500">
+        <i class="ri-edit-fill"></i>
+    </a>
+    <button class="text-red-600 dark:text-red-500 ml-2"
+            onclick="openDeleteModal('{{ company.id }}', '{{ company.name }}')">
+        <i class="ri-delete-bin-2-fill"></i>
+    </button>
+</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -146,8 +164,8 @@
         <div>
             <div class="flex flex-col md:flex-row justify-center form-group text-center p-4">
                 <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full mr-0 md:mr-2 mb-2 md:mb-0 flex items-center justify-center"
-                   href="{% url 'core:customer_create' %}">
-                    <i class="fa-solid fa-plus mr-2"></i> Nuevo cliente
+                   href="{% url 'core:company_create' %}">
+                    <i class="fa-solid fa-plus mr-2"></i> Nueva empresa
                 </a>
                 <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full flex items-center justify-center"
                    href="{% url 'home' %}">
@@ -155,17 +173,17 @@
                 </a>
             </div>
         </div>
-        </div>
     </section>
 
-    {% include 'fragments/delete.html' %}
+  {% include 'fragments/delete.html' %}
     <script>
-        function openDeleteModal(id, name) {
-            const deleteForm = document.getElementById('deleteForm');
-            deleteForm.action = `{% url 'core:customer_delete' 0 %}`.replace('0', id);
-            document.getElementById('Description').textContent = `ID: ${id} - ${name}`;
-            document.getElementById('deleteModal').classList.remove('hidden');
-        }
+    function openDeleteModal(id, name) {
+        const deleteForm = document.getElementById('deleteForm');
+        deleteForm.action = `{% url 'core:company_delete' 0 %}`.replace('0', id);
+        document.getElementById('Description').textContent = `ID: ${id} - ${name}`;
+        document.getElementById('deleteModal').classList.remove('hidden');
+    }
+
 
         function revealDNI(icon) {
             var dniElement = icon.nextElementSibling; // Obtener el siguiente elemento que contiene el número de cédula
@@ -179,5 +197,4 @@
             }, 5000);
         }
     </script>
-
-{% endblock %}
+{% endblock content %}

@@ -28,7 +28,7 @@
                     <form method="GET" action="{% url 'core:company_list' %}">
                         <input type="text" name="q" id="table-search"
                                class="text-center pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                               placeholder="ID o Nombre Empresa" value="{{ request.GET.q }}">
+                               placeholder="Ruc o Nombre Empresa" value="{{ request.GET.q }}">
                     </form>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                     <tr>
                         <th scope="col" class="px-6 py-3">ID</th>
                         <th scope="col" class="px-6 py-3">Logo</th>
-                        <th scope="col" class="px-6 py-3">Dni</th>
+                        <th scope="col" class="px-6 py-3">Ruc</th>
                         <th scope="col" class="px-6 py-3">Empresa</th>
                         <th scope="col" class="px-6 py-3">Dirección</th>
                         <th scope="col" class="px-6 py-3">Responsable</th>
@@ -62,16 +62,17 @@
                             <td>
                                 <img class="mx-auto w-16 h-16 object-contain rounded-2xl"
                                      src="
+                                             
                                              {% if company.logo %}{{ company.logo.url }}{% else %}{% static 'img/default_company.jpg' %}{% endif %}"
                                      alt="Logo de la empresa">
                             </td>
-                              <td class="px-2 py-4">
+                            <td class="px-2 py-4">
                               <span class="reveal-dni" onclick="revealDNI(this)">
                                 <i class="far fa-eye" style="cursor: pointer"></i>
                                    </span>
                                 <span class="dni-hidden" style="display: none;">{{ company.dni }}</span>
                             </td>
-                        
+
                             <td class="px-2 py-4">{{ company.name }}</td>
                             {#                            <td class="px-2 py-4">{{ company.address }}</td>#}
 
@@ -107,24 +108,44 @@
                             <td class="px-2 py-4">{{ company.emission_point_code }}</td>
                             <td class="px-2 py-4">{{ company.authorization_number }}</td>
                             <td class="px-2 py-4">{{ company.get_taxpayer_type_display }}</td>
-                            <td class="px-2 py-4">
+                            {#                            <td class="px-2 py-4">#}
+                            {#                                {% if company.required_to_keep_accounting %}#}
+                            {#                                    <i class="fa-solid fa-check text-green-500"></i>#}
+                            {#                                {% else %}#}
+                            {#                                    <i class="fa-solid fa-square-minus text-red-500"></i>#}
+                            {#                                {% endif %}#}
+                            {#                            </td>#}
+                            <td class="px-2 py-4">{{ company.economic_activity_code }}</td>
+                            {#                     <td class="px-6 py-4 text-2xl">#}
+                            {#    <a href="{% url 'core:company_update' company.id %}"#}
+                            {#       class="text-blue-600 dark:text-blue-500">#}
+                            {#        <i class="ri-edit-fill"></i>#}
+                            {#    </a>#}
+                            {#    <button class="text-red-600 dark:text-red-500 ml-2"#}
+                            {#            onclick="openDeleteModal('{{ company.id }}', '{{ company.name }}')">#}
+                            {#        <i class="ri-delete-bin-2-fill"></i>#}
+                            {#    </button>#}
+                            {#</td>#}
+
+                            <td class="px-6 py-4">
                                 {% if company.required_to_keep_accounting %}
                                     <i class="fa-solid fa-check text-green-500"></i>
                                 {% else %}
                                     <i class="fa-solid fa-square-minus text-red-500"></i>
                                 {% endif %}
                             </td>
-                            <td class="px-2 py-4">{{ company.economic_activity_code }}</td>
-                     <td class="px-6 py-4 text-2xl">
-    <a href="{% url 'core:company_update' company.id %}"
-       class="text-blue-600 dark:text-blue-500">
-        <i class="ri-edit-fill"></i>
-    </a>
-    <button class="text-red-600 dark:text-red-500 ml-2"
-            onclick="openDeleteModal('{{ company.id }}', '{{ company.name }}')">
-        <i class="ri-delete-bin-2-fill"></i>
-    </button>
-</td>
+                        
+                            <td class="px-6 py-4 text-2xl">
+                                <a href="{% url 'core:company_update' company.id %}"
+                                   class="text-blue-600 dark:text-blue-500">
+                                    <i class="ri-edit-fill"></i>
+                                </a>
+                                 <button class="text-red-600 dark:text-red-500 ml-2"
+                                        onclick="openDeleteModal('{{ company.id }}', '{{ company.dni }} {{ company.name }}')">
+                                    <i class="ri-delete-bin-2-fill"></i>
+                                </button>
+                            </td>
+
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -175,26 +196,16 @@
         </div>
     </section>
 
-  {% include 'fragments/delete.html' %}
+    {% include 'fragments/delete.html' %}
     <script>
-    function openDeleteModal(id, name) {
-        const deleteForm = document.getElementById('deleteForm');
-        deleteForm.action = `{% url 'core:company_delete' 0 %}`.replace('0', id);
-        document.getElementById('Description').textContent = `ID: ${id} - ${name}`;
-        document.getElementById('deleteModal').classList.remove('hidden');
-    }
-
-
-        function revealDNI(icon) {
-            var dniElement = icon.nextElementSibling; // Obtener el siguiente elemento que contiene el número de cédula
-            dniElement.style.display = 'inline'; // Mostrar el número de cédula
-
-            icon.style.display = 'none'; // Ocultar el icono de ojo
-
-            setTimeout(function () {
-                dniElement.style.display = 'none'; // Ocultar el número de cédula después de 5 segundos
-                icon.style.display = 'inline'; // Mostrar nuevamente el icono de ojo
-            }, 5000);
+        function openDeleteModal(id, dni, name) {
+            const deleteForm = document.getElementById('deleteForm');
+            deleteForm.action = `{% url 'core:company_delete' 0 %}`.replace('0', id);
+            document.getElementById('Description').textContent = `ID: ${id} - ${dni} - ${name}`;
+            document.getElementById('deleteModal').classList.remove('hidden');
         }
+
+
+    
     </script>
 {% endblock content %}

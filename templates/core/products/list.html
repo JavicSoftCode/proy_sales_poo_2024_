@@ -155,14 +155,14 @@
     </section>
 
      {% include 'fragments/delete.html' %}
-    <script>
-        function openDeleteModal(id, name) {
+     <script>
+        function openDeleteModal(id, description) {
             const deleteForm = document.getElementById('deleteForm');
             deleteForm.action = `{% url 'core:product_delete' 0 %}`.replace('0', id);
-            document.getElementById('Description').textContent = `ID: ${id} - ${name}`;
+            document.getElementById('Description').textContent = `ID: ${id} - ${description}`;
             document.getElementById('deleteModal').classList.remove('hidden');
         }
-
+    
         function closeModal() {
             document.getElementById('deleteModal').classList.add('hidden');
         }

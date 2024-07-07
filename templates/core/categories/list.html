@@ -98,6 +98,7 @@
                                                  
                                                  
                                                  
+                                                 
                                                  {% if item.image %}{{ item.image.url }}{% else %}{% static 'img/incognito.png' %}{% endif %}"
                                          alt="Imagen del proveedor">
                                 </figure>
@@ -197,6 +198,18 @@
 
         function closeModal() {
             document.getElementById('deleteModal').classList.add('hidden');
+        }
+
+        function revealDNI(icon) {
+            var dniElement = icon.nextElementSibling; // Obtener el siguiente elemento que contiene el número de cédula
+            dniElement.style.display = 'inline'; // Mostrar el número de cédula
+
+            icon.style.display = 'none'; // Ocultar el icono de ojo
+
+            setTimeout(function () {
+                dniElement.style.display = 'none'; // Ocultar el número de cédula después de 5 segundos
+                icon.style.display = 'inline'; // Mostrar nuevamente el icono de ojo
+            }, 5000);
         }
     </script>
 

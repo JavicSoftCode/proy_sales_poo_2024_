@@ -50,11 +50,11 @@ class Company(models.Model):
     verbose_name='Código de Actividad Económica', max_length=10, blank=True, null=True, default='1234567890',
     help_text='Código de la actividad económica según el SRI.'
   )
-
+ 
   class Meta:
     verbose_name = 'Empresa'
     verbose_name_plural = 'Empresa'
-
+  
   def __str__(self):
     return self.name
 

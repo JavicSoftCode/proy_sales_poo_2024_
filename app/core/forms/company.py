@@ -115,7 +115,6 @@ class CompanyForm(ModelForm):
     max_length=49,
     required=False,
     label="Número de Autorización",
-    initial='Ingresar número de Autorización',
     widget=forms.TextInput(
       attrs={
         "placeholder": "Ingrese número de autorización",

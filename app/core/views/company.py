@@ -17,10 +17,10 @@ class CompanyListView(PermissionMixin, ListViewMixin, ListView):
 
     def get_queryset(self):
         q = self.request.GET.get('q')
-        queryset = self.model.objects.all().order_by('id')  # Todas las compañías
+        queryset = self.model.objects.all().order_by('id')  # Todos los clientes
 
         if q:
-            queryset = queryset.filter(Q(dni__icontains=q) | Q(name__icontains=q) | Q(representative__icontains=q))
+          queryset = queryset.filter(Q(dni__icontains=q) | Q(name__icontains=q))
 
         return queryset
 
@@ -94,10 +94,6 @@ class CompanyDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
     success_url = reverse_lazy('core:company_list')
     permission_required = 'delete_company'
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.object = None
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Eliminar Compañía'
@@ -108,6 +104,7 @@ class CompanyDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         success_message = f"Éxito al eliminar la compañía {self.object.name}."
-        self.object.delete()
+        self.object.required_to_keep_accounting = False  # Marca la compañía como inactiva
+        self.object.save()
         messages.success(self.request, success_message)
         return super().delete(request, *args, **kwargs)

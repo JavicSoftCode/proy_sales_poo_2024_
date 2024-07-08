@@ -141,7 +141,7 @@
                                     <i class="ri-edit-fill"></i>
                                 </a>
                                  <button class="text-red-600 dark:text-red-500 ml-2"
-                                        onclick="openDeleteModal('{{ company.id }}', '{{ company.dni }} {{ company.name }}')">
+                                        onclick="openDeleteModal('{{ company.id }}', '{{ company.name }}')">
                                     <i class="ri-delete-bin-2-fill"></i>
                                 </button>
                             </td>
@@ -198,14 +198,27 @@
 
     {% include 'fragments/delete.html' %}
     <script>
-        function openDeleteModal(id, dni, name) {
+        function openDeleteModal(id, name) {
             const deleteForm = document.getElementById('deleteForm');
             deleteForm.action = `{% url 'core:company_delete' 0 %}`.replace('0', id);
-            document.getElementById('Description').textContent = `ID: ${id} - ${dni} - ${name}`;
+            document.getElementById('Description').textContent = `ID: ${id} - ${name}`;
             document.getElementById('deleteModal').classList.remove('hidden');
         }
 
-
+        function closeModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+        }
     
+        function revealDNI(icon) {
+            var dniElement = icon.nextElementSibling; // Obtener el siguiente elemento que contiene el número de cédula
+            dniElement.style.display = 'inline'; // Mostrar el número de cédula
+
+            icon.style.display = 'none'; // Ocultar el icono de ojo
+
+            setTimeout(function () {
+                dniElement.style.display = 'none'; // Ocultar el número de cédula después de 5 segundos
+                icon.style.display = 'inline'; // Mostrar nuevamente el icono de ojo
+            }, 5000);
+        }
     </script>
 {% endblock content %}

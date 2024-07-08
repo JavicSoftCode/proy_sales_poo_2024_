@@ -69,9 +69,9 @@
                                              alt="Imagen del producto">
                                     </th>
                                     <td class="px-2 py-4">{{ item.description }}</td>
-                                    <td class="px-2 py-4">{{ item.expiration_date }}</td>
-                                    <td class="px-2 py-4">{{ item.created }}</td>
-                                    <td class="px-2 py-4">{{ item.updated }}</td>
+                                    <td class="px-2 py-4">{{ item.expiration_date  |  date:"Y-m-d" }}</td>
+                                    <td class="px-2 py-4">{{ item.created  |  date:"Y-m-d  H:i"}}</td>
+                                    <td class="px-2 py-4">{{ item.updated  |  date:"Y-m-d  -|-  H:i"}}</td>
                                     <td class="px-2 py-4">{{ item.brand }}</td>
                                     <td class="px-2 py-4">{{ item.line }}</td>
                                     <td class="px-2 py-4">{{ item.get_categories }}</td>
@@ -162,7 +162,7 @@
             document.getElementById('Description').textContent = `ID: ${id} - ${description}`;
             document.getElementById('deleteModal').classList.remove('hidden');
         }
-    
+
         function closeModal() {
             document.getElementById('deleteModal').classList.add('hidden');
         }

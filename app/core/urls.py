@@ -1,5 +1,5 @@
 from django.urls import path
-from app.core.views import supplier, brand, category, product, customer, company
+from app.core.views import supplier, brand, category, product, customer, company, paymentMethod
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -41,6 +41,12 @@ urlpatterns = [
                 path('company_create/', company.CompanyCreateView.as_view(), name='company_create'),
                 path('company_update/<int:pk>/', company.CompanyUpdateView.as_view(), name='company_update'),
                 path('company_delete/<int:pk>/', company.CompanyDeleteView.as_view(), name='company_delete'),
+
+                # #     # URLs de metodo de pago
+                path('paymentMethod_list/', paymentMethod.PaymentMethodListView.as_view(), name='paymentMethod_list'),
+                path('paymentMethod_create/', paymentMethod.PaymentMethodCreateView.as_view(), name='paymentMethod_create'),
+                path('paymentMethod_update/<int:pk>/', paymentMethod.PaymentMethodUpdateView.as_view(), name='paymentMethod_update'),
+                path('paymentMethod_delete/<int:pk>/', paymentMethod.PaymentMethodDeleteView.as_view(), name='paymentMethod_delete'),
 
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

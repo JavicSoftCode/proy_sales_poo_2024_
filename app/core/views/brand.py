@@ -7,16 +7,12 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from django.contrib import messages
 from django.db.models import Q
 
-# PAGINATION
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
 
 class BrandListView(PermissionMixin, ListViewMixin, ListView):
   model = Brand
   template_name = 'core/brands/list.html'
   context_object_name = 'brands'
   permission_required = 'view_brand'
-  paginate_by = 4
 
   def get_queryset(self):
     q1 = self.request.GET.get('q')
@@ -27,25 +23,25 @@ class BrandListView(PermissionMixin, ListViewMixin, ListView):
 
     return self.model.objects.filter(query).order_by('id')
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    queryset = self.get_queryset()
-    paginator = Paginator(queryset, self.paginate_by)
-
-    page = self.request.GET.get('page')
-    try:
-      brands = paginator.page(page)
-    except PageNotAnInteger:
-      brands = paginator.page(1)
-    except EmptyPage:
-      brands = paginator.page(paginator.num_pages)
-
-    context['brands'] = brands
-    context['title1'] = 'Marcas'
-    context['title2'] = 'Consulta de Marcas'
-    context['create_url'] = reverse_lazy('core:brand_create')
-    context['query'] = self.request.GET.get('q', '')
-    return context
+  # def get_context_data(self, **kwargs):
+  #   context = super().get_context_data(**kwargs)
+  #   queryset = self.get_queryset()
+  #   paginator = Paginator(queryset, self.paginate_by)
+  #
+  #   page = self.request.GET.get('page')
+  #   try:
+  #     brands = paginator.page(page)
+  #   except PageNotAnInteger:
+  #     brands = paginator.page(1)
+  #   except EmptyPage:
+  #     brands = paginator.page(paginator.num_pages)
+  #
+  #   context['brands'] = brands
+  #   context['title1'] = 'Marcas'
+  #   context['title2'] = 'Consulta de Marcas'
+  #   context['create_url'] = reverse_lazy('core:brand_create')
+  #   context['query'] = self.request.GET.get('q', '')
+  #   return context
 
 
 class BrandCreateView(PermissionMixin, CreateViewMixin, CreateView):
@@ -55,12 +51,12 @@ class BrandCreateView(PermissionMixin, CreateViewMixin, CreateView):
   success_url = reverse_lazy('core:brand_list')
   permission_required = 'add_brand'
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['title1'] = 'Crear Marca'
-    context['title2'] = 'Marca'
-    context['back_url'] = self.success_url
-    return context
+  # def get_context_data(self, **kwargs):
+  #   context = super().get_context_data(**kwargs)
+  #   context['title1'] = 'Crear Marca'
+  #   context['title2'] = 'Marca'
+  #   context['back_url'] = self.success_url
+  #   return context
 
   def form_valid(self, form):
     response = super().form_valid(form)
@@ -76,12 +72,12 @@ class BrandUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   success_url = reverse_lazy('core:brand_list')
   permission_required = 'change_brand'
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['title1'] = 'Actualizar Marca'
-    context['title2'] = 'Actualizar Datos De La Marca'
-    context['back_url'] = self.success_url
-    return context
+  # def get_context_data(self, **kwargs):
+  #   context = super().get_context_data(**kwargs)
+  #   context['title1'] = 'Actualizar Marca'
+  #   context['title2'] = 'Actualizar Datos De La Marca'
+  #   context['back_url'] = self.success_url
+  #   return context
 
   def form_valid(self, form):
     response = super().form_valid(form)
@@ -100,12 +96,12 @@ class BrandDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
     super().__init__(*args, **kwargs)
     self.object = None
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['title'] = 'Eliminar Marca'
-    context['description'] = f"¿Desea eliminar la marca: {self.object.description}?"
-    context['back_url'] = self.success_url
-    return context
+  # def get_context_data(self, **kwargs):
+  #   context = super().get_context_data(**kwargs)
+  #   context['title'] = 'Eliminar Marca'
+  #   context['description'] = f"¿Desea eliminar la marca: {self.object.description}?"
+  #   context['back_url'] = self.success_url
+  #   return context
 
   def delete(self, request, *args, **kwargs):
     self.object = self.get_object()

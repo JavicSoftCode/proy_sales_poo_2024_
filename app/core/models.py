@@ -50,11 +50,11 @@ class Company(models.Model):
     verbose_name='Código de Actividad Económica', max_length=10, blank=True, null=True, default='1234567890',
     help_text='Código de la actividad económica según el SRI.'
   )
- 
+
   class Meta:
     verbose_name = 'Empresa'
     verbose_name_plural = 'Empresa'
-  
+
   def __str__(self):
     return self.name
 
@@ -152,6 +152,8 @@ class Iva(models.Model):
   description = models.CharField(verbose_name='Iva', max_length=100, unique=True)
   value = models.DecimalField(verbose_name='Porcentaje(%)', max_digits=6, decimal_places=2)
   image = models.ImageField(verbose_name='Imagen', upload_to='ivas/', blank=True, null=True)
+  created = models.DateTimeField(default=timezone.now, editable=False)
+  updated = models.DateTimeField(auto_now=True)
   active = models.BooleanField(verbose_name='Activo', default=True)
 
   class Meta:
@@ -236,6 +238,8 @@ class ProductPrice(models.Model):
   value = models.DecimalField(verbose_name='Incremento', default=0, max_digits=11, decimal_places=2)
   issue_date = models.DateTimeField(verbose_name='Fecha Emision', default=timezone.now, db_index=True)
   observaciones = models.TextField(verbose_name='Obervacion', blank=True, null=True)
+  created = models.DateTimeField(default=timezone.now, editable=False)
+  updated = models.DateTimeField(auto_now=True)
   active = models.BooleanField(verbose_name='Activo', default=True)
 
   class Meta:
@@ -249,6 +253,9 @@ class ProductPrice(models.Model):
 
   def __str__(self):
     return "{} - {:%d-%m-%Y}".format(self.value, self.issue_date)
+
+  def __str__(self):
+    return f"{self.product} - {', '.join([str(cat) for cat in self.category.all()])} - {self.value} - {self.issue_date.strftime('%d-%m-%Y')}"
 
 
 class ProductPriceDetail(models.Model):
@@ -320,7 +327,7 @@ class Customer(models.Model):
 
 
 class PaymentMethod(models.Model):
-  description = models.CharField(verbose_name='Metodo de Pago', max_length=100)
+  description = models.CharField(verbose_name='Metodo de Pago', max_length=100, unique=True, )
   image = models.ImageField(verbose_name='Foto', upload_to='paymentmethods/', blank=True, null=True)
   active = models.BooleanField(verbose_name='Activo', default=True)
 

@@ -22,7 +22,7 @@
                         <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
                              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"></path>
                         </svg>
                     </div>
                     <form method="GET" action="{% url 'core:customer_list' %}">
@@ -57,7 +57,7 @@
                             <td class="w-4 p-4">{{ customer.id }}</td>
                             <th>
                                 <img class="mx-auto w-16 h-16 object-contain rounded-2xl" src="
-                                        {% if customer.image %}{{ customer.image.url }}{% else %}{% static 'img/default_customer.jpg' %}{% endif %}"
+                                        {% if customer.image %}{{ customer.image.url }}{% else %}{% static 'img/usuario_anonimo.png' %}{% endif %}"
                                      alt="Imagen del cliente">
                             </th>
 
@@ -156,7 +156,6 @@
                 </a>
             </div>
         </div>
-        </div>
     </section>
 
         {% include 'fragments/delete.html' %}
@@ -173,14 +172,14 @@
             }
 
             function revealDNI(icon) {
-                var dniElement = icon.nextElementSibling; // Obtener el siguiente elemento que contiene el número de cédula
-                dniElement.style.display = 'inline'; // Mostrar el número de cédula
+                var dniElement = icon.nextElementSibling; 
+                dniElement.style.display = 'inline'; 
 
-                icon.style.display = 'none'; // Ocultar el icono de ojo
+                icon.style.display = 'none'; 
 
                 setTimeout(function () {
-                    dniElement.style.display = 'none'; // Ocultar el número de cédula después de 5 segundos
-                    icon.style.display = 'inline'; // Mostrar nuevamente el icono de ojo
+                    dniElement.style.display = 'none'; 
+                    icon.style.display = 'inline'; 
                 }, 5000);
             }
         </script>

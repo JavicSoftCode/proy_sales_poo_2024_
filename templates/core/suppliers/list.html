@@ -25,7 +25,7 @@
                              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                   stroke-width="2"
-                                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"></path>
                         </svg>
                     </div>
                     <form method="GET" action="{% url 'core:supplier_list' %}">
@@ -59,10 +59,7 @@
                             <td class="px-6 py-4">{{ item.id }}</td>
                             <td class="px-6 py-4">
                                 <img class="mx-auto w-16 h-16 object-contain rounded-2xl"
-                                     src="
-                                                 
-                                             
-                                             {% if item.image %}{{ item.image.url }}{% else %}{% static 'img/default_supplier.jpg' %}{% endif %}"
+                                     src=" {% if item.image %}{{ item.image.url }}{% else %}{% static 'img/default_supplier.jpg' %}{% endif %}"
                                      alt="Imagen del proveedor">
                             </td>
                             <td class="px-2 py-4">
@@ -77,7 +74,7 @@
                                 <a href="https://www.google.com/maps/search/?api=1&query={{ item.address }}"
                                    target="_blank" rel="noopener noreferrer"
                                    title="Ver en Google Maps: {{ item.address }}">
-                                    <i class="fas fa-map-marker-alt"></i> <!-- Reemplaza con el icono de tu elección -->
+                                    <i class="fas fa-map-marker-alt"></i> 
                                 </a>
                             </td>
                             <td class="px-6 py-4">{{ item.phone }}</td>
@@ -94,7 +91,7 @@
                                 {% if permissions.change_supplier %}
                                     <a href="{% url 'core:supplier_update' item.id %}"
                                        class="text-blue-600 dark:text-blue-500">
-                                        <i class="fa-solid fa-gear"></i>
+                                        <i class="ri-edit-fill"></i>
                                     </a>
                                 {% endif %}
                                 {% if permissions.delete_supplier %}
@@ -169,14 +166,14 @@
         }
 
         function revealDNI(icon) {
-            var dniElement = icon.nextElementSibling; // Obtener el siguiente elemento que contiene el número de cédula
-            dniElement.style.display = 'inline'; // Mostrar el número de cédula
+            var dniElement = icon.nextElementSibling; 
+            dniElement.style.display = 'inline'; 
 
-            icon.style.display = 'none'; // Ocultar el icono de ojo
+            icon.style.display = 'none'; 
 
             setTimeout(function () {
-                dniElement.style.display = 'none'; // Ocultar el número de cédula después de 5 segundos
-                icon.style.display = 'inline'; // Mostrar nuevamente el icono de ojo
+                dniElement.style.display = 'none'; 
+                icon.style.display = 'inline'; 
             }, 5000);
         }
     </script>

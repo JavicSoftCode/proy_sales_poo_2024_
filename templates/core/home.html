@@ -926,7 +926,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // Redirecciona a la página de registro
-                        window.location.href = "{% url 'signup' %}";
+                        window.location.href = "{% url 'security:auth_signup' %}";
                     }
                 });
             } else {

@@ -1,7 +1,7 @@
 {% extends 'components/base.html' %}
 {% load static %}
 {% block content %}
-    <title>{% block title %} {{ title1 }} {% endblock title %}</title>
+    <title>{% block title %} {{ title2 }} {% endblock title %}</title>
 
     <section class="dark:bg-principal"><br>
         <div class="text-center" data-aos="fade" data-aos-delay="200">
@@ -16,10 +16,6 @@
                     {{ title2 }}
                 </h1>
             </div>
-
-            {#          <p class="dark:text-gray-400 text-center mt-6 text-lg font-light">#}
-            {#                Complete el formulario para guardar una nueva categoría.#}
-            {#            </p>#}
 
             <form method="post" enctype="multipart/form-data" class="space-y-6 py-4 mx-4 sm:mx-8 lg:mx-4">
                 {% csrf_token %}
@@ -49,8 +45,6 @@
                         </div>
                     </div>
 
-
-                    <!-- Columna de la derecha -->
                     <div class="p-4 rounded-3xl dark:bg-secundario bg-white flex flex-col justify-center items-center"
                          data-aos="fade-right" data-aos-delay="200">
                         {#                        {% csrf_token %}#}

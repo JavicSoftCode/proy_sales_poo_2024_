@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
     {% load widget_tweaks %}
-    <title>{% block title %} {{ title1 }} {% endblock title %}</title>
+    <title>{% block title %} {{ title2 }} {% endblock title %}</title>
     <section class="dark:bg-principal">
         <div class="text-center" data-aos="fade" data-aos-delay="200">
             <div class="sm:pt-28 lg:pt-24">
@@ -147,7 +147,7 @@
                 '{% if form.logo.value %}'
                     logoSeleccionado.src = "{{ form.logo.value.url }}";
                     '{% else %}'
-                    logoSeleccionado.src = "{% static 'img/logo_default.png' %}";
+                    logoSeleccionado.src = "{% static 'img/default_Company.jpg' %}";
                     '{% endif %}'
             }
         });

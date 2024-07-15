@@ -341,63 +341,135 @@
                         </svg>
                     </button>
                 </div>
+                <style>
 
+                    .icon-container {
+                        position: relative;
+                        display: inline-block;
+                    }
+
+                    .icon-label {
+                        position: absolute;
+                        top: -30px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        background-color: #6875f5;
+                        color: #fff;
+                        padding: 2px 5px;
+                        border-radius: 5px;
+                        opacity: 0;
+                        font-size: 15px;
+                        font-family: "Times New Roman", cursive;
+                        transition: opacity 0.3s ease-out;
+                        pointer-events: none;
+                    }
+
+                    .icon-link:hover .icon-label {
+                        opacity: 1;
+                    }
+
+
+                </style>
                 <!-- Elementos  -->
                 <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
                     <ul id="menu"
                         class="dark:dark:bg-secundario navbar-menu flex flex-col p-4 md:p-0 mt-4 rounded-lg bg-white md:bg-transparent md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:border-gray-700">
                         <li>
-                            <a href="/"
-                               class="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-900 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><i
-                                    class="fa-solid fa-house"></i></a>
+                            <div class="icon-container">
+                                <a href="/"
+                                   class="icon-link block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-900 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><i
+                                        class="fa-solid fa-house" style="color: #ffffff"></i>
+                                    <span class="icon-label">Inicio</span>
+                                </a>
+                            </div>
                         </li>
                         {% if user.is_superuser %}
                             <li>
-                                <a href="{% url 'modulos' %}"
-                                   class="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-900 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                                    <i class="fa-solid fa-puzzle-piece"></i>
-                                </a>
+                                <div class="icon-container">
+                                    <a href="{% url 'modulos' %}" class="icon-link">
+                                        <i class="fa-solid fa-puzzle-piece" style="color: #ffffff"></i>
+                                        <span class="icon-label">Módulos</span>
+                                    </a>
+                                </div>
                             </li>
+
                             <li>
-                                <a href="{% url 'core:company_list' %}"
-                                   class="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-900 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><i
-                                        class="fa-solid fa-briefcase"></i></a>
+                                <div class="icon-container">
+                                    <a href="{% url 'core:company_list' %}" class="icon-link">
+                                        <i class="fa-solid fa-briefcase" style="color: #ffffff"></i>
+                                        <span class="icon-label">Empresas</span>
+                                    </a>
+                                </div>
                             </li>
+
                             <li>
-                                <a href="{% url 'core:customer_list' %}"
-                                   class="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-900 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><i
-                                        class="fa-solid fa-users"></i></a>
+                                <div class="icon-container">
+                                    <a href="{% url 'core:customer_list' %}" class="icon-link">
+                                        <i class="fa-solid fa-users" style="color: #ffffff"></i>
+                                        <span class="icon-label">Clientes</span>
+                                    </a>
+                                </div>
                             </li>
+
                             <li>
-                                <a href="{% url 'core:paymentMethod_list' %}"
-                                   class="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-900 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><i
-                                        class="fa-solid fa-credit-card"></i></a>
+                                <div class="icon-container">
+                                    <a href="{% url 'core:iva_list' %}" class="icon-link">
+                                       <i class="fa-solid fa-percent" style="color: #ffffff"></i>
+                                        <span class="icon-label">Iva</span>
+                                    </a>
+                                </div>
                             </li>
+
                             <li>
-                                <a href="{% url 'core:product_list' %}"
-                                   class="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-900 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><i
-                                        class="fa-solid fa-box-open"></i></a>
+                                <div class="icon-container">
+                                    <a href="{% url 'core:paymentMethod_list' %}" class="icon-link">
+                                        <i class="fa-solid fa-credit-card" style="color: #ffffff"></i>
+                                        <span class="icon-label">Pagos</span>
+                                    </a>
+                                </div>
                             </li>
+
                             <li>
-                                <a href="{% url 'core:category_list' %}"
-                                   class="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-900 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><i
-                                        class="fa-solid fa-list"></i></a>
+                                <div class="icon-container">
+                                    <a href="{% url 'core:product_list' %}" class="icon-link">
+                                        <i class="fa-solid fa-box-open" style="color: #ffffff"></i>
+                                        <span class="icon-label">Productos</span>
+                                    </a>
+                                </div>
                             </li>
+
                             <li>
-                                <a href="{% url 'core:brand_list' %}"
-                                   class="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-900 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><i
-                                        class="fa-solid fa-gem"></i></a>
+                                <div class="icon-container">
+                                    <a href="{% url 'core:category_list' %}" class="icon-link">
+                                        <i class="fa-solid fa-list" style="color: #ffffff"></i>
+                                        <span class="icon-label">Categorías</span>
+                                    </a>
+                                </div>
                             </li>
+
                             <li>
-                                <a href="{% url 'core:supplier_list' %}"
-                                   class="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-900 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><i
-                                        class="fa-solid fa-truck-fast"></i></a>
+                                <div class="icon-container">
+                                    <a href="{% url 'core:brand_list' %}" class="icon-link">
+                                        <i class="fa-solid fa-gem" style="color: #ffffff"></i>
+                                        <span class="icon-label">Marcas</span>
+                                    </a>
+                                </div>
                             </li>
+
+                            <li>
+                                <div class="icon-container">
+                                    <a href="{% url 'core:supplier_list' %}" class="icon-link">
+                                        <i class="fa-solid fa-truck-fast" style="color: #ffffff"></i>
+                                        <span class="icon-label">Proveedores</span>
+                                    </a>
+                                </div>
+                            </li>
+
                         {% endif %}
                         {% if user.is_authenticated and not user.is_superuser %}
                             <li>
-                                <a href="{% url 'security:auth_login' %}"
-                                   class="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-900 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Tienda</a>
+                                <a href="/modulos/"
+                                   class="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-900 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Módulos</a>
                             </li>
                         {% endif %}
                     </ul>

@@ -20,11 +20,6 @@
                 <p class="text-center my-6 font-Tiny5 text-2xl dark:text-gray-400 uppercase">¡Bienvenido de vuelta!<br>
                     Completa el formulario para ingresar a nuestro sistema</p>
 
-{#                <div class="text-center my-4" data-aos="fade-right" data-aos-delay="200">#}
-{#                    <img src="{% static 'img/register/signin.jpg' %}"#}
-{#                         class="block w-20 md:w-64 lg:w-64 mx-auto rounded-full" alt="Signin">#}
-{#                </div>#}
-
                 <div class="flex justify-center items-center">
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
@@ -79,17 +74,7 @@
                 <p class="dark:text-gray-400 text-center mt-3 z-10">¿No tienes una cuenta? <a
                         href="{% url 'security:auth_signup' %}"
                         class="text-blue-600 hover:underline dark:text-blue-300 font-Tiny5 uppercase">Regístrate</a></p>
-                <!-- <svg viewBox="0 0 1024 1024"
-                    class="absolute left-1/2 top-1/2 -z-10 h-[64rem] w-[64rem] -translate-x-1/2 [mask-image:radial-gradient(closest-side,white,transparent)]"
-                    aria-hidden="true" style="pointer-events: none; z-index: -1;">
-                    <circle cx="512" cy="512" r="512" fill="url(#827591b1-ce8c-4110-b064-7cb85a0b1217)" fill-opacity="0.7"></circle>
-                    <defs>
-                        <radialGradient id="827591b1-ce8c-4110-b064-7cb85a0b1217">
-                            <stop stop-color="#3b82f6"></stop>
-                            <stop offset="1" stop-color="#1d4ed8"></stop>
-                        </radialGradient>
-                    </defs>
-                </svg> -->
+         
             </section>
         </div>
     </div>

@@ -7,16 +7,12 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from django.contrib import messages
 from django.db.models import Q
 
-# PAGINATION
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
 
 class PaymentMethodListView(PermissionMixin, ListViewMixin, ListView):
   model = PaymentMethod
   template_name = 'core/paymentMethod/list.html'
   context_object_name = 'paymentMethod'
   permission_required = 'view_paymentMethod'
-  paginate_by = 4
 
   def get_queryset(self):
     q1 = self.request.GET.get('q')
@@ -27,25 +23,25 @@ class PaymentMethodListView(PermissionMixin, ListViewMixin, ListView):
 
     return self.model.objects.filter(query).order_by('id')
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    queryset = self.get_queryset()
-    paginator = Paginator(queryset, self.paginate_by)
-
-    page = self.request.GET.get('page')
-    try:
-      paymentMethod = paginator.page(page)
-    except PageNotAnInteger:
-      paymentMethod = paginator.page(1)
-    except EmptyPage:
-      paymentMethod = paginator.page(paginator.num_pages)
-
-    context['paymentMethod'] = paymentMethod
-    context['title1'] = 'Método de Pago'
-    context['title2'] = 'Consulta del método de pago'
-    context['create_url'] = reverse_lazy('core:paymentMethod_create')
-    context['query'] = self.request.GET.get('q', '')
-    return context
+  # def get_context_data(self, **kwargs):
+  #   context = super().get_context_data(**kwargs)
+  #   queryset = self.get_queryset()
+  #   paginator = Paginator(queryset, self.paginate_by)
+  #
+  #   page = self.request.GET.get('page')
+  #   try:
+  #     paymentMethod = paginator.page(page)
+  #   except PageNotAnInteger:
+  #     paymentMethod = paginator.page(1)
+  #   except EmptyPage:
+  #     paymentMethod = paginator.page(paginator.num_pages)
+  #
+  #   context['paymentMethod'] = paymentMethod
+  #   context['title1'] = 'Método de Pago'
+  #   context['title2'] = 'Consulta del método de pago'
+  #   context['create_url'] = reverse_lazy('core:paymentMethod_create')
+  #   context['query'] = self.request.GET.get('q', '')
+  #   return context
 
 
 class PaymentMethodCreateView(PermissionMixin, CreateViewMixin, CreateView):
@@ -55,12 +51,12 @@ class PaymentMethodCreateView(PermissionMixin, CreateViewMixin, CreateView):
   success_url = reverse_lazy('core:paymentMethod_list')
   permission_required = 'add_paymentMethod'
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['title1'] = 'Crear Método de Pago'
-    context['title2'] = 'Método de Pago'
-    context['back_url'] = self.success_url
-    return context
+  # def get_context_data(self, **kwargs):
+  #   context = super().get_context_data(**kwargs)
+  #   context['title1'] = 'Crear Método de Pago'
+  #   context['title2'] = 'Método de Pago'
+  #   context['back_url'] = self.success_url
+  #   return context
 
   def form_valid(self, form):
     response = super().form_valid(form)
@@ -76,12 +72,12 @@ class PaymentMethodUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   success_url = reverse_lazy('core:paymentMethod_list')
   permission_required = 'change_paymentMethod'
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['title1'] = 'Actualizar Método de Pago'
-    context['title2'] = 'Actualizar Datos Del Método Pago'
-    context['back_url'] = self.success_url
-    return context
+  # def get_context_data(self, **kwargs):
+  #   context = super().get_context_data(**kwargs)
+  #   context['title1'] = 'Actualizar Método de Pago'
+  #   context['title2'] = 'Actualizar Datos Del Método Pago'
+  #   context['back_url'] = self.success_url
+  #   return context
 
   def form_valid(self, form):
     response = super().form_valid(form)
@@ -100,12 +96,12 @@ class PaymentMethodDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
     super().__init__(*args, **kwargs)
     self.object = None
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['title'] = 'Eliminar Método de Pago'
-    context['description'] = f"¿Desea eliminar el método de pago: {self.object.description}?"
-    context['back_url'] = self.success_url
-    return context
+  # def get_context_data(self, **kwargs):
+  #   context = super().get_context_data(**kwargs)
+  #   context['title'] = 'Eliminar Método de Pago'
+  #   context['description'] = f"¿Desea eliminar el método de pago: {self.object.description}?"
+  #   context['back_url'] = self.success_url
+  #   return context
 
   def delete(self, request, *args, **kwargs):
     self.object = self.get_object()

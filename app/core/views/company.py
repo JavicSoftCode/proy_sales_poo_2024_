@@ -13,7 +13,6 @@ class CompanyListView(PermissionMixin, ListViewMixin, ListView):
     template_name = 'core/company/list.html'
     context_object_name = 'company'
     permission_required = 'view_company'
-    paginate_by = 4
 
     def get_queryset(self):
         q = self.request.GET.get('q')
@@ -24,26 +23,26 @@ class CompanyListView(PermissionMixin, ListViewMixin, ListView):
 
         return queryset
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        queryset = self.get_queryset()
-
-        paginator = Paginator(queryset, self.paginate_by)
-
-        page = self.request.GET.get('page')
-        try:
-            companies = paginator.page(page)
-        except PageNotAnInteger:
-            companies = paginator.page(1)
-        except EmptyPage:
-            companies = paginator.page(paginator.num_pages)
-
-        context['companies'] = companies
-        context['title1'] = 'Compañías'
-        context['title2'] = 'Consulta de Compañías'
-        context['create_url'] = reverse_lazy('core:company_create')
-        context['query'] = self.request.GET.get('q', '')
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     queryset = self.get_queryset()
+    #
+    #     paginator = Paginator(queryset, self.paginate_by)
+    #
+    #     page = self.request.GET.get('page')
+    #     try:
+    #         companies = paginator.page(page)
+    #     except PageNotAnInteger:
+    #         companies = paginator.page(1)
+    #     except EmptyPage:
+    #         companies = paginator.page(paginator.num_pages)
+    #
+    #     context['companies'] = companies
+    #     context['title1'] = 'Compañías'
+    #     context['title2'] = 'Consulta de Compañías'
+    #     context['create_url'] = reverse_lazy('core:company_create')
+    #     context['query'] = self.request.GET.get('q', '')
+    #     return context
 
 
 class CompanyCreateView(PermissionMixin, CreateViewMixin, CreateView):
@@ -53,12 +52,12 @@ class CompanyCreateView(PermissionMixin, CreateViewMixin, CreateView):
     success_url = reverse_lazy('core:company_list')
     permission_required = 'add_company'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title1'] = 'Crear Compañía'
-        context['title2'] = 'Compañía'
-        context['back_url'] = self.success_url
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['title1'] = 'Crear Compañía'
+    #     context['title2'] = 'Compañía'
+    #     context['back_url'] = self.success_url
+    #     return context
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -74,12 +73,12 @@ class CompanyUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
     success_url = reverse_lazy('core:company_list')
     permission_required = 'change_company'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title1'] = 'Actualizar Compañía'
-        context['title2'] = 'Actualizar Datos de la Compañía'
-        context['back_url'] = self.success_url
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['title1'] = 'Actualizar Compañía'
+    #     context['title2'] = 'Actualizar Datos de la Compañía'
+    #     context['back_url'] = self.success_url
+    #     return context
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -94,12 +93,16 @@ class CompanyDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
     success_url = reverse_lazy('core:company_list')
     permission_required = 'delete_company'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Eliminar Compañía'
-        context['description'] = f"¿Desea eliminar la compañía: {self.object.name}?"
-        context['back_url'] = self.success_url
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['title'] = 'Eliminar Compañía'
+    #     context['description'] = f"¿Desea eliminar la compañía: {self.object.name}?"
+    #     context['back_url'] = self.success_url
+    #     return context
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.object = None
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()

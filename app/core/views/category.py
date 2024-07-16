@@ -22,29 +22,6 @@ class CategoryListView(PermissionMixin, ListViewMixin, ListView):
 
     return self.model.objects.filter(query).order_by('id')
 
-<<<<<<< HEAD
-=======
-  # def get_context_data(self, **kwargs):
-  #   context = super().get_context_data(**kwargs)
-  #   queryset = self.get_queryset()
-  #   paginator = Paginator(queryset, self.paginate_by)
-  #
-  #   page = self.request.GET.get('page')
-  #   try:
-  #     categories = paginator.page(page)
-  #   except PageNotAnInteger:
-  #     categories = paginator.page(1)
-  #   except EmptyPage:
-  #     categories = paginator.page(paginator.num_pages)
-  #
-  #   context['categories'] = categories
-  #   context['title1'] = 'Categorias'
-  #   context['title2'] = 'Consulta de Categorias'
-  #   context['create_url'] = reverse_lazy('core:category_create')
-  #   context['query'] = self.request.GET.get('q', '')
-  #   return context
-
->>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
 
 class CategoryCreateView(PermissionMixin, CreateViewMixin, CreateView):
   model = Category
@@ -53,16 +30,6 @@ class CategoryCreateView(PermissionMixin, CreateViewMixin, CreateView):
   success_url = reverse_lazy('core:category_list')
   permission_required = 'add_category'
 
-<<<<<<< HEAD
-=======
-  # def get_context_data(self, **kwargs):
-  #   context = super().get_context_data(**kwargs)
-  #   context['title1'] = 'Crear Categoria'
-  #   context['title2'] = 'Categoria'
-  #   context['back_url'] = self.success_url
-  #   return context
-
->>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
   def form_valid(self, form):
     response = super().form_valid(form)
     category = self.object
@@ -77,16 +44,6 @@ class CategoryUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   success_url = reverse_lazy('core:category_list')
   permission_required = 'change_category'
 
-<<<<<<< HEAD
-=======
-  # def get_context_data(self, **kwargs):
-  #   context = super().get_context_data(**kwargs)
-  #   context['title1'] = 'Actualizar Categoría'
-  #   context['title2'] = 'Actualizar Datos De Categoría'
-  #   context['back_url'] = self.success_url
-  #   return context
-
->>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
   def form_valid(self, form):
     response = super().form_valid(form)
     category = self.object
@@ -104,16 +61,6 @@ class CategoryDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
     super().__init__(*args, **kwargs)
     self.object = None
 
-<<<<<<< HEAD
-=======
-  # def get_context_data(self, **kwargs):
-  #   context = super().get_context_data(**kwargs)
-  #   context['title'] = 'Eliminar Marca'
-  #   context['description'] = f"¿Desea eliminar la marca: {self.object.description}?"
-  #   context['back_url'] = self.success_url
-  #   return context
-
->>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
   def delete(self, request, *args, **kwargs):
     self.object = self.get_object()
     success_message = f"Éxito al eliminar la categoría {self.object.description}."

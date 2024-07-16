@@ -28,12 +28,9 @@ class SupplierForm(ModelForm):
       "name": {
         "unique": "Ya existe un proveedor con este nombre.",
       },
-<<<<<<< HEAD
       "phone": {
         "unique": "Ya existe un proveedor con este número de teléfono.",
       }
-=======
->>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
     }
     widgets = {
       "name": forms.TextInput(attrs={
@@ -43,11 +40,7 @@ class SupplierForm(ModelForm):
       }),
       "ruc": forms.TextInput(attrs={
         "placeholder": "Ingrese DNI del proveedor",
-<<<<<<< HEAD
         "id": "id_ruc",
-=======
-        "id": "id_ruc",  # DNI nomas esta validado
->>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
         "class": "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light",
       }),
       "address": forms.TextInput(attrs={

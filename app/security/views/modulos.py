@@ -2,11 +2,7 @@ from app.security.instance.menu_module import MenuModule
 from app.security.mixins.mixins import CreateViewMixin, DeleteViewMixin, ListViewMixin, PermissionMixin, UpdateViewMixin
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from django.views.generic import TemplateView
-<<<<<<< HEAD
 from app.security.models import Module, GroupModulePermission
-=======
-from app.security.models import Module
->>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
 from django.urls import reverse_lazy
 from django.db.models import Q
 from app.security.forms.modules import ModuleForm
@@ -19,11 +15,7 @@ from django.http import HttpResponseRedirect
 class ModuloTemplateView(PermissionMixin, TemplateView):
   template_name = 'components/modulos.html'
 
-<<<<<<< HEAD
   def get_context_data(self, **kwargs):
-=======
-  def get_context_data(self, **kwargs):  # agregar datos adicionales
->>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
     context = super().get_context_data(**kwargs)
     context["title1"] = "IC - Modulos"
     context["title2"] = "Modulos Disponibles"
@@ -95,7 +87,3 @@ class ModuleDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
     success_url = self.get_success_url()
     self.object.delete()
     return redirect(success_url)
-<<<<<<< HEAD
-=======
-
->>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6

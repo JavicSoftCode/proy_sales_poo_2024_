@@ -33,7 +33,6 @@ class CompanyForm(ModelForm):
       "dni": {
         "unique": "Ya existe una compañía con este RUC.",
       },
-<<<<<<< HEAD
       "name": {
         "unique": "Ya existe una compañía con este nombre.",
       },
@@ -51,9 +50,6 @@ class CompanyForm(ModelForm):
       },
     }
 
-=======
-    }
->>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
     widgets = {
       "dni": forms.TextInput(attrs={
         "placeholder": "Ingrese RUC",

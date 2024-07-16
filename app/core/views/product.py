@@ -21,29 +21,6 @@ class ProductListView(PermissionMixin, ListViewMixin, ListView):
       query = Q(active=True)
 
     return self.model.objects.filter(query).order_by('id')
-<<<<<<< HEAD
-=======
-
-  # def get_context_data(self, **kwargs):
-  #   context = super().get_context_data(**kwargs)
-  #   queryset = self.get_queryset()
-  #   paginator = Paginator(queryset, self.paginate_by)
-  #
-  #   page = self.request.GET.get('page')
-  #   try:
-  #     products = paginator.page(page)
-  #   except PageNotAnInteger:
-  #     products = paginator.page(1)
-  #   except EmptyPage:
-  #     products = paginator.page(paginator.num_pages)
-  #
-  #   context['brands'] = products
-  #   context['title1'] = 'Productos'
-  #   context['title2'] = 'Consulta de Productos'
-  #   context['create_url'] = reverse_lazy('core:product_create')
-  #   context['query'] = self.request.GET.get('q', '')
-  #   return context
->>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
 
 
 class ProductCreateView(PermissionMixin, CreateViewMixin, CreateView):
@@ -53,16 +30,6 @@ class ProductCreateView(PermissionMixin, CreateViewMixin, CreateView):
   success_url = reverse_lazy('core:product_list')
   permission_required = 'add_product'
 
-<<<<<<< HEAD
-=======
-  # def get_context_data(self, **kwargs):
-  #   context = super().get_context_data(**kwargs)
-  #   context['title1'] = 'Crear Producto'
-  #   context['title2'] = 'Producto'
-  #   context['back_url'] = self.success_url
-  #   return context
-
->>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
   def form_valid(self, form):
     response = super().form_valid(form)
     product = self.object
@@ -77,16 +44,6 @@ class ProductUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   success_url = reverse_lazy('core:product_list')
   permission_required = 'change_product'
 
-<<<<<<< HEAD
-=======
-  # def get_context_data(self, **kwargs):
-  #   context = super().get_context_data(**kwargs)
-  #   context['title1'] = 'Actualizar Producto'
-  #   context['title2'] = 'Actualizar Datos Del Producto'
-  #   context['back_url'] = self.success_url
-  #   return context
-
->>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
   def form_valid(self, form):
     response = super().form_valid(form)
     product = self.object
@@ -104,16 +61,6 @@ class ProductDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
     super().__init__(*args, **kwargs)
     self.object = None
 
-<<<<<<< HEAD
-=======
-  # def get_context_data(self, **kwargs):
-  #   context = super().get_context_data(**kwargs)
-  #   context['title'] = 'Eliminar Producto'
-  #   context['description'] = f"¿Desea eliminar el producto: {self.object.description}?"
-  #   context['back_url'] = self.success_url
-  #   return context
-
->>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
   def delete(self, request, *args, **kwargs):
     self.object = self.get_object()
     success_message = f"Éxito al eliminar el producto {self.object.description}."

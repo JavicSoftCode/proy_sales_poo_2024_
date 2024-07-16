@@ -31,18 +31,11 @@
                         <form method="GET" action="{% url 'security:group_module_permission_list' %}">
                             <input type="text" name="q" id="table-search"
                                    class="text-center pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-<<<<<<< HEAD
                                    placeholder="Grupo o Módulo" value="{{ request.GET.q }}">
                         </form>
                     </div>
                 </div>
             
-=======
-                                   placeholder="Búsqueda sin límites" value="{{ request.GET.q }}">
-                        </form>
-                    </div>
-                </div>
->>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
                 <!-- Tabla de permisos de grupo -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-center text-lg">
@@ -69,11 +62,7 @@
                                     {% if permissions.change_groupmodulepermission %}
                                         <a href="{% url 'security:group_module_permission_update' item.id %}"
                                            class="text-blue-600 dark:text-blue-500 mr-2">
-<<<<<<< HEAD
                                             <i class="ri-edit-fill"></i> 
-=======
-                                            <i class="ri-edit-fill"></i> <!-- Ícono de editar (lapiz) -->
->>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
                                         </a>
                                     {% endif %}
 
@@ -81,33 +70,11 @@
                                         <a href="#"
                                            class="text-red-600 dark:text-red-500"
                                            onclick="openDeleteModal('{{ item.id }}', '{{ item.group.name }}', '{{ item.module.name  }}')">
-<<<<<<< HEAD
                                             <i class="fa-solid fa-trash"></i>
-=======
-                                            <i class="fa-solid fa-trash"></i> <!-- Ícono de eliminar (basurero) -->
->>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
                                         </a>
                                     {% endif %}
                                 </td>
 
-<<<<<<< HEAD
-=======
-                                {#                                <td class="px-6 py-4">#}
-                                {#                                    {% if permissions.change_groupmodulepermission %}#}
-                                {#                                      <a href="{% url 'security:group_module_permission_update' item.id %}"#}
-                                {#                                          class="text-blue-600 dark:text-blue-500">#}
-                                {#                                          <i class="ri-edit-fill"></i>#}
-                                {#                                      </a>#}
-                                {#                                    {% endif%}  #}
-                                {#                                    {% if permissions.delete_groupmodulepermission %}#}
-                                {#                                      <a href="#"#}
-                                {#                                          class="text-red-600 dark:text-red-500"#}
-                                {#                                          onclick="openDeleteModal('{{ item.id }}', '{{ item.name }}')">#}
-                                {#                                          <i class="fa-solid fa-trash"></i>#}
-                                {#                                      </a>#}
-                                {#                                    {% endif %} #}
-                                {#                                  </td>#}
->>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -151,11 +118,7 @@
                         </a>
                     {% endif %}
                     <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full flex items-center justify-center"
-<<<<<<< HEAD
                        href="{% url 'modulos' %}">
-=======
-                       href="{% url 'home' %}">
->>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
                         <i class="fa-solid fa-house"></i>
                     </a>
                 </div>

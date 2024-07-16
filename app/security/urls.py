@@ -48,9 +48,14 @@ urlpatterns += [
 
                  # URLS de usuarios
                  path('users_list/', user.UsersListView.as_view(), name='users_list'),
+<<<<<<< HEAD
                  path('users/create/', user.UserCreateView.as_view(), name='users_create'),
                  path('users/update/<int:pk>/', user.UserUpdateView.as_view(), name='users_update'),
                  path('users/delete/<int:pk>/', user.UserDeleteView.as_view(), name='users_delete'),
                  path('users/groups/<int:user_id>/', user.UserGroupView.as_view(), name='users_groups'),
+=======
+                 path('users_groups/<int:user_id>/', user.UserGroupView.as_view(), name='user_groups'),
+                 path('users_delete/<int:user_id>/', user.UserDeleteView.as_view(), name='user_delete'),
+>>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
 
                ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

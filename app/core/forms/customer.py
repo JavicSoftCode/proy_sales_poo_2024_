@@ -8,7 +8,11 @@ import datetime
 class CustomerForm(ModelForm):
   image = forms.ImageField(required=False, label="Foto de perfil", widget=FileInput(attrs={
     "class": "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light",
+<<<<<<< HEAD
   })),
+=======
+  }))
+>>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
 
   class Meta:
     model = Customer
@@ -35,19 +39,25 @@ class CustomerForm(ModelForm):
       "email": {
         "unique": "Ya existe un cliente con este correo electrónico.",
       },
+<<<<<<< HEAD
       "phone": {
         "unique": "Ya existe un cliente con este correo electrónico.",
       },
+=======
+>>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
     }
     widgets = {
       "dni": forms.TextInput(attrs={
         "placeholder": "Ingrese DNI",
         "class": "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light",
       }),
+<<<<<<< HEAD
       "date_of_birth": forms.DateInput(attrs={
         'type': 'date',
         'class': 'shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light',
       }),
+=======
+>>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
       "first_name": forms.TextInput(attrs={
         "placeholder": "Ingrese nombres",
         "class": "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light",
@@ -63,6 +73,13 @@ class CustomerForm(ModelForm):
       "gender": forms.Select(choices=(('M', 'Masculino'), ('F', 'Femenino')), attrs={
         "class": "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light",
       }),
+<<<<<<< HEAD
+=======
+      "date_of_birth": forms.DateInput(attrs={
+        "type": "date",
+        "class": "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light",
+      }),
+>>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
       "phone": forms.TextInput(attrs={
         "placeholder": "Ingrese teléfono",
         "class": "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light",

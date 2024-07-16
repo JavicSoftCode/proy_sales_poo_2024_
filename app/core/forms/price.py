@@ -1,7 +1,12 @@
 from django.forms import ModelForm, Select, TextInput, CheckboxInput, DateTimeInput, Textarea, SelectMultiple
 from app.core.models import ProductPrice
+<<<<<<< HEAD
 from django.utils import timezone
 from django import forms
+=======
+from django import forms
+from django.utils import timezone
+>>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
 
 
 class ProductPriceForm(ModelForm):
@@ -11,7 +16,11 @@ class ProductPriceForm(ModelForm):
     labels = {
       'line': 'Línea',
       'category': 'Categoría',
+<<<<<<< HEAD
       'product': 'Producto',
+=======
+      'product': 'Producto Precio',
+>>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
       'type_increment': 'Tipo de Aumento',
       'value': 'Incremento',
       'issue_date': 'Fecha Emisión',
@@ -48,8 +57,11 @@ class ProductPriceForm(ModelForm):
       'observaciones': Textarea(attrs={
         "placeholder": "Ingrese observaciones",
         "id": "id_observaciones",
+<<<<<<< HEAD
         "rows": 5,
         "cols": 10,
+=======
+>>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
         "class": "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light",
       }),
       'active': CheckboxInput(attrs={

@@ -13,7 +13,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # configuration de contexto generic y permisos de botones
 class ListViewMixin(object):
   query = None
-  paginate_by = 2
+  paginate_by = 4
 
   def dispatch(self, request, *args, **kwargs):
     self.query = Q()

@@ -22,13 +22,47 @@ class PaymentMethodListView(PermissionMixin, ListViewMixin, ListView):
 
     return self.model.objects.filter(query).order_by('id')
 
+<<<<<<< HEAD
+=======
+  # def get_context_data(self, **kwargs):
+  #   context = super().get_context_data(**kwargs)
+  #   queryset = self.get_queryset()
+  #   paginator = Paginator(queryset, self.paginate_by)
+  #
+  #   page = self.request.GET.get('page')
+  #   try:
+  #     paymentMethod = paginator.page(page)
+  #   except PageNotAnInteger:
+  #     paymentMethod = paginator.page(1)
+  #   except EmptyPage:
+  #     paymentMethod = paginator.page(paginator.num_pages)
+  #
+  #   context['paymentMethod'] = paymentMethod
+  #   context['title1'] = 'Método de Pago'
+  #   context['title2'] = 'Consulta del método de pago'
+  #   context['create_url'] = reverse_lazy('core:paymentMethod_create')
+  #   context['query'] = self.request.GET.get('q', '')
+  #   return context
+
+>>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
 
 class PaymentMethodCreateView(PermissionMixin, CreateViewMixin, CreateView):
   model = PaymentMethod
   form_class = PaymentMethodForm
   template_name = 'core/paymentMethod/form.html'
   success_url = reverse_lazy('core:paymentMethod_list')
+<<<<<<< HEAD
   permission_required = 'add_paymentmethod'
+=======
+  permission_required = 'add_paymentMethod'
+
+  # def get_context_data(self, **kwargs):
+  #   context = super().get_context_data(**kwargs)
+  #   context['title1'] = 'Crear Método de Pago'
+  #   context['title2'] = 'Método de Pago'
+  #   context['back_url'] = self.success_url
+  #   return context
+>>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
 
   def form_valid(self, form):
     response = super().form_valid(form)
@@ -44,6 +78,16 @@ class PaymentMethodUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   success_url = reverse_lazy('core:paymentMethod_list')
   permission_required = 'change_paymentMethod'
 
+<<<<<<< HEAD
+=======
+  # def get_context_data(self, **kwargs):
+  #   context = super().get_context_data(**kwargs)
+  #   context['title1'] = 'Actualizar Método de Pago'
+  #   context['title2'] = 'Actualizar Datos Del Método Pago'
+  #   context['back_url'] = self.success_url
+  #   return context
+
+>>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
   def form_valid(self, form):
     response = super().form_valid(form)
     PaymentMethod = self.object
@@ -61,6 +105,16 @@ class PaymentMethodDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
     super().__init__(*args, **kwargs)
     self.object = None
 
+<<<<<<< HEAD
+=======
+  # def get_context_data(self, **kwargs):
+  #   context = super().get_context_data(**kwargs)
+  #   context['title'] = 'Eliminar Método de Pago'
+  #   context['description'] = f"¿Desea eliminar el método de pago: {self.object.description}?"
+  #   context['back_url'] = self.success_url
+  #   return context
+
+>>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
   def delete(self, request, *args, **kwargs):
     self.object = self.get_object()
     success_message = f"Éxito al eliminar el método de pago {self.object.description}."

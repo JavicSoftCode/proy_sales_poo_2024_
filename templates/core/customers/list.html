@@ -63,7 +63,12 @@
                             <td class="w-4 p-4">{{ customer.id }}</td>
 
                             <th>
+<<<<<<< HEAD
                                 <img class="mx-auto w-16 h-16 object-contain rounded-2xl" src="{% if customer.image %}{{ customer.image.url }}{% else %}{% static 'img/usuario_anonimo.png' %}{% endif %}"
+=======
+                                <img class="mx-auto w-16 h-16 object-contain rounded-2xl" src="
+                                        {% if customer.image %}{{ customer.image.url }}{% else %}{% static 'img/usuario_anonimo.png' %}{% endif %}"
+>>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
                                      alt="Imagen del cliente">
                             </th>
 
@@ -203,6 +208,7 @@
             document.getElementById('deleteModal').classList.add('hidden');
         }
 
+<<<<<<< HEAD
         function revealDNI(icon) {
             var dniElement = icon.nextElementSibling;
             dniElement.style.display = 'inline';
@@ -215,5 +221,19 @@
             }, 5000);
         }
     </script>
+=======
+            function revealDNI(icon) {
+                var dniElement = icon.nextElementSibling; 
+                dniElement.style.display = 'inline'; 
+
+                icon.style.display = 'none'; 
+
+                setTimeout(function () {
+                    dniElement.style.display = 'none'; 
+                    icon.style.display = 'inline'; 
+                }, 5000);
+            }
+        </script>
+>>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
 
 {% endblock %}

@@ -22,6 +22,28 @@ class SupplierListView(PermissionMixin, ListViewMixin, ListView):
 
     return self.model.objects.filter(query).order_by('id')
 
+<<<<<<< HEAD
+=======
+  # def get_context_data(self, **kwargs):
+  #   context = super().get_context_data(**kwargs)
+  #   queryset = self.get_queryset()
+  #   paginator = Paginator(queryset, self.paginate_by)
+  #
+  #   page = self.request.GET.get('page')
+  #   try:
+  #     suppliers = paginator.page(page)
+  #   except PageNotAnInteger:
+  #     suppliers = paginator.page(1)
+  #   except EmptyPage:
+  #     suppliers = paginator.page(paginator.num_pages)
+  #
+  #   context['suppliers'] = suppliers
+  #   context['create_url'] = reverse_lazy('core:supplier_create')
+  #   context['query'] = self.request.GET.get('q', '')
+  #   return context
+  #
+
+>>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
 
 class SupplierCreateView(PermissionMixin, CreateViewMixin, CreateView):
   model = Supplier
@@ -30,6 +52,16 @@ class SupplierCreateView(PermissionMixin, CreateViewMixin, CreateView):
   success_url = reverse_lazy('core:supplier_list')
   permission_required = 'add_supplier'
 
+<<<<<<< HEAD
+=======
+  # def get_context_data(self, **kwargs):
+  #   context = super().get_context_data()
+  #   context['title1'] = 'Crear Proveedor'
+  #   context['title2'] = 'Proveedor'
+  #   context['back_url'] = self.success_url
+  #   return context
+
+>>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
   def form_valid(self, form):
     response = super().form_valid(form)
     supplier = self.object
@@ -44,6 +76,16 @@ class SupplierUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   success_url = reverse_lazy('core:supplier_list')
   permission_required = 'change_supplier'
 
+<<<<<<< HEAD
+=======
+  # def get_context_data(self, **kwargs):
+  #   context = super().get_context_data()
+  #   context['title1'] = 'Actualizar Proveedor '
+  #   context['title2'] = 'Actualizar Datos del Proveedor '
+  #   context['back_url'] = self.success_url
+  #   return context
+
+>>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
   def form_valid(self, form):
     response = super().form_valid(form)
     supplier = self.object
@@ -61,6 +103,16 @@ class SupplierDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
     super().__init__(*args, **kwargs)
     self.object = None
 
+<<<<<<< HEAD
+=======
+  # def get_context_data(self, **kwargs):
+  #   context = super().get_context_data(**kwargs)
+  #   context['grabar'] = 'Eliminar Proveedor'
+  #   context['description'] = f"¿Desea eliminar al proveedor: {self.object.name}?"
+  #   context['back_url'] = self.success_url
+  #   return context
+
+>>>>>>> 748233b376cadbaee22ab464bb0b0ac354bcffa6
   def delete(self, request, *args, **kwargs):
     self.object = self.get_object()
     success_message = f"Éxito al eliminar lógicamente la marca {self.object.description}."

@@ -1,14 +1,16 @@
 from django.db.models import Q
 from app.security.instance.group_permission import GroupPermission
 from app.security.instance.menu_module import MenuModule
-#
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 
+# PAGINATION
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-# configuracion de contexto generico y permisos de botones
+
+# configuration de contexto generic y permisos de botones
 class ListViewMixin(object):
   query = None
   paginate_by = 2
@@ -38,6 +40,7 @@ class CreateViewMixin(object):
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context['title'] = f'{self.model._meta.verbose_name}'
+    context['title2'] = f' Registrar {self.model._meta.verbose_name}'
     context['permissions'] = self._get_permission_dict_of_group()
     MenuModule(self.request).fill(context)
     return context
@@ -51,6 +54,7 @@ class UpdateViewMixin(object):
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context['title'] = f'{self.model._meta.verbose_name_plural}'
+    context['title2'] = f' Actualizar {self.model._meta.verbose_name}'
     context['permissions'] = self._get_permission_dict_of_group()
     MenuModule(self.request).fill(context)
 

@@ -98,7 +98,7 @@ class GroupModulePermission(models.Model):
 
 
 class User(AbstractUser):
-  dni = models.CharField(verbose_name='Cédula o RUC', max_length=13, blank=True, null=True)
+  dni = models.CharField(verbose_name='Cédula o RUC', max_length=13, blank=True, null=True, unique=True)
   image = models.ImageField(
     verbose_name='Archive image',
     upload_to='users/',

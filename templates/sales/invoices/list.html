@@ -145,7 +145,7 @@
     <script>
         function openDeleteModal(id, name) {
             const deleteForm = document.getElementById('deleteForm');
-            deleteForm.action = `{% url 'sales:sales_delete' %}`.replace('0', id);  // le quite el CERO antes -->>>   ----  'sales:sales_delete' 0 ---- 
+            deleteForm.action = `{% url 'sales:sales_delete' 0 %}`.replace('0', id);  // le quite el CERO antes -->>>   ----  'sales:sales_delete' 0 ---- 
             document.getElementById('Description').textContent = `ID: ${id} - ${name}`;
             document.getElementById('deleteModal').classList.remove('hidden');
         }

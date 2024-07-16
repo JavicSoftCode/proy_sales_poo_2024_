@@ -11,18 +11,18 @@ d.addEventListener('DOMContentLoaded', function (e) {
   let $form = d.getElementById("formSale")
   let detailSale = []
   let sub=0
-  // if (detail_hours.length > 0) {
-  //   detailOvertime = detail_hours.map(item => {
-  //     const { id: idHour, des: description, fac: factor, nh, vh: value } = item
-  //     return { idHour, description, factor, nh, value }
-  //   })
-  //   present()
-  //   totals()
-  // }
+  if (detail_hours.length > 0) {
+    detailOvertime = detail_hours.map(item => {
+      const { id: idHour, des: description, fac: factor, nh, vh: value } = item
+      return { idHour, description, factor, nh, value }
+    })
+    present()
+    totals()
+  }
   // Declaracion de metodos
   // ---------- calcula el sobretiempo y lo añade al arreglo detailOvertime[] ----------
   const calculation = (id,description, iva,price,quantify) => {
-    const product = detailSale.find(prod => prod.id == id)
+    const product = detailSale.find(prod => prod.id === id)
     if (product) {
       if (!confirm(`¿Ya existe ingresado ${product.description} =>  Desea actualizarlo?`)) return
       quantify  += product.quantify

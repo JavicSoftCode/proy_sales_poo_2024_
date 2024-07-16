@@ -7,22 +7,29 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
-from proy_sales.utils import phone_regex, valida_cedula, valida_numero_flotante_positivo, valida_numero_entero_positivo
+from proy_sales.utils import phone_regex, valida_cedula, valida_numero_flotante_positivo, valida_numero_entero_positivo, \
+  ecuador_landline_regex, valida_ruc, generate_random_authorization_number, generate_establishment_code, \
+  validate_date_of_birth, validate_expiration_date,  get_current_datetime
+from django.core.validators import RegexValidator, EmailValidator, URLValidator
 import os
 
 
 class Company(models.Model):
-  dni = models.CharField(verbose_name='RUC', max_length=13, blank=True, null=True)
-  name = models.CharField(verbose_name='Empresa', max_length=50)
+  dni = models.CharField(verbose_name='RUC', max_length=13, blank=True, null=True, validators=[valida_ruc], unique=True)
+  name = models.CharField(verbose_name='Empresa', max_length=50, unique=True)
   address = models.CharField(verbose_name='Dirección', max_length=200, blank=True, null=True)
   representative = models.CharField(verbose_name='Responsable', max_length=50, blank=True, null=True)
-  landline = models.CharField(verbose_name='Teléfono Fijo', max_length=10, blank=True, null=True)
-  website = models.URLField(verbose_name='Sitio Web', max_length=100, blank=True, null=True)
-  email = models.EmailField(verbose_name='Correo Electrónico', max_length=100, blank=True, null=True)
+  landline = models.CharField(verbose_name='Teléfono Fijo', max_length=15, blank=True, null=True,
+                              validators=[ecuador_landline_regex], unique=True)
+  website = models.URLField(verbose_name='Sitio Web', max_length=100, blank=True, null=True, validators=[URLValidator],
+                            unique=True)
+  email = models.EmailField(verbose_name='Correo Electrónico', max_length=100, blank=True, null=True,
+                            validators=[EmailValidator], unique=True)
   logo = models.ImageField(verbose_name='Logo', upload_to='company/', blank=True, null=True)
   # Campos adicionales para la factura del SRI
   establishment_code = models.CharField(
-    verbose_name='Código de Establecimiento', max_length=3, blank=True, null=True, default='001',
+    unique=True,
+    verbose_name='Código de Establecimiento', max_length=3, blank=True, null=True, default=generate_establishment_code,
     help_text='Código de tres dígitos asignado al establecimiento por el SRI. Para empresas sin sucursales, usar "001".'
   )
   emission_point_code = models.CharField(
@@ -31,7 +38,7 @@ class Company(models.Model):
   )
   authorization_number = models.CharField(
     verbose_name='Número de Autorización', max_length=49, blank=True, null=True,
-    default='12345678901234567890123456789012345678901234567890',
+    default=generate_random_authorization_number,
     help_text='Número de autorización otorgado por el SRI.'
   )
   taxpayer_type = models.CharField(
@@ -50,11 +57,11 @@ class Company(models.Model):
     verbose_name='Código de Actividad Económica', max_length=10, blank=True, null=True, default='1234567890',
     help_text='Código de la actividad económica según el SRI.'
   )
- 
+
   class Meta:
     verbose_name = 'Empresa'
     verbose_name_plural = 'Empresa'
-  
+
   def __str__(self):
     return self.name
 
@@ -90,7 +97,7 @@ class Supplier(models.Model):
   name = models.CharField(verbose_name='Nombres', max_length=100, unique=True)
   ruc = models.CharField(verbose_name='Dni', max_length=10, validators=[valida_cedula], unique=True)
   image = models.ImageField(verbose_name='Imagen', upload_to='suppliers/', blank=True, null=True)
-  phone = models.CharField(verbose_name='Telefono', max_length=10, validators=[phone_regex])
+  phone = models.CharField(verbose_name='Telefono', max_length=15, validators=[phone_regex], unique=True)
   address = models.CharField(verbose_name='Direccion', max_length=200)
   latitude = models.CharField(verbose_name='Latitud', max_length=100)
   longitude = models.CharField(verbose_name='Longitud', max_length=100)
@@ -113,6 +120,8 @@ class Supplier(models.Model):
 class Line(models.Model):
   description = models.CharField(verbose_name='Linea', max_length=100, unique=True)
   image = models.ImageField(verbose_name='Imagen', upload_to='lines/', blank=True, null=True)
+  created = models.DateTimeField(default=timezone.now, editable=False)
+  updated = models.DateTimeField(auto_now=True)
   active = models.BooleanField(verbose_name='Activo', default=True)
 
   class Meta:
@@ -150,8 +159,10 @@ class Category(models.Model):
 
 class Iva(models.Model):
   description = models.CharField(verbose_name='Iva', max_length=100, unique=True)
-  value = models.DecimalField(verbose_name='Porcentaje(%)', max_digits=6, decimal_places=2)
+  value = models.DecimalField(verbose_name='Porcentaje(%)', max_digits=6, decimal_places=2, unique=True)
   image = models.ImageField(verbose_name='Imagen', upload_to='ivas/', blank=True, null=True)
+  created = models.DateTimeField(default=timezone.now, editable=False)
+  updated = models.DateTimeField(auto_now=True)
   active = models.BooleanField(verbose_name='Activo', default=True)
 
   class Meta:
@@ -175,12 +186,12 @@ class ActiveProductManager(models.Manager):
 class Product(models.Model):
   description = models.CharField(verbose_name='Nombre', max_length=100, unique=True, db_index=True)
   brand = models.ForeignKey(Brand, on_delete=models.PROTECT, related_name='product_brands', verbose_name='Marca')
-  cost = models.DecimalField(verbose_name='Costo Producto', max_digits=10, decimal_places=2, default=Decimal('0.0'))
+  cost = models.DecimalField(verbose_name='Costo Producto', max_digits=10, decimal_places=2, validators=[valida_numero_flotante_positivo], default=Decimal('0.0'))
   price = models.DecimalField(verbose_name='Precio', max_digits=10, decimal_places=2,
                               validators=[valida_numero_flotante_positivo])
   stock = models.IntegerField(verbose_name='Stock', default=100, validators=[valida_numero_entero_positivo])
   iva = models.ForeignKey(Iva, on_delete=models.PROTECT, related_name='product_iva', verbose_name='Iva')
-  expiration_date = models.DateTimeField(verbose_name='Caducidad', default=timezone.now() + datetime.timedelta(days=30))
+  expiration_date = models.DateTimeField(verbose_name='Caducidad', default=timezone.now() + datetime.timedelta(days=30), validators=[validate_expiration_date])
   line = models.ForeignKey(Line, on_delete=models.PROTECT, related_name='product_lines', verbose_name='Linea')
   categories = models.ManyToManyField('Category', related_name="products_categories", verbose_name='Categoria')
   image = models.ImageField(verbose_name='Imagen', upload_to='products/', blank=True, null=True)
@@ -234,8 +245,11 @@ class ProductPrice(models.Model):
   type_increment = models.CharField(verbose_name='Tipo de Aumento', max_length=1,
                                     choices=(('P', 'Porcentaje'), ('V', 'Valor Fijo')), default='P')
   value = models.DecimalField(verbose_name='Incremento', default=0, max_digits=11, decimal_places=2)
-  issue_date = models.DateTimeField(verbose_name='Fecha Emision', default=timezone.now, db_index=True)
+  # issue_date = models.DateTimeField(verbose_name='Fecha Emision', default=timezone.now, default=get_current_datetime, db_index=True)
+  issue_date = models.DateTimeField(verbose_name='Fecha Emision', validators=[get_current_datetime], db_index=True)
   observaciones = models.TextField(verbose_name='Obervacion', blank=True, null=True)
+  created = models.DateTimeField(default=timezone.now, editable=False)
+  updated = models.DateTimeField(auto_now=True)
   active = models.BooleanField(verbose_name='Activo', default=True)
 
   class Meta:
@@ -249,6 +263,9 @@ class ProductPrice(models.Model):
 
   def __str__(self):
     return "{} - {:%d-%m-%Y}".format(self.value, self.issue_date)
+
+  def __str__(self):
+    return f"{self.product} - {', '.join([str(cat) for cat in self.category.all()])} - {self.value} - {self.issue_date.strftime('%d-%m-%Y')}"
 
 
 class ProductPriceDetail(models.Model):
@@ -280,15 +297,19 @@ class ProductPriceDetail(models.Model):
 
 
 class Customer(models.Model):
-  dni = models.CharField(verbose_name='Dni', max_length=13, unique=True, blank=True, null=True)
+  dni = models.CharField(verbose_name='Dni', max_length=10, validators=[valida_cedula], unique=True, blank=True,
+                         null=True)
   first_name = models.CharField(verbose_name='Nombres', max_length=50)
   last_name = models.CharField(verbose_name='Apellidos', max_length=50)
   address = models.TextField(verbose_name='Dirección', blank=True, null=True)
   gender = models.CharField(verbose_name='Sexo', max_length=1, choices=(('M', 'Masculino'), ('F', 'Femenino')),
                             default='M')
-  date_of_birth = models.DateField(verbose_name='Fecha Nacimiento', blank=True, null=True)
-  phone = models.CharField(verbose_name='Telefono', max_length=50, blank=True, null=True)
-  email = models.CharField(verbose_name='Correo', max_length=100, blank=True, null=True)
+  date_of_birth = models.DateField(verbose_name='Fecha Nacimiento', blank=True, null=True,
+                                   validators=[validate_date_of_birth])
+  phone = models.CharField(verbose_name='Telefono', max_length=50, blank=True, null=True, validators=[phone_regex],
+                           unique=True)
+  email = models.CharField(verbose_name='Correo', max_length=100, blank=True, null=True, validators=[EmailValidator],
+                           unique=True)
   latitude = models.CharField(verbose_name='Latitud', max_length=100)
   longitude = models.CharField(verbose_name='Longitud', max_length=100)
   image = models.ImageField(verbose_name='Foto', upload_to='customers/', blank=True, null=True)
@@ -320,8 +341,10 @@ class Customer(models.Model):
 
 
 class PaymentMethod(models.Model):
-  description = models.CharField(verbose_name='Metodo de Pago', max_length=100)
+  description = models.CharField(verbose_name='Metodo de Pago', max_length=100, unique=True, )
   image = models.ImageField(verbose_name='Foto', upload_to='paymentmethods/', blank=True, null=True)
+  created = models.DateTimeField(default=timezone.now, editable=False)
+  updated = models.DateTimeField(auto_now=True)
   active = models.BooleanField(verbose_name='Activo', default=True)
 
   class Meta:

@@ -2,8 +2,11 @@
 {% block content %}
     {% load static %}
     <title>{% block title %}{{ title1 }}{% endblock title %}</title>
+
     <section class="dark:bg-principal">
         <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+
+            <!-- Cabecera -->
             <div class="sm:pt-28 lg:pt-24">
                 <div class="flex flex-col items-center justify-center">
                     <span class="rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
@@ -25,16 +28,17 @@
                              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                   stroke-width="2"
-                                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"></path>
                         </svg>
                     </div>
                     <form method="GET" action="{% url 'core:supplier_list' %}">
                         <input type="text" name="q" id="table-search"
                                class="text-center pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                               placeholder="Búsqueda sin límites" value="{{ request.GET.q }}">
+                               placeholder="Dni" value="{{ request.GET.q }}">
                     </form>
                 </div>
             </div>
+        
             <!-- Tabla de proveedores -->
             <div class="overflow-x-auto">
                 <table class="w-full text-center text-lg">
@@ -56,33 +60,46 @@
                     <tbody>
                     {% for item in suppliers %}
                         <tr class="dark:text-gray-400 bg-white border-b dark:bg-[#0b1121] dark:border-secundario hover:bg-gray-50 dark:hover:bg-[#121c33]">
+                           
                             <td class="px-6 py-4">{{ item.id }}</td>
                             <td class="px-6 py-4">
                                 <img class="mx-auto w-16 h-16 object-contain rounded-2xl"
-                                     src="
-                                                 
-                                             
-                                             {% if item.image %}{{ item.image.url }}{% else %}{% static 'img/default_supplier.jpg' %}{% endif %}"
+                                     src=" {% if item.image %}{{ item.image.url }}{% else %}{% static 'img/default_supplier.jpg' %}{% endif %}"
                                      alt="Imagen del proveedor">
                             </td>
+                        
                             <td class="px-2 py-4">
                               <span class="reveal-dni" onclick="revealDNI(this)">
                                 <i class="far fa-eye" style="cursor: pointer"></i>
                                    </span>
                                 <span class="dni-hidden" style="display: none;">{{ item.ruc }}</span>
                             </td>
+                        
                             <td class="px-6 py-4">{{ item.name }}</td>
 
                             <td class="px-2 py-4">
                                 <a href="https://www.google.com/maps/search/?api=1&query={{ item.address }}"
                                    target="_blank" rel="noopener noreferrer"
                                    title="Ver en Google Maps: {{ item.address }}">
-                                    <i class="fas fa-map-marker-alt"></i> <!-- Reemplaza con el icono de tu elección -->
+                                    <i class="fas fa-map-marker-alt"></i> 
                                 </a>
                             </td>
-                            <td class="px-6 py-4">{{ item.phone }}</td>
+                        
+{#                            <td class="px-6 py-4">{{ item.phone }}</td>#}
+                              <td class="px-2 py-4">
+                                <a href="tel:{{ item.phone }}" class="phone-icon"
+                                   title="Llamar por teléfono {{ item.phone }}">
+                                    <i class="fa-solid fa-square-phone"></i>
+                                </a>
+                                <a href="whatsapp://send?phone={{ item.phone }}"
+                                   title="Llamar por WhatsApp {{ item.phone }}" class="phone-icon">
+                                    <i class="fa-brands fa-square-whatsapp"></i>
+                                </a>
+                            </td>
+                        
                             <td class="px-6 py-4">{{ item.latitude }}</td>
                             <td class="px-6 py-4">{{ item.longitude }}</td>
+                         
                             <td class="px-6 py-4">
                                 {% if item.active %}
                                     <i class="fa-solid fa-check text-green-500"></i>
@@ -90,13 +107,15 @@
                                     <i class="fa-solid fas fa-eye-slash text-red-500"></i>
                                 {% endif %}
                             </td>
+                        
                             <td class="px-6 py-4">
                                 {% if permissions.change_supplier %}
                                     <a href="{% url 'core:supplier_update' item.id %}"
                                        class="text-blue-600 dark:text-blue-500">
-                                        <i class="fa-solid fa-gear"></i>
+                                        <i class="ri-edit-fill"></i>
                                     </a>
                                 {% endif %}
+                            
                                 {% if permissions.delete_supplier %}
                                     <a href="#"
                                        class="text-red-600 dark:text-red-500"
@@ -169,14 +188,14 @@
         }
 
         function revealDNI(icon) {
-            var dniElement = icon.nextElementSibling; // Obtener el siguiente elemento que contiene el número de cédula
-            dniElement.style.display = 'inline'; // Mostrar el número de cédula
+            var dniElement = icon.nextElementSibling; 
+            dniElement.style.display = 'inline'; 
 
-            icon.style.display = 'none'; // Ocultar el icono de ojo
+            icon.style.display = 'none'; 
 
             setTimeout(function () {
-                dniElement.style.display = 'none'; // Ocultar el número de cédula después de 5 segundos
-                icon.style.display = 'inline'; // Mostrar nuevamente el icono de ojo
+                dniElement.style.display = 'none'; 
+                icon.style.display = 'inline'; 
             }, 5000);
         }
     </script>

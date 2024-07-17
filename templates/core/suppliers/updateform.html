@@ -104,13 +104,11 @@
                                    class="dark:text-blue-300 font-black uppercase text-lg">{{ form.active.label }}</label>
                             {{ form.active }}
                         </div>
-
                         <div class="flex flex-col md:flex-row justify-center">
                             <button type="submit"
                                     class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full mr-0 md:mr-2 mb-2 md:mb-0 flex items-center">
                                 <i class="fa-solid fa-save mr-2"></i>Guardar
                             </button>
-
                             <a class="bg-red-700 hover:bg-red-800 text-white py-2 px-4 rounded-full flex items-center"
                                href="{% url 'core:supplier_list' %}">
                                 <i class="fa-solid fa-xmark mr-2"></i>Cancelar
@@ -142,7 +140,6 @@
     <!-- Asegúrate de que Leaflet y los estilos necesarios estén cargados -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" integrity="..." crossorigin=""/>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js" integrity="..." crossorigin=""></script>
-
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
           integrity="sha512-1ycn6IcaQQ40/MKB4Imkb9Mnv5b1D2y5fE54G1DibEN5tr4m7Xx69GwpLjtNMte8yu4Z8tfgS1SJz3tkP4X3g=="
@@ -155,40 +152,44 @@
             const addressField = document.getElementById('{{ form.address.id_for_label }}');
             const nameField = document.getElementById('{{ form.name.id_for_label }}');
             const imageField = document.getElementById('{{ form.image.id_for_label }}');
+            const initialLat = {{ object.latitude|default:"-2.129896" }};
+            const initialLng = {{ object.longitude|default:"-79.593256" }};
+            const initialAddress = '{{ object.address|default:"" }}';
+            const initialImageUrl = '{{ object.image.url|default:"{% static 'img/default_supplier.jpg' %}" }}';
 
             let providerName = nameField.value || 'Proveedor';
-            let imageUrl = imageField.value ? URL.createObjectURL(imageField.files[0]) : '{% static "img/default_supplier.jpg" %}';
+            let imageUrl = initialImageUrl;
 
             // Función para actualizar el contenido del popup
             function updatePopupContent(marker, address) {
                 const popupContent = `
-                    <div class="col-md-4">
-                        <div class="card" style="border-radius: 10px;">
-                            <div class="card-header d-flex align-items-center" style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6;">
-                                <img src="${imageUrl}" alt="Imagen del Proveedor" style="width: 50px; height: 50px; border-radius: 5px; margin-left: 10px; float: right" />
-                                <div>
-                                    <strong class="card-title">
-                                        <h2 style="font-weight: bold; margin-bottom: 0;">Proveedor:</h2>
-                                        <span>${providerName}</span>
-                                    </strong>
-                                    <i class="fa fa-user"></i>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="location text-sm-center d-flex align-items-center">
-                                    <div style="margin-left: 10px;">
-                                        <strong>
-                                            <h2 style="font-weight: bold; margin-bottom: 0;">Dirección:</h2>
-                                            <span>${address}</span>
-                                        </strong>
-                                        <i class="fa fa-map-marker"></i>
-                                    </div>
-                                </div>
-                                <hr>
-                            </div>
+            <div class="col-md-4">
+                <div class="card" style="border-radius: 10px;">
+                    <div class="card-header d-flex align-items-center" style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6;">
+                        <img src="${imageUrl}" alt="Imagen del Proveedor" style="width: 50px; height: 50px; border-radius: 5px; margin-left: 10px; float: right" />
+                        <div>
+                            <strong class="card-title">
+                                <h2 style="font-weight: bold; margin-bottom: 0;">Proveedor:</h2>
+                                <span>${providerName}</span>
+                            </strong>
+                            <i class="fa fa-user"></i>
                         </div>
                     </div>
-                `;
+                    <div class="card-body">
+                        <div class="location text-sm-center d-flex align-items-center">
+                            <div style="margin-left: 10px;">
+                                <strong>
+                                    <h2 style="font-weight: bold; margin-bottom: 0;">Dirección:</h2>
+                                    <span>${address}</span>
+                                </strong>
+                                <i class="fa fa-map-marker"></i>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+        `;
                 marker.bindPopup(popupContent, {offset: [0, -30]});
             }
 
@@ -206,7 +207,7 @@
                 if (this.files && this.files[0]) {
                     imageUrl = URL.createObjectURL(this.files[0]);
                 } else {
-                    imageUrl = '{% static "img/default_supplier.jpg" %}';
+                    imageUrl = initialImageUrl;
                 }
                 if (marker) {
                     updatePopupContent(marker, addressField.value);
@@ -216,7 +217,7 @@
 
             const mapElement = document.getElementById('map');
             if (mapElement) {
-                const mapInstance = L.map(mapElement).setView([-2.129896, -79.593256], 14);
+                const mapInstance = L.map(mapElement).setView([initialLat, initialLng], 14);
 
                 // Agrega la capa de mapa (por ejemplo, OpenStreetMap)
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -275,6 +276,17 @@
                         marker.closePopup();
                     }
                 });
+
+                // Añadir el marcador del proveedor actual
+                const icon = L.divIcon({
+                    html: '<i class="fa-solid fa-truck-field" style="font-size: 24px; color: #007bff;"></i>',
+                    className: 'custom-icon',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 30]
+                });
+                marker = L.marker([initialLat, initialLng], {icon: icon, draggable: false}).addTo(mapInstance);
+                updatePopupContent(marker, initialAddress);
+                marker.openPopup();
             }
         });
     </script>

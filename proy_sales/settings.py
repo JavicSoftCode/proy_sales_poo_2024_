@@ -128,7 +128,7 @@ DATE_INPUT_FORMATS = [
 
 #     @ Javic Soft Code
 # Internacionalización y localización
-LANGUAGE_CODE = 'es'  # Cambiar a español
+LANGUAGE_CODE = 'es-ec'  # Cambiar a español
 TIME_ZONE = 'America/Guayaquil'  # Zona horaria de Ecuador
 USE_I18N = True  # Habilitar internacionalización
 USE_TZ = True  # Usar zonas horarias

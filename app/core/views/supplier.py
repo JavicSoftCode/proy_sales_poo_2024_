@@ -9,6 +9,17 @@ from django.shortcuts import render
 import folium
 from folium.plugins import FastMarkerCluster
 
+from django.http import JsonResponse
+
+
+class SupplierSuggestionsView(ListView):
+  def get(self, request, *args, **kwargs):
+    term = request.GET.get('term', '')
+    suggestions = Supplier.objects.filter(ruc__icontains=term).values('ruc', 'name')[
+                  :10]
+    suggestions_list = list(suggestions)
+    return JsonResponse(suggestions_list, safe=False)
+
 
 class SupplierListView(PermissionMixin, ListViewMixin, ListView):
   model = Supplier
@@ -33,6 +44,7 @@ class SupplierListView(PermissionMixin, ListViewMixin, ListView):
     ]
 
     context['locations'] = locations_data
+    context['title1'] = "Proveedores"
     context['encabezado'] = "Todas las ubicaciones de los Proveedores"
     return context
 

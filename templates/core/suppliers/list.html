@@ -1,6 +1,7 @@
 {% extends 'components/base.html' %}
 {% block content %}
     {% load static %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>{% block title %}{{ title1 }}{% endblock title %}</title>
 
     <section class="dark:bg-principal">
@@ -18,164 +19,275 @@
                 </h1>
             </div>
 
+            <!-- Barra de búsqueda original-->
+            {#            <div class="p-4 flex justify-center">#}
+            {#                <label for="table-search" class="sr-only">Search</label>#}
+            {#                <div class="relative mt-1">#}
+            {#                    <div#}
+            {#                            class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">#}
+            {#                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"#}
+            {#                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">#}
+            {#                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"#}
+            {#                                  stroke-width="2"#}
+            {#                                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"></path>#}
+            {#                        </svg>#}
+            {#                    </div>#}
+            {#                    <form method="GET" action="{% url 'core:supplier_list' %}">#}
+            {#                        <input type="text" name="q" id="table-search"#}
+            {#                               class="text-center pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"#}
+            {#                               placeholder="Dni" value="{{ request.GET.q }}">#}
+            {#                    </form>#}
+            {#                </div>#}
+            {#            </div>#}
+
+
             <!-- Barra de búsqueda -->
             <div class="p-4 flex justify-center">
                 <label for="table-search" class="sr-only">Search</label>
                 <div class="relative mt-1">
-                    <div
-                            class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
                         <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                  stroke-width="2"
+                             xmlns="http://www.w3.org/2000/svg"
+                             fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"></path>
                         </svg>
                     </div>
                     <form method="GET" action="{% url 'core:supplier_list' %}">
                         <input type="text" name="q" id="table-search"
                                class="text-center pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                               placeholder="Dni" value="{{ request.GET.q }}">
+                               placeholder="Buscar por DNI" value="{{ request.GET.q }}" autocomplete="off">
                     </form>
                 </div>
             </div>
 
-            <!-- Tabla de proveedores -->
-            <div class="overflow-x-auto">
-                <table class="w-full text-center text-lg" style="width: 50%">
-                    <thead class="uppercase font-Tiny5 bg-gray-50 dark:bg-secundario dark:text-blue-300">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">ID</th>
-                        <th scope="col" class="px-6 py-3">Imagen</th>
-                        <th scope="col" class="px-6 py-3">DNI</th>
-                        <th scope="col" class="px-6 py-3">Nombre</th>
-                        <th scope="col" class="px-6 py-3">Dirección</th>
-                        <th scope="col" class="px-6 py-3">Celular</th>
-                        <th scope="col" class="px-6 py-3">Latitud</th>
-                        <th scope="col" class="px-6 py-3">Longitud</th>
-                        <th scope="col" class="px-6 py-3">Estado</th>
-                        <th scope="col" class="px-6 py-3">Acciones</th>
+            <!-- Contenedor de sugerencias -->
+            <div id="suggestions-container" style="background-color: #050812; border: 3px solid #2D64BD; color :#7D838F"
+                 class="absolute left-1/2 transform -translate-x-1/2 mt-2 z-10 bg-white border border-gray-300 text-gray-900 rounded-lg shadow-lg max-h-80 overflow-y-auto">
+                <!-- Contenido de las sugerencias -->
+            </div>
 
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for item in suppliers %}
-                        <tr class="dark:text-gray-400 bg-white border-b dark:bg-[#0b1121] dark:border-secundario hover:bg-gray-50 dark:hover:bg-[#121c33]">
+        </div>
 
-                            <td class="px-6 py-4">{{ item.id }}</td>
-                            <td class="px-6 py-4">
-                                <img class="mx-auto w-16 h-16 object-contain rounded-2xl"
-                                     src="  {% if item.image %}{{ item.image.url }}{% else %}{% static 'img/default_supplier.jpg' %}{% endif %}"
-                                     alt="Imagen del proveedor">
-                            </td>
+        <!-- Tabla de proveedores -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-center text-lg" style="width: 50%">
+                <thead class="uppercase font-Tiny5 bg-gray-50 dark:bg-secundario dark:text-blue-300">
+                <tr>
+                    <th scope="col" class="px-6 py-3">ID</th>
+                    <th scope="col" class="px-6 py-3">Imagen</th>
+                    <th scope="col" class="px-6 py-3">DNI</th>
+                    <th scope="col" class="px-6 py-3">Nombre</th>
+                    <th scope="col" class="px-6 py-3">Dirección</th>
+                    <th scope="col" class="px-6 py-3">Celular</th>
+                    <th scope="col" class="px-6 py-3">Latitud</th>
+                    <th scope="col" class="px-6 py-3">Longitud</th>
+                    <th scope="col" class="px-6 py-3">Estado</th>
+                    <th scope="col" class="px-6 py-3">Acciones</th>
 
-                            <td class="px-2 py-4">
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in suppliers %}
+                    <tr class="dark:text-gray-400 bg-white border-b dark:bg-[#0b1121] dark:border-secundario hover:bg-gray-50 dark:hover:bg-[#121c33]">
+
+                        <td class="px-6 py-4">{{ item.id }}</td>
+                        <td class="px-6 py-4">
+                            <img class="mx-auto w-16 h-16 object-contain rounded-2xl"
+                                 src=" {% if item.image %}{{ item.image.url }}{% else %}{% static 'img/default_supplier.jpg' %}{% endif %}"
+                                 alt="Imagen del proveedor">
+                        </td>
+
+                        <td class="px-2 py-4">
                               <span class="reveal-dni" onclick="revealDNI(this)">
                                 <i class="far fa-eye" style="cursor: pointer"></i>
                                    </span>
-                                <span class="dni-hidden" style="display: none;">{{ item.ruc }}</span>
-                            </td>
+                            <span class="dni-hidden" style="display: none;">{{ item.ruc }}</span>
+                        </td>
 
-                            <td class="px-6 py-4">{{ item.name }}</td>
+                        <td class="px-6 py-4">{{ item.name }}</td>
 
-                            <td class="px-2 py-4">
-                                <a href="https://www.google.com/maps/search/?api=1&query={{ item.address }}"
-                                   target="_blank" rel="noopener noreferrer"
-                                   title="Ver en Google Maps: {{ item.address }}">
-                                    <i class="fas fa-map-marker-alt"></i>
+                        <td class="px-2 py-4">
+                            <a href="https://www.google.com/maps/search/?api=1&query={{ item.latitude }}, {{ item.longitude }}"
+                               target="_blank" rel="noopener noreferrer"
+                               title="Ver en Google Maps: {{ item.address }}">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </a>
+                        </td>
+
+                        <td class="px-2 py-4">
+                            <a href="tel:{{ item.phone }}" class="phone-icon"
+                               title="Llamar por teléfono {{ item.phone }}">
+                                <i class="fa-solid fa-square-phone"></i>
+                            </a>
+
+                            <a href="whatsapp://send?phone={{ item.phone }}"
+                               title="Llamar por WhatsApp {{ item.phone }}" class="phone-icon">
+                                <i class="fa-brands fa-square-whatsapp"></i>
+                            </a>
+                        </td>
+
+                        <td class="px-6 py-4">{{ item.latitude }}</td>
+                        <td class="px-6 py-4">{{ item.longitude }}</td>
+
+                        <td class="px-6 py-4">
+                            {% if item.active %}
+                                <i class="fa-solid fa-check text-green-500"></i>
+                            {% else %}
+                                <i class="fa-solid fas fa-eye-slash text-red-500"></i>
+                            {% endif %}
+                        </td>
+
+                        <td class="px-6 py-4">
+                            {% if permissions.change_supplier %}
+                                <a href="{% url 'core:supplier_update' item.id %}"
+                                   class="text-blue-600 dark:text-blue-500">
+                                    <i class="ri-edit-fill"></i>
                                 </a>
-                            </td>
+                            {% endif %}
 
-                            <td class="px-2 py-4">
-                                <a href="tel:{{ item.phone }}" class="phone-icon"
-                                   title="Llamar por teléfono {{ item.phone }}">
-                                    <i class="fa-solid fa-square-phone"></i>
+                            {% if permissions.delete_supplier %}
+                                <a href="#"
+                                   class="text-red-600 dark:text-red-500"
+                                   onclick="openDeleteModal('{{ item.id }}', '{{ item.name }}')">
+                                    <i class="fa-solid fa-trash"></i>
                                 </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-                                <a href="whatsapp://send?phone={{ item.phone }}"
-                                   title="Llamar por WhatsApp {{ item.phone }}" class="phone-icon">
-                                    <i class="fa-brands fa-square-whatsapp"></i>
-                                </a>
-                            </td>
+        <!-- Mapa -->
+        <div id="map" style="height: 300px; width: 400px; float: right; margin-top: -15%"></div>
 
-                            <td class="px-6 py-4">{{ item.latitude }}</td>
-                            <td class="px-6 py-4">{{ item.longitude }}</td>
-
-                            <td class="px-6 py-4">
-                                {% if item.active %}
-                                    <i class="fa-solid fa-check text-green-500"></i>
-                                {% else %}
-                                    <i class="fa-solid fas fa-eye-slash text-red-500"></i>
-                                {% endif %}
-                            </td>
-
-                            <td class="px-6 py-4">
-                                {% if permissions.change_supplier %}
-                                    <a href="{% url 'core:supplier_update' item.id %}"
-                                       class="text-blue-600 dark:text-blue-500">
-                                        <i class="ri-edit-fill"></i>
-                                    </a>
-                                {% endif %}
-
-                                {% if permissions.delete_supplier %}
-                                    <a href="#"
-                                       class="text-red-600 dark:text-red-500"
-                                       onclick="openDeleteModal('{{ item.id }}', '{{ item.name }}')">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </a>
-                                {% endif %}
-                            </td>
-                        </tr>
+        <!-- Paginación -->
+        <div class="flex justify-center mt-4">
+            <nav aria-label="Page navigation example">
+                <ul class="inline-flex -space-x-px">
+                    {% if page_obj.has_previous %}
+                        <li>
+                            <a href="?page=1"
+                               class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-[#0b1121] dark:border-secundario dark:text-gray-400 dark:hover:bg-[#121c33] dark:hover:text-white">Anterior</a>
+                        </li>
+                    {% endif %}
+                    {% for num in page_obj.paginator.page_range %}
+                        <li>
+                            <a href="?page={{ num }}"
+                               class="flex items-center justify-center px-3 h-8 leading-tight {% if num == page_obj.number %}text-blue-600 bg-blue-50 border border-gray-300 hover:bg-blue-100 hover:text-blue-700 dark:bg-secundario dark:border-principal dark:text-blue-300{% else %}text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-[#0b1121] dark:border-secundario dark:text-gray-400 dark:hover:bg-[#121c33] dark:hover:text-white{% endif %}">
+                                {{ num }}
+                            </a>
+                        </li>
                     {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                    {% if page_obj.has_next %}
+                        <li>
+                            <a href="?page={{ page_obj.next_page_number }}"
+                               class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-[#0b1121] dark:border-secundario dark:text-gray-400 dark:hover:bg-[#121c33] dark:hover:text-white">Siguiente</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
 
-            <!-- Mapa -->
-            <div id="map" style="height: 300px; width: 400px; float: right; margin-top: -15%"></div>
-
-            <!-- Paginación -->
-            <div class="flex justify-center mt-4">
-                <nav aria-label="Page navigation example">
-                    <ul class="inline-flex -space-x-px">
-                        {% if page_obj.has_previous %}
-                            <li>
-                                <a href="?page=1"
-                                   class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-[#0b1121] dark:border-secundario dark:text-gray-400 dark:hover:bg-[#121c33] dark:hover:text-white">Anterior</a>
-                            </li>
-                        {% endif %}
-                        {% for num in page_obj.paginator.page_range %}
-                            <li>
-                                <a href="?page={{ num }}"
-                                   class="flex items-center justify-center px-3 h-8 leading-tight {% if num == page_obj.number %}text-blue-600 bg-blue-50 border border-gray-300 hover:bg-blue-100 hover:text-blue-700 dark:bg-secundario dark:border-principal dark:text-blue-300{% else %}text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-[#0b1121] dark:border-secundario dark:text-gray-400 dark:hover:bg-[#121c33] dark:hover:text-white{% endif %}">
-                                    {{ num }}
-                                </a>
-                            </li>
-                        {% endfor %}
-                        {% if page_obj.has_next %}
-                            <li>
-                                <a href="?page={{ page_obj.next_page_number }}"
-                                   class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-[#0b1121] dark:border-secundario dark:text-gray-400 dark:hover:bg-[#121c33] dark:hover:text-white">Siguiente</a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </nav>
-            </div>
-
-            <!-- Enlaces adicionales -->
-            <div class="flex flex-col md:flex-row justify-center form-group text-center p-4">
-                {% if permissions.add_supplier %}
-                    <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full mr-0 md:mr-2 mb-2 md:mb-0 flex items-center justify-center"
-                       href="{% url 'core:supplier_create' %}">
-                        <i class="fa-solid fa-plus mr-2"></i> Nuevo Proveedor
-                    </a>
-                {% endif %}
-                <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full flex items-center justify-center"
-                   href="{% url 'home' %}">
-                    <i class="fa-solid fa-house"></i>
+        <!-- Enlaces adicionales -->
+        <div class="flex flex-col md:flex-row justify-center form-group text-center p-4">
+            {% if permissions.add_supplier %}
+                <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full mr-0 md:mr-2 mb-2 md:mb-0 flex items-center justify-center"
+                   href="{% url 'core:supplier_create' %}">
+                    <i class="fa-solid fa-plus mr-2"></i> Nuevo Proveedor
                 </a>
-            </div>
+            {% endif %}
+            <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full flex items-center justify-center"
+               href="{% url 'home' %}">
+                <i class="fa-solid fa-house"></i>
+            </a>
+        </div>
         </div>
     </section>
+
+    {#    script buscador dinamico #}
+    <script>
+        const searchInput = document.getElementById('table-search');
+        const suggestionsContainer = document.getElementById('suggestions-container');
+        const tableRows = document.querySelectorAll('#supplier-table tbody tr');
+
+        searchInput.addEventListener('input', function () {
+            const searchTerm = this.value.trim();
+
+            if (searchTerm === '') {
+                showAllRows(); // Mostrar todas las filas cuando el campo está vacío
+                suggestionsContainer.innerHTML = '';
+                suggestionsContainer.style.display = 'none';
+                return;
+            }
+
+            fetchSuggestions(searchTerm);
+        });
+
+        function fetchSuggestions(searchTerm) {
+            fetch(`/core/supplier-suggestions/?term=${encodeURIComponent(searchTerm)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const suggestionsHTML = data.map(item => `<div class="suggestion-item" style="cursor: pointer;" data-ruc="${item.ruc}">${item.ruc} - ${item.name}</div>`).join('');
+                    suggestionsContainer.innerHTML = suggestionsHTML;
+                    suggestionsContainer.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error al buscar sugerencias de proveedores:', error);
+                    suggestionsContainer.innerHTML = '<div>Error al buscar sugerencias de proveedores.</div>';
+                    suggestionsContainer.style.display = 'block';
+                });
+        }
+
+        function showAllRows() {
+            tableRows.forEach(row => {
+                row.style.display = 'table-row';
+            });
+        }
+
+        // Ocultar el contenedor si se hace clic fuera de él
+        document.addEventListener('click', function (event) {
+            if (!suggestionsContainer.contains(event.target) && event.target !== searchInput) {
+                suggestionsContainer.style.display = 'none';
+            }
+        });
+
+        // Escuchar clics en las sugerencias y actualizar la tabla
+        suggestionsContainer.addEventListener('click', function (event) {
+            if (event.target.classList.contains('suggestion-item')) {
+                const ruc = event.target.getAttribute('data-ruc');
+
+                // Autocompletar el campo de búsqueda con el RUC seleccionado
+                searchInput.value = ruc;
+
+                // Filtrar la tabla para mostrar solo la fila correspondiente
+                let found = false;
+                tableRows.forEach(row => {
+                    const rowData = row.textContent.trim();
+                    if (rowData.includes(ruc)) {
+                        row.style.display = 'table-row'; // Mostrar la fila
+                        found = true;
+                    } else {
+                        row.style.display = 'none'; // Ocultar las otras filas
+                    }
+                });
+
+                // Si no se encontró ninguna fila, mostrar todas
+                if (!found) {
+                    showAllRows();
+                }
+
+                // Ocultar el contenedor de sugerencias después de seleccionar
+                suggestionsContainer.style.display = 'none';
+
+                // Enviar automáticamente la búsqueda
+                searchInput.form.submit();
+            }
+        });
+    </script>
+
 
     <!-- Incluye FontAwesome para los iconos todo esto para que funcione el mapa en la list -->
     <link rel="stylesheet"
@@ -184,7 +296,6 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var map = L.map('map').setView([-2.129896, -79.593256], 13);

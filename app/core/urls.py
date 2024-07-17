@@ -6,6 +6,7 @@ from django.urls import path
 
 app_name = 'core'
 urlpatterns = [
+
                 # URLs de marcas
                 path('brands_list/', brand.BrandListView.as_view(), name='brand_list'),
                 path('brands_create/', brand.BrandCreateView.as_view(), name='brand_create'),
@@ -68,5 +69,7 @@ urlpatterns = [
                 path('supplier_create/', supplier.SupplierCreateView.as_view(), name='supplier_create'),
                 path('supplier_update/<int:pk>/', supplier.SupplierUpdateView.as_view(), name='supplier_update'),
                 path('supplier_delete/<int:pk>/', supplier.SupplierDeleteView.as_view(), name='supplier_delete'),
+
+                path('supplier-suggestions/', supplier.SupplierSuggestionsView.as_view(), name='supplier_suggestions'),
 
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

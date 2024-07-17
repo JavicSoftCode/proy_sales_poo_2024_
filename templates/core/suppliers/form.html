@@ -118,7 +118,7 @@
                         </div>
                     </div>
 
-                    <!-- Columna final -->
+                    <!-- Columna final mapa-->
                     <div class="bg-white dark:bg-secundario rounded-3xl flex flex-col justify-center items-center p-8"
                          data-aos="fade-right" data-aos-delay="200" style="margin-left: 740px">
                         <div class="row">
@@ -139,15 +139,13 @@
         </div>
     </section>
 
-    <!-- Asegúrate de que Leaflet y los estilos necesarios estén cargados -->
+    <!-- Incluye FontAwesome para los iconos todo esto para que funcione el mapa en el form -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" integrity="..." crossorigin=""/>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js" integrity="..." crossorigin=""></script>
-
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
           integrity="sha512-1ycn6IcaQQ40/MKB4Imkb9Mnv5b1D2y5fE54G1DibEN5tr4m7Xx69GwpLjtNMte8yu4Z8tfgS1SJz3tkP4X3g=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const latField = document.getElementById('{{ form.latitude.id_for_label }}');

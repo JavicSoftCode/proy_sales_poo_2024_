@@ -28,14 +28,14 @@
                                       d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"></path>
                             </svg>
                         </div>
-                        <form method="GET" action="{% url 'security:group_module_permission_list' %}">
+                        <form method="GET" action="{% url 'security:groupmodulepermission_list' %}">
                             <input type="text" name="q" id="table-search"
                                    class="text-center pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                                    placeholder="Grupo o Módulo" value="{{ request.GET.q }}">
                         </form>
                     </div>
                 </div>
-            
+
                 <!-- Tabla de permisos de grupo -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-center text-lg">
@@ -60,9 +60,9 @@
                                 </td>
                                 <td class="px-6 py-4 flex justify-between items-center">
                                     {% if permissions.change_groupmodulepermission %}
-                                        <a href="{% url 'security:group_module_permission_update' item.id %}"
+                                        <a href="{% url 'security:groupmodulepermission_update' item.id %}"
                                            class="text-blue-600 dark:text-blue-500 mr-2">
-                                            <i class="ri-edit-fill"></i> 
+                                            <i class="ri-edit-fill"></i>
                                         </a>
                                     {% endif %}
 
@@ -113,7 +113,7 @@
                 <div class="flex flex-col md:flex-row justify-center form-group text-center p-4">
                     {% if permissions.add_groupmodulepermission %}
                         <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full mr-0 md:mr-2 mb-2 md:mb-0 flex items-center justify-center"
-                           href="{% url 'security:group_module_permission_add' %}">
+                           href="{% url 'security:groupmodulepermission_create' %}">
                             <i class="fa-solid fa-plus mr-2"></i> Nuevo permiso de grupo
                         </a>
                     {% endif %}
@@ -130,7 +130,7 @@
     <script>
         function openDeleteModal(id, name, name1) {
             const deleteForm = document.getElementById('deleteForm');
-            deleteForm.action = `{% url 'security:group_module_permission_delete' 0 %}`.replace('0', id);
+            deleteForm.action = `{% url 'security:groupmodulepermission_delete' 0 %}`.replace('0', id);
             document.getElementById('Description').textContent = `ID: ${id} - ${name} - ${name1}`;
             document.getElementById('deleteModal').classList.remove('hidden');
         }

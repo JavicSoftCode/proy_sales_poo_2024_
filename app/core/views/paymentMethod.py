@@ -5,6 +5,20 @@ from app.core.models import PaymentMethod
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.db.models import Q
+from django.shortcuts import render
+from django.http import JsonResponse
+from folium.plugins import FastMarkerCluster
+import folium
+
+
+# vista para el buscadador dinamico
+class PaymentMethodSuggestionsView(ListView):
+  def get(self, request, *args, **kwargs):
+    term = request.GET.get('term', '')
+    suggestions = PaymentMethod.objects.filter(description__icontains=term).values('description', 'active')[
+                  :10]
+    suggestions_list = list(suggestions)
+    return JsonResponse(suggestions_list, safe=False)
 
 
 class PaymentMethodListView(PermissionMixin, ListViewMixin, ListView):
@@ -42,7 +56,7 @@ class PaymentMethodUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   form_class = PaymentMethodForm
   template_name = 'core/paymentMethod/form.html'
   success_url = reverse_lazy('core:paymentMethod_list')
-  permission_required = 'change_paymentMethod'
+  permission_required = 'change_paymentmethod'
 
   def form_valid(self, form):
     response = super().form_valid(form)
@@ -55,7 +69,7 @@ class PaymentMethodDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
   model = PaymentMethod
   template_name = 'core/delete.html'
   success_url = reverse_lazy('core:paymentMethod_list')
-  permission_required = 'delete_paymentMethod'
+  permission_required = 'delete_paymentmethod'
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)

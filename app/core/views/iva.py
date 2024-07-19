@@ -5,6 +5,21 @@ from app.core.models import Iva
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.db.models import Q
+from django.shortcuts import render
+from django.http import JsonResponse
+from folium.plugins import FastMarkerCluster
+import folium
+
+
+# vista para el buscadador dinamico
+class IvaSuggestionsView(ListView):
+  def get(self, request, *args, **kwargs):
+    term = request.GET.get('term', '')
+    suggestions = Iva.objects.filter(
+      Q(description__icontains=term) | Q(value__icontains=term)
+    ).values('description', 'value', 'active')[:10]
+    suggestions_list = list(suggestions)
+    return JsonResponse(suggestions_list, safe=False)
 
 
 class IvaListView(PermissionMixin, ListViewMixin, ListView):

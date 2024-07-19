@@ -159,7 +159,6 @@
             let providerName = nameField.value || 'Proveedor';
             let imageUrl = initialImageUrl;
 
-            // Función para actualizar el contenido del popup
             function updatePopupContent(marker, address) {
                 const popupContent = `
             <div class="col-md-4">
@@ -192,7 +191,6 @@
                 marker.bindPopup(popupContent, {offset: [0, -30]});
             }
 
-            // Actualiza el nombre del proveedor
             nameField.addEventListener('input', function () {
                 providerName = this.value || 'Proveedor';
                 if (marker) {
@@ -201,7 +199,6 @@
                 }
             });
 
-            // Actualiza la URL de la imagen del proveedor
             imageField.addEventListener('change', function () {
                 if (this.files && this.files[0]) {
                     imageUrl = URL.createObjectURL(this.files[0]);
@@ -218,23 +215,19 @@
             if (mapElement) {
                 const mapInstance = L.map(mapElement).setView([initialLat, initialLng], 14);
 
-                // Agrega la capa de mapa (por ejemplo, OpenStreetMap)
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 19,
                 }).addTo(mapInstance);
 
                 let marker;
 
-                // Función para manejar el clic en el mapa
                 function handleMapClick(e) {
                     const lat = e.latlng.lat.toFixed(6);
                     const lng = e.latlng.lng.toFixed(6);
 
-                    // Actualiza los campos de latitud y longitud
                     latField.value = lat;
                     lngField.value = lng;
 
-                    // Elimina el marcador anterior y agrega uno nuevo con el icono de proveedor
                     if (marker) {
                         mapInstance.removeLayer(marker);
                     }
@@ -246,7 +239,6 @@
                     });
                     marker = L.marker(e.latlng, {icon: icon, draggable: false}).addTo(mapInstance);
 
-                    // Obtiene detalles de ubicación usando geocodificación inversa
                     fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
                         .then(response => response.json())
                         .then(data => {
@@ -259,24 +251,20 @@
                         });
                 }
 
-                // Agrega el evento de clic al mapa para manejarlo
                 mapInstance.on('click', handleMapClick);
 
-                // Muestra el popup al pasar el mouse sobre el marcador
-                mapInstance.on('mouseover', function (e) {
+                mapInstance.on('mouseout', function (e) {
                     if (marker) {
                         marker.openPopup();
                     }
                 });
 
-                // Cierra el popup al salir el mouse del marcador
                 mapInstance.on('mouseout', function (e) {
                     if (marker) {
                         marker.closePopup();
                     }
                 });
 
-                // Añadir el marcador del proveedor actual
                 const icon = L.divIcon({
                     html: '<i class="fa-solid fa-truck-field" style="font-size: 24px; color: #007bff;"></i>',
                     className: 'custom-icon',

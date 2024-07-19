@@ -19,28 +19,6 @@
                 </h1>
             </div>
 
-            <!-- Barra de búsqueda original-->
-            {#            <div class="p-4 flex justify-center">#}
-            {#                <label for="table-search" class="sr-only">Search</label>#}
-            {#                <div class="relative mt-1">#}
-            {#                    <div#}
-            {#                            class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">#}
-            {#                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"#}
-            {#                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">#}
-            {#                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"#}
-            {#                                  stroke-width="2"#}
-            {#                                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"></path>#}
-            {#                        </svg>#}
-            {#                    </div>#}
-            {#                    <form method="GET" action="{% url 'core:supplier_list' %}">#}
-            {#                        <input type="text" name="q" id="table-search"#}
-            {#                               class="text-center pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"#}
-            {#                               placeholder="Dni" value="{{ request.GET.q }}">#}
-            {#                    </form>#}
-            {#                </div>#}
-            {#            </div>#}
-
-
             <!-- Barra de búsqueda -->
             <div class="p-4 flex justify-center">
                 <label for="table-search" class="sr-only">Search</label>
@@ -64,14 +42,15 @@
             <!-- Contenedor de sugerencias -->
             <div id="suggestions-container" style="background-color: #050812; border: 3px solid #2D64BD; color :#7D838F"
                  class="absolute left-1/2 transform -translate-x-1/2 mt-2 z-10 bg-white border border-gray-300 text-gray-900 rounded-lg shadow-lg max-h-80 overflow-y-auto">
-                <!-- Contenido de las sugerencias -->
             </div>
-
         </div>
+
+        <!-- Mapa -->
+        <div id="map" style="border-radius: 10px; height: 200px; width: 400px; margin-top: -13.1%"></div>
 
         <!-- Tabla de proveedores -->
         <div class="overflow-x-auto">
-            <table class="w-full text-center text-lg" style="width: 50%">
+            <table class="w-full text-center text-lg">
                 <thead class="uppercase font-Tiny5 bg-gray-50 dark:bg-secundario dark:text-blue-300">
                 <tr>
                     <th scope="col" class="px-6 py-3">ID</th>
@@ -94,7 +73,7 @@
                         <td class="px-6 py-4">{{ item.id }}</td>
                         <td class="px-6 py-4">
                             <img class="mx-auto w-16 h-16 object-contain rounded-2xl"
-                                 src=" {% if item.image %}{{ item.image.url }}{% else %}{% static 'img/default_supplier.jpg' %}{% endif %}"
+                                 src="  {% if item.image %}{{ item.image.url }}{% else %}{% static 'img/default_supplier.jpg' %}{% endif %}"
                                  alt="Imagen del proveedor">
                         </td>
 
@@ -160,9 +139,6 @@
             </table>
         </div>
 
-        <!-- Mapa -->
-        <div id="map" style="height: 300px; width: 400px; float: right; margin-top: -15%"></div>
-
         <!-- Paginación -->
         <div class="flex justify-center mt-4">
             <nav aria-label="Page navigation example">
@@ -204,7 +180,6 @@
                 <i class="fa-solid fa-house"></i>
             </a>
         </div>
-        </div>
     </section>
 
     {#    script buscador dinamico #}
@@ -217,7 +192,7 @@
             const searchTerm = this.value.trim();
 
             if (searchTerm === '') {
-                showAllRows(); // Mostrar todas las filas cuando el campo está vacío
+                showAllRows(); 
                 suggestionsContainer.innerHTML = '';
                 suggestionsContainer.style.display = 'none';
                 return;
@@ -230,13 +205,16 @@
             fetch(`/core/supplier-suggestions/?term=${encodeURIComponent(searchTerm)}`)
                 .then(response => response.json())
                 .then(data => {
-                    const suggestionsHTML = data.map(item => `<div class="suggestion-item" style="cursor: pointer;" data-ruc="${item.ruc}">${item.ruc} - ${item.name}</div>`).join('');
+                    const suggestionsHTML = data.map(item => {
+                        const activeStatus = item.active ? '<i class="fa-solid fa-check text-green-500"></i>' : '<i class="fa-solid fa-square-minus text-red-500"></i>';
+                        return `<div class="suggestion-item" style="cursor: pointer; padding: 5px" data-ruc="${item.ruc}">${item.ruc} - ${item.name}   -    ${activeStatus}</div>`;
+                    }).join('');
                     suggestionsContainer.innerHTML = suggestionsHTML;
                     suggestionsContainer.style.display = 'block';
                 })
                 .catch(error => {
-                    console.error('Error al buscar sugerencias de proveedores:', error);
-                    suggestionsContainer.innerHTML = '<div>Error al buscar sugerencias de proveedores.</div>';
+                    console.error('Error al buscar sugerencias de proveedor:', error);
+                    suggestionsContainer.innerHTML = '<div>Error al buscar sugerencias de proveedor.</div>';
                     suggestionsContainer.style.display = 'block';
                 });
         }
@@ -247,47 +225,39 @@
             });
         }
 
-        // Ocultar el contenedor si se hace clic fuera de él
         document.addEventListener('click', function (event) {
             if (!suggestionsContainer.contains(event.target) && event.target !== searchInput) {
                 suggestionsContainer.style.display = 'none';
             }
         });
 
-        // Escuchar clics en las sugerencias y actualizar la tabla
         suggestionsContainer.addEventListener('click', function (event) {
             if (event.target.classList.contains('suggestion-item')) {
                 const ruc = event.target.getAttribute('data-ruc');
 
-                // Autocompletar el campo de búsqueda con el RUC seleccionado
                 searchInput.value = ruc;
 
-                // Filtrar la tabla para mostrar solo la fila correspondiente
                 let found = false;
                 tableRows.forEach(row => {
                     const rowData = row.textContent.trim();
                     if (rowData.includes(ruc)) {
-                        row.style.display = 'table-row'; // Mostrar la fila
+                        row.style.display = 'table-row'; 
                         found = true;
                     } else {
-                        row.style.display = 'none'; // Ocultar las otras filas
+                        row.style.display = 'none'; 
                     }
                 });
 
-                // Si no se encontró ninguna fila, mostrar todas
                 if (!found) {
                     showAllRows();
                 }
 
-                // Ocultar el contenedor de sugerencias después de seleccionar
                 suggestionsContainer.style.display = 'none';
 
-                // Enviar automáticamente la búsqueda
                 searchInput.form.submit();
             }
         });
     </script>
-
 
     <!-- Incluye FontAwesome para los iconos todo esto para que funcione el mapa en la list -->
     <link rel="stylesheet"
@@ -306,14 +276,12 @@
 
             var locations = {{ locations|safe }};
 
-            // Define el ícono personalizado utilizando FontAwesome y el color deseado
             var truckIcon = L.divIcon({
                 html: '<i class="fa-solid fa-truck-field fa-lg" style="color: #007BFF; font-size: 25px"></i>',
                 iconSize: [20, 20],
                 className: 'truck-icon'
             });
 
-            // Añadir marcadores al mapa con el ícono personalizado y popup
             locations.forEach(location => {
                 var popupContent = `
                 <div class="col-md-4 popup">
@@ -338,7 +306,10 @@
                                                 <h2 style="font-weight: bold; margin-bottom: 0;">Longitud:</h2>
                                                 <span>${location.longitude}</span>
                                             </strong>
-                                            <i class="fa fa-map-marker" style="margin-left: 10px;"></i>
+                                            <a href="https://www.google.com/maps/search/?api=1&query=${location.latitude}, ${location.longitude}"
+                                                 target="_blank" rel="noopener noreferrer">
+                                                 <i class="fas fa-map-marker-alt" style="color:red"></i>
+                                            </a>
                                         </div>
                                     </div>
                                     <hr>

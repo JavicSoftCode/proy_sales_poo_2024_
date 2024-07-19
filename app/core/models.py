@@ -18,8 +18,10 @@ class Company(models.Model):
   dni = models.CharField(verbose_name='RUC', max_length=13, blank=True, null=True, validators=[valida_ruc], unique=True)
   name = models.CharField(verbose_name='Empresa', max_length=50, unique=True)
   address = models.CharField(verbose_name='Dirección', max_length=200, blank=True, null=True)
+  latitude = models.CharField(verbose_name='Latitud', max_length=100, default='0.0')
+  longitude = models.CharField(verbose_name='Longitud', max_length=100, default='0.0')
   representative = models.CharField(verbose_name='Responsable', max_length=50, blank=True, null=True)
-  landline = models.CharField(verbose_name='Teléfono Fijo', max_length=15, blank=True, null=True,
+  landline = models.CharField(verbose_name='Teléfono Fijo', max_length=14, blank=True, null=True,
                               validators=[ecuador_landline_regex], unique=True)
   website = models.URLField(verbose_name='Sitio Web', max_length=100, blank=True, null=True, validators=[URLValidator],
                             unique=True)

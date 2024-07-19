@@ -51,6 +51,7 @@
             font-family: "Times New Roman", cursive;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>{% block title %} {{ title1 }} {% endblock title %}</title>
 
     <section class="dark:bg-principal">
@@ -74,7 +75,8 @@
                 <div class="relative mt-1">
                     <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
                         <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                             xmlns="http://www.w3.org/2000/svg"
+                             fill="none" viewBox="0 0 20 20">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"></path>
                         </svg>
@@ -82,129 +84,138 @@
                     <form method="GET" action="{% url 'core:company_list' %}">
                         <input type="text" name="q" id="table-search"
                                class="text-center pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                               placeholder="Ruc o Nombre Empresa" value="{{ request.GET.q }}">
+                               placeholder="Buscar Ruc o Empresa" value="{{ request.GET.q }}" autocomplete="off">
                     </form>
                 </div>
             </div>
 
-            <!-- Tabla -->
-            <div class="overflow-x-auto">
-                <table class="w-full text-center text-lg">
-                    <thead class="uppercase font-Tiny5 bg-gray-50 dark:bg-secundario dark:text-blue-300">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">ID</th>
-                        <th scope="col" class="px-6 py-3">Logo</th>
-                        <th scope="col" class="px-6 py-3">Ruc</th>
-                        <th scope="col" class="px-6 py-3">Empresa</th>
-                        <th scope="col" class="px-6 py-3">Dirección</th>
-                        <th scope="col" class="px-6 py-3">Responsable</th>
-                        <th scope="col" class="px-6 py-3">Tel.</th>
-                        <th scope="col" class="px-6 py-3">Web</th>
-                        <th scope="col" class="px-6 py-3">Email</th>
-                        <th scope="col" class="px-6 py-3">Código Est.</th>
-                        <th scope="col" class="px-6 py-3">Código P. Emisión</th>
-                        <th scope="col" class="px-6 py-3">N. de Autorización</th>
-                        <th scope="col" class="px-6 py-3">Tipo de Contribuyente</th>
-                        <th scope="col" class="px-6 py-3">Llevar Contabilidad</th>
-                        <th scope="col" class="px-6 py-3">Código Act. Económica</th>
-                        <th scope="col" class="px-6 py-3">Opc.</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for company in company %}
-                        <tr class="dark:text-gray-400 bg-white border-b dark:bg-[#0b1121] dark:border-secundario hover:bg-gray-50 dark:hover:bg-[#121c33]">
-
-                            <td class="w-4 p-4">{{ company.id }}</td>
-
-                            <td>
-                                <img class="mx-auto w-16 h-16 object-contain rounded-2xl"
-                                     src="{% if company.logo %}{{ company.logo.url }}{% else %}{% static 'img/default_company.jpg' %}{% endif %}"
-                                     alt="Logo de la empresa">
-                            </td>
-
-                            <td class="px-2 py-4">
-                              <span class="reveal-dni" onclick="revealDNI(this)">
-                                <i class="fa-solid fa-eye" style="cursor: pointer" title="Cédula {{ company.dni }}"></i>
-                                   </span>
-                                <span class="dni-hidden" style="display: none;">{{ company.dni }}</span>
-                            </td>
-
-                            <td class="px-2 py-4">{{ company.name }}</td>
-
-                            <td class="px-2 py-4">
-                                <a href="https://www.google.com/maps/search/?api=1&query={{ company.address }}"
-                                   target="_blank" rel="noopener noreferrer"
-                                   title="Ver en Google Maps: {{ company.address }}">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                </a>
-                            </td>
-
-                            <td class="px-2 py-4">{{ company.representative }}</td>
-
-                            <td class="px-2 py-4">
-                                <a href="tel:{{ company.landline }}" title="Número Fijo: {{ company.landline }}">
-                                    <i class="fa-solid fa-square-phone"></i>
-                                </a>
-                            </td>
-
-                            <td class="px-2 py-4">
-                                <a href="{{ company.website }}" title="{{ company.address }}"target="_blank" rel="noopener noreferrer">
-                                    <i class="fas fa-globe"></i>
-                                </a>
-                            </td>
-
-                            <td class="px-2 py-4">
-                                <a href="https://mail.google.com/mail/?view=cm&to={{ company.email }}" target="_blank"
-                                   rel="noopener noreferrer"
-                                   title="{{ company.email }}">
-                                    <i class="fas fa-envelope"></i>
-                                </a>
-                            </td>
-
-                            <td class="px-2 py-4">{{ company.establishment_code }}</td>
-                            <td class="px-2 py-4">{{ company.emission_point_code }}</td>
-
-                            <td class="px-2 py-4">
-                                <span class="authorization-icon"
-                                      onclick="openAuthorizationModal('{{ company.authorization_number }}')">
-                                <i class="fas fa-info-circle" style="color: #9CA3AF" title="{{ company.authorization_number }}"></i>
-                                </span>
-                            </td>
-
-                            <td class="px-2 py-4">{{ company.get_taxpayer_type_display }}</td>
-                            <td class="px-2 py-4">{{ company.economic_activity_code }}</td>
-
-                            <td class="px-6 py-4">
-                                {% if company.required_to_keep_accounting %}
-                                    <i class="fa-solid fa-check text-green-500"></i>
-                                {% else %}
-                                    <i class="fa-solid fa-square-minus text-red-500"></i>
-                                {% endif %}
-                            </td>
-
-                            <td class="px-6 py-4">
-                                {% if permissions.change_company %}
-                                    <a href="{% url 'core:company_update' company.id %}"
-                                       class="text-blue-600 dark:text-blue-500 inline-block mr-2">
-                                        <i class="ri-edit-fill"></i>
-                                    </a>
-                                {% endif %}
-                            
-                                {% if permissions.delete_company %}
-                                    <button class="text-red-600 dark:text-red-500 inline-block"
-                                            onclick="openDeleteModal('{{ company.id }}', '{{ company.name }}')">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                {% endif %}
-                            </td>
-
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+            <!-- Contenedor de sugerencias -->
+            <div id="suggestions-container" style="background-color: #050812; border: 3px solid #2D64BD; color :#7D838F"
+                 class="absolute left-1/2 transform -translate-x-1/2 mt-2 z-10 bg-white border border-gray-300 text-gray-900 rounded-lg shadow-lg max-h-80 overflow-y-auto">
             </div>
         </div>
+    
+        <!-- Mapa -->
+        <div id="map" style="border-radius: 10px; height: 200px; width: 400px; float: right; margin-top: -13.1%"></div>
 
+        <!-- Tabla -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-center text-lg">
+                <thead class="uppercase font-Tiny5 bg-gray-50 dark:bg-secundario dark:text-blue-300">
+                <tr>
+                    <th scope="col" class="px-6 py-3">ID</th>
+                    <th scope="col" class="px-6 py-3">Logo</th>
+                    <th scope="col" class="px-6 py-3">Ruc</th>
+                    <th scope="col" class="px-6 py-3">Empresa</th>
+                    <th scope="col" class="px-6 py-3">Dirección</th>
+                    <th scope="col" class="px-6 py-3">Responsable</th>
+                    <th scope="col" class="px-6 py-3">Tel.</th>
+                    <th scope="col" class="px-6 py-3">Web</th>
+                    <th scope="col" class="px-6 py-3">Email</th>
+                    <th scope="col" class="px-6 py-3">Código Est.</th>
+                    <th scope="col" class="px-6 py-3">Código P. Emisión</th>
+                    <th scope="col" class="px-6 py-3">N. de Autorización</th>
+                    <th scope="col" class="px-6 py-3">Tipo de Contribuyente</th>
+                    <th scope="col" class="px-6 py-3">Llevar Contabilidad</th>
+                    <th scope="col" class="px-6 py-3">Código Act. Económica</th>
+                    <th scope="col" class="px-6 py-3">Opc.</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in company %}
+                    <tr class="dark:text-gray-400 bg-white border-b dark:bg-[#0b1121] dark:border-secundario hover:bg-gray-50 dark:hover:bg-[#121c33]">
+
+                        <td class="w-4 p-4">{{ item.id }}</td>
+
+                        <td>
+                            <img class="mx-auto w-16 h-16 object-contain rounded-2xl"
+                                 src="{% if item.logo %}{{ item.logo.url }}{% else %}{% static 'img/default_company.jpg' %}{% endif %}"
+                                 alt="Logo de la empresa">
+                        </td>
+
+                        <td class="px-2 py-4">
+                              <span class="reveal-dni" onclick="revealDNI(this)">
+                                <i class="fa-solid fa-eye" style="cursor: pointer" title="Cédula {{ item.dni }}"></i>
+                                   </span>
+                            <span class="dni-hidden" style="display: none;">{{ item.dni }}</span>
+                        </td>
+
+                        <td class="px-2 py-4">{{ item.name }}</td>
+
+                        <td class="px-2 py-4">
+                            <a href="https://www.google.com/maps/search/?api=1&query={{ item.latitude }}, {{ item.longitude }}"
+                               target="_blank" rel="noopener noreferrer"
+                               title="Ver en Google Maps: {{ item.address }}">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </a>
+                        </td>
+
+                        <td class="px-2 py-4">{{ item.representative }}</td>
+
+                        <td class="px-2 py-4">
+                            <a href="tel:{{ item.landline }}" title="Número Fijo: {{ item.landline }}">
+                                <i class="fa-solid fa-square-phone"></i>
+                            </a>
+                        </td>
+
+                        <td class="px-2 py-4">
+                            <a href="{{ item.website }}" title="{{ item.address }}" target="_blank"
+                               rel="noopener noreferrer">
+                                <i class="fas fa-globe"></i>
+                            </a>
+                        </td>
+
+                        <td class="px-2 py-4">
+                            <a href="https://mail.google.com/mail/?view=cm&to={{ item.email }}" target="_blank"
+                               rel="noopener noreferrer"
+                               title="{{ item.email }}">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </td>
+
+                        <td class="px-2 py-4">{{ item.establishment_code }}</td>
+                        <td class="px-2 py-4">{{ item.emission_point_code }}</td>
+
+                        <td class="px-2 py-4">
+                                <span class="authorization-icon"
+                                      onclick="openAuthorizationModal('{{ item.authorization_number }}')">
+                                <i class="fas fa-info-circle" style="color: #9CA3AF"
+                                   title="{{ item.authorization_number }}"></i>
+                                </span>
+                        </td>
+
+                        <td class="px-2 py-4">{{ item.get_taxpayer_type_display }}</td>
+                        <td class="px-2 py-4">{{ item.economic_activity_code }}</td>
+
+                        <td class="px-6 py-4">
+                            {% if item.required_to_keep_accounting %}
+                                <i class="fa-solid fa-check text-green-500"></i>
+                            {% else %}
+                                <i class="fa-solid fa-square-minus text-red-500"></i>
+                            {% endif %}
+                        </td>
+
+                        <td class="px-6 py-4">
+                            {% if permissions.change_company %}
+                                <a href="{% url 'core:company_update' item.id %}"
+                                   class="text-blue-600 dark:text-blue-500 inline-block mr-2">
+                                    <i class="ri-edit-fill"></i>
+                                </a>
+                            {% endif %}
+
+                            {% if permissions.delete_company %}
+                                <button class="text-red-600 dark:text-red-500 inline-block"
+                                        onclick="openDeleteModal('{{ item.id }}', '{{ item.name }}')">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    
         <!-- Paginación -->
         <div class="flex justify-center mt-4">
             <nav aria-label="Page navigation example">
@@ -254,6 +265,153 @@
         </div>
 
     </section>
+
+    {#    script buscador dinamico #}
+    <script>
+        const searchInput = document.getElementById('table-search');
+        const suggestionsContainer = document.getElementById('suggestions-container');
+        const tableRows = document.querySelectorAll('#supplier-table tbody tr');
+
+        searchInput.addEventListener('input', function () {
+            const searchTerm = this.value.trim();
+
+            if (searchTerm === '') {
+                showAllRows(); 
+                suggestionsContainer.innerHTML = '';
+                suggestionsContainer.style.display = 'none';
+                return;
+            }
+
+            fetchSuggestions(searchTerm);
+        });
+
+        function fetchSuggestions(searchTerm) {
+            fetch(`/core/company-suggestions/?term=${encodeURIComponent(searchTerm)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const suggestionsHTML = data.map(item => {
+                        return `<div class="suggestion-item" style="cursor: pointer; padding: 5px" data-dni="${item.dni}">${item.dni} - ${item.name}</div>`;
+                    }).join('');
+                    suggestionsContainer.innerHTML = suggestionsHTML;
+                    suggestionsContainer.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error al buscar sugerencias de proveedores:', error);
+                    suggestionsContainer.innerHTML = '<div>Error al buscar sugerencias de proveedores.</div>';
+                    suggestionsContainer.style.display = 'block';
+                });
+        }
+        
+        function showAllRows() {
+            tableRows.forEach(row => {
+                row.style.display = 'table-row';
+            });
+        }
+
+        document.addEventListener('click', function (event) {
+            if (!suggestionsContainer.contains(event.target) && event.target !== searchInput) {
+                suggestionsContainer.style.display = 'none';
+            }
+        });
+
+        suggestionsContainer.addEventListener('click', function (event) {
+            if (event.target.classList.contains('suggestion-item')) {
+                const dni = event.target.getAttribute('data-dni');
+
+                searchInput.value = dni;
+
+                let found = false;
+                tableRows.forEach(row => {
+                    const rowData = row.textContent.trim();
+                    if (rowData.includes(dni)) {
+                        row.style.display = 'table-row'; 
+                        found = true;
+                    } else {
+                        row.style.display = 'none'; 
+                    }
+                });
+
+                if (!found) {
+                    showAllRows();
+                }
+
+                suggestionsContainer.style.display = 'none';
+
+                searchInput.form.submit();
+            }
+        });
+    </script>
+
+    <!-- Incluye FontAwesome para los iconos todo esto para que funcione el mapa en la list -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+          integrity="sha512-1ycn6IcaQQ40/MKB4Imkb9Mnv5b1D2y5fE54G1DibEN5tr4m7Xx69GwpLjtNMte8yu4Z8tfgS1SJz3tkP4X3g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var map = L.map('map').setView([-2.129896, -79.593256], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+            }).addTo(map);
+
+            var locations = {{ locations|safe }};
+
+            var truckIcon = L.divIcon({
+                html: '<i class="fa-solid fa-building fa-lg" style="color: #007BFF; font-size: 25px"></i>',
+                iconSize: [20, 20],
+                className: 'truck-icon'
+            });
+
+            locations.forEach(location => {
+                var popupContent = `
+                <div class="col-md-4 popup">
+                    <div class="card" style="border-radius: 10px; overflow: hidden; text-align: center;">
+                        <div class="row no-gutters">
+                            <div class="col-auto">
+                                <img src="${location.image}" alt="Imagen del Proveedor" style="width: 150px; height: 110px; border-radius: 5px; margin: 5px 10px 5px 0;">
+                            </div>
+                            <div class="col">
+                                <div class="card-header d-flex align-items-center" style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6;">
+                                    <strong class="card-title">
+                                        <span>${location.name}</span>
+                                    </strong>
+                                    <i class="fa-solid fa-building" style="margin-left: 10px;"></i>
+                                </div>
+                                <div class="card-body">
+                                    <div class="location text-sm-center d-flex align-items-center">
+                                        <div style="margin: 10px auto;">
+                                            <strong>
+                                                <h2 style="font-weight: bold; margin-bottom: 0;">Latitud:</h2>
+                                                <span>${location.latitude}</span>
+                                                <h2 style="font-weight: bold; margin-bottom: 0;">Longitud:</h2>
+                                                <span>${location.longitude}</span>
+                                            </strong>
+                                                  <a href="https://www.google.com/maps/search/?api=1&query=${location.latitude}, ${location.longitude}"
+                                                        target="_blank" rel="noopener noreferrer">
+                                                        <i class="fas fa-map-marker-alt" style="color:red"></i>
+                                                   </a>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+                var marker = L.marker([location.latitude, location.longitude], {icon: truckIcon})
+                    .addTo(map)
+                    .bindPopup(popupContent, {maxWidth: 'auto'});
+
+                marker.on('click', function (e) {
+                    this.openPopup();
+                });
+            });
+        });
+    </script>
 
     {% include 'fragments/delete.html' %}
 

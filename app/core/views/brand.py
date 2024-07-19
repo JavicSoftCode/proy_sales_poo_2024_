@@ -5,6 +5,17 @@ from app.core.models import Brand
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.db.models import Q
+from django.http import JsonResponse
+
+
+# vista para el buscadador dinamico
+class BrandSuggestionsView(ListView):
+  def get(self, request, *args, **kwargs):
+    term = request.GET.get('term', '')
+    suggestions = Brand.objects.filter(description__icontains=term).values('description', 'active')[
+                  :10]
+    suggestions_list = list(suggestions)
+    return JsonResponse(suggestions_list, safe=False)
 
 
 class BrandListView(PermissionMixin, ListViewMixin, ListView):

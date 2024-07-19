@@ -5,6 +5,20 @@ from app.core.models import Line
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.db.models import Q
+from django.shortcuts import render
+from django.http import JsonResponse
+from folium.plugins import FastMarkerCluster
+import folium
+
+
+# vista para el buscadador dinamico
+class LineSuggestionsView(ListView):
+  def get(self, request, *args, **kwargs):
+    term = request.GET.get('term', '')
+    suggestions = Line.objects.filter(description__icontains=term).values('image', 'description', 'active')[
+                  :10]
+    suggestions_list = list(suggestions)
+    return JsonResponse(suggestions_list, safe=False)
 
 
 class LineListView(PermissionMixin, ListViewMixin, ListView):

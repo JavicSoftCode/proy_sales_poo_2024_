@@ -1,6 +1,7 @@
 {% extends 'components/base.html' %}
 {% block content %}
     {% load static %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>{% block title %} {{ title1 }} {% endblock title %}</title>
 
     <section class="dark:bg-principal">
@@ -18,13 +19,14 @@
                 </h1>
             </div>
 
-            <!-- Barra de busqueda -->
+            <!-- Barra de búsqueda -->
             <div class="p-4 flex justify-center">
                 <label for="table-search" class="sr-only">Search</label>
                 <div class="relative mt-1">
                     <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
                         <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                             xmlns="http://www.w3.org/2000/svg"
+                             fill="none" viewBox="0 0 20 20">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"></path>
                         </svg>
@@ -32,116 +34,125 @@
                     <form method="GET" action="{% url 'core:customer_list' %}">
                         <input type="text" name="q" id="table-search"
                                class="text-center pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                               placeholder="Dni" value="{{ request.GET.q }}">
+                               placeholder="Buscar por DNI" value="{{ request.GET.q }}" autocomplete="off">
                     </form>
                 </div>
             </div>
 
-            <!-- Tabla -->
-            <div class="overflow-x-auto">
-                <table class="w-full text-center text-lg">
-                    <thead class="uppercase font-Tiny5 bg-gray-50 dark:bg-secundario dark:text-blue-300">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">ID</th>
-                        <th scope="col" class="px-6 py-3">Imagen</th>
-                        <th scope="col" class="px-6 py-3">Dni</th>
-                        <th scope="col" class="px-6 py-3">Nombre</th>
-                        <th scope="col" class="px-6 py-3">Apellido</th>
-                        <th scope="col" class="px-6 py-3">Email</th>
-                        <th scope="col" class="px-6 py-3">Teléfono</th>
-                        <th scope="col" class="px-6 py-3">Dirección</th>
-                        <th scope="col" class="px-6 py-3">Fecha Nac.</th>
-                        <th scope="col" class="px-6 py-3">Género</th>
-                        <th scope="col" class="px-6 py-3">Activo</th>
-                        <th scope="col" class="px-6 py-3">Acciones</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for customer in customers %}
-                        <tr class="dark:text-gray-400 bg-white border-b dark:bg-[#0b1121] dark:border-secundario hover:bg-gray-50 dark:hover:bg-[#121c33]">
-
-                            <td class="w-4 p-4">{{ customer.id }}</td>
-
-                            <th>
-                                <img class="mx-auto w-16 h-16 object-contain rounded-2xl" src="{% if customer.image %}{{ customer.image.url }}{% else %}{% static 'img/usuario_anonimo.png' %}{% endif %}"
-                                     alt="Imagen del cliente">
-                            </th>
-
-                            <td class="px-2 py-4">
-                              <span class="reveal-dni" onclick="revealDNI(this)">
-                                <i class="fa-solid fa-eye" style="cursor: pointer" title="{{ customer.dni }}"></i>
-                                   </span>
-                                <span class="dni-hidden" style="display: none;">{{ customer.dni }}</span>
-                            </td>
-
-                            <td class="px-2 py-4">{{ customer.first_name }}</td>
-
-                            <td class="px-2 py-4">{{ customer.last_name }}</td>
-
-                            <td class="px-2 py-4">
-                                <a href="https://mail.google.com/mail/?view=cm&to={{ customer.email }}" target="_blank"
-                                   rel="noopener noreferrer"
-                                   title="{{ customer.email }}">
-                                    <i class="fas fa-envelope"></i>
-                                </a>
-                            </td>
-
-                            <td class="px-2 py-4">
-                                <a href="tel:{{ customer.phone }}" class="phone-icon"
-                                   title="Llamar por teléfono {{ customer.phone }}">
-                                    <i class="fa-solid fa-square-phone"></i>
-                                </a>
-                                <a href="whatsapp://send?phone={{ customer.phone }}"
-                                   title="Llamar por WhatsApp {{ customer.phone }}" class="phone-icon">
-                                    <i class="fa-brands fa-square-whatsapp"></i>
-                                </a>
-                            </td>
-
-                            <td class="px-2 py-4">
-                                <a href="https://www.google.com/maps/search/?api=1&query={{ customer.address }}"
-                                   target="_blank" rel="noopener noreferrer"
-                                   title="{{ customer.address }}">
-                                    <i class="fas fa-map-marker-alt"></i> <!-- Reemplaza con el icono de tu elección -->
-                                </a>
-                            </td>
-
-                            <td class="px-2 py-4">
-                                {{ customer.date_of_birth|date:"Y-m-d" }}
-                            </td>
-
-                            <td class="px-2 py-4">{{ customer.get_gender_display }}</td>
-
-                            <td class="px-6 py-4">
-                                {% if customer.active %}
-                                    <i class="fa-solid fa-check text-green-500"></i>
-                                {% else %}
-                                    <i class="fa-solid fa-square-minus text-red-500"></i>
-                                {% endif %}
-                            </td>
-
-                            <td class="px-6 py-4 text-2xl">
-                                {% if permissions.change_customer %}
-                                    <a href="{% url 'core:customer_update' customer.id %}"
-                                       class="text-blue-600 dark:text-blue-500">
-                                        <i class="ri-edit-fill"></i>
-                                    </a>
-                                {% endif %}
-
-                                {% if permissions.delete_customer%}
-                                    <button class="text-red-600 dark:text-red-500 ml-2"
-                                            onclick="openDeleteModal('{{ customer.id }}', '{{ customer.first_name }} {{ customer.last_name }}')">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+            <!-- Contenedor de sugerencias -->
+            <div id="suggestions-container" style="background-color: #050812; border: 3px solid #2D64BD; color :#7D838F"
+                 class="absolute left-1/2 transform -translate-x-1/2 mt-2 z-10 bg-white border border-gray-300 text-gray-900 rounded-lg shadow-lg max-h-80 overflow-y-auto">
             </div>
         </div>
 
-        <!-- Paginación -->
+        <!-- Mapa -->
+        <div id="map" style="border-radius: 10px; height: 200px; width: 400px; margin-top: -13.1%"></div>
+
+        <!-- Tabla -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-center text-lg">
+                <thead class="uppercase font-Tiny5 bg-gray-50 dark:bg-secundario dark:text-blue-300">
+                <tr>
+                    <th scope="col" class="px-6 py-3">ID</th>
+                    <th scope="col" class="px-6 py-3">Imagen</th>
+                    <th scope="col" class="px-6 py-3">Dni</th>
+                    <th scope="col" class="px-6 py-3">Nombre</th>
+                    <th scope="col" class="px-6 py-3">Apellido</th>
+                    <th scope="col" class="px-6 py-3">Email</th>
+                    <th scope="col" class="px-6 py-3">Teléfono</th>
+                    <th scope="col" class="px-6 py-3">Dirección</th>
+                    <th scope="col" class="px-6 py-3">Fecha Nac.</th>
+                    <th scope="col" class="px-6 py-3">Género</th>
+                    <th scope="col" class="px-6 py-3">Activo</th>
+                    <th scope="col" class="px-6 py-3">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for customer in customers %}
+                    <tr class="dark:text-gray-400 bg-white border-b dark:bg-[#0b1121] dark:border-secundario hover:bg-gray-50 dark:hover:bg-[#121c33]">
+
+                        <td class="w-4 p-4">{{ customer.id }}</td>
+
+                        <th>
+                            <img class="mx-auto w-16 h-16 object-contain rounded-2xl" src="  
+                                    
+                                    {% if customer.image %}{{ customer.image.url }}{% else %}{% static 'img/usuario_anonimo.png' %}{% endif %}"
+                                 alt="Imagen del cliente">
+                        </th>
+
+                        <td class="px-2 py-4">
+                              <span class="reveal-dni" onclick="revealDNI(this)">
+                                <i class="fa-solid fa-eye" style="cursor: pointer" title="{{ customer.dni }}"></i>
+                                   </span>
+                            <span class="dni-hidden" style="display: none;">{{ customer.dni }}</span>
+                        </td>
+
+                        <td class="px-2 py-4">{{ customer.first_name }}</td>
+
+                        <td class="px-2 py-4">{{ customer.last_name }}</td>
+
+                        <td class="px-2 py-4">
+                            <a href="https://mail.google.com/mail/?view=cm&to={{ customer.email }}" target="_blank"
+                               rel="noopener noreferrer"
+                               title="{{ customer.email }}">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </td>
+
+                        <td class="px-2 py-4">
+                            <a href="tel:{{ customer.phone }}" class="phone-icon"
+                               title="Llamar por teléfono {{ customer.phone }}">
+                                <i class="fa-solid fa-square-phone"></i>
+                            </a>
+                            <a href="whatsapp://send?phone={{ customer.phone }}"
+                               title="Llamar por WhatsApp {{ customer.phone }}" class="phone-icon">
+                                <i class="fa-brands fa-square-whatsapp"></i>
+                            </a>
+                        </td>
+
+                        <td class="px-2 py-4">
+                            <a href="https://www.google.com/maps/search/?api=1&query={{ customer.address }}"
+                               target="_blank" rel="noopener noreferrer"
+                               title="{{ customer.address }}">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </a>
+                        </td>
+
+                        <td class="px-2 py-4">
+                            {{ customer.date_of_birth|date:"Y-m-d" }}
+                        </td>
+
+                        <td class="px-2 py-4">{{ customer.get_gender_display }}</td>
+
+                        <td class="px-6 py-4">
+                            {% if customer.active %}
+                                <i class="fa-solid fa-check text-green-500"></i>
+                            {% else %}
+                                <i class="fa-solid fa-square-minus text-red-500"></i>
+                            {% endif %}
+                        </td>
+
+                        <td class="px-6 py-4 text-2xl">
+                            {% if permissions.change_customer %}
+                                <a href="{% url 'core:customer_update' customer.id %}"
+                                   class="text-blue-600 dark:text-blue-500">
+                                    <i class="ri-edit-fill"></i>
+                                </a>
+                            {% endif %}
+
+                            {% if permissions.delete_customer %}
+                                <button class="text-red-600 dark:text-red-500 ml-2"
+                                        onclick="openDeleteModal('{{ customer.id }}', '{{ customer.first_name }} {{ customer.last_name }}')">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
         <div class="flex justify-center mt-4">
             <nav aria-label="Page navigation example">
                 <ul class="inline-flex -space-x-px">
@@ -189,6 +200,154 @@
             </div>
         </div>
     </section>
+
+    {#    script buscador dinamico #}
+    <script>
+        const searchInput = document.getElementById('table-search');
+        const suggestionsContainer = document.getElementById('suggestions-container');
+        const tableRows = document.querySelectorAll('#supplier-table tbody tr');
+
+        searchInput.addEventListener('input', function () {
+            const searchTerm = this.value.trim();
+
+            if (searchTerm === '') {
+                showAllRows();
+                suggestionsContainer.innerHTML = '';
+                suggestionsContainer.style.display = 'none';
+                return;
+            }
+
+            fetchSuggestions(searchTerm);
+        });
+
+        function fetchSuggestions(searchTerm) {
+            fetch(`/core/customer-suggestions/?term=${encodeURIComponent(searchTerm)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const suggestionsHTML = data.map(item => {
+                        const activeStatus = item.active ? '<i class="fa-solid fa-check text-green-500"></i>' : '<i class="fa-solid fa-square-minus text-red-500"></i>';
+                        return `<div class="suggestion-item" style="cursor: pointer; padding: 5px" data-dni="${item.dni}">${item.dni} - ${item.first_name}   -    ${activeStatus}</div>`;
+                    }).join('');
+                    suggestionsContainer.innerHTML = suggestionsHTML;
+                    suggestionsContainer.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error al buscar sugerencias de cliente:', error);
+                    suggestionsContainer.innerHTML = '<div>Error al buscar sugerencias de cliente.</div>';
+                    suggestionsContainer.style.display = 'block';
+                });
+        }
+
+        function showAllRows() {
+            tableRows.forEach(row => {
+                row.style.display = 'table-row';
+            });
+        }
+
+        document.addEventListener('click', function (event) {
+            if (!suggestionsContainer.contains(event.target) && event.target !== searchInput) {
+                suggestionsContainer.style.display = 'none';
+            }
+        });
+
+        suggestionsContainer.addEventListener('click', function (event) {
+            if (event.target.classList.contains('suggestion-item')) {
+                const dni = event.target.getAttribute('data-dni');
+
+                searchInput.value = dni;
+
+                let found = false;
+                tableRows.forEach(row => {
+                    const rowData = row.textContent.trim();
+                    if (rowData.includes(ruc)) {
+                        row.style.display = 'table-row';
+                        found = true;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                if (!found) {
+                    showAllRows();
+                }
+
+                suggestionsContainer.style.display = 'none';
+
+                searchInput.form.submit();
+            }
+        });
+    </script>
+
+    <!-- Incluye FontAwesome para los iconos todo esto para que funcione el mapa en la list -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+          integrity="sha512-1ycn6IcaQQ40/MKB4Imkb9Mnv5b1D2y5fE54G1DibEN5tr4m7Xx69GwpLjtNMte8yu4Z8tfgS1SJz3tkP4X3g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var map = L.map('map').setView([-2.129896, -79.593256], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+            }).addTo(map);
+
+            var locations = {{ locations|safe }};
+
+            var truckIcon = L.divIcon({
+                html: '<i class="fa fa-user fa-lg" style="color: #007BFF; font-size: 25px"></i>',
+                iconSize: [20, 20],
+                className: 'truck-icon'
+            });
+
+            locations.forEach(location => {
+                var popupContent = `
+                <div class="col-md-4 popup">
+                    <div class="card" style="border-radius: 10px; overflow: hidden; text-align: center;">
+                        <div class="row no-gutters">
+                            <div class="col-auto">
+                                <img src="${location.image}" alt="Imagen del Cliente" style="width: 150px; height: 110px; border-radius: 5px; margin: 5px 10px 5px 0;">
+                            </div>
+                            <div class="col">
+                                <div class="card-header d-flex align-items-center" style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6;">
+                                    <strong class="card-title">
+                                        <span>${location.first_name} ${location.last_name}</span>
+                                    </strong>
+                                    <i class="fa fa-user" style="margin-left: 10px;"></i>
+                                </div>
+                                <div class="card-body">
+                                    <div class="location text-sm-center d-flex align-items-center">
+                                        <div style="margin: 10px auto;">
+                                            <strong>
+                                                <h2 style="font-weight: bold; margin-bottom: 0;">Latitud:</h2>
+                                                <span>${location.latitude}</span>
+                                                <h2 style="font-weight: bold; margin-bottom: 0;">Longitud:</h2>
+                                                <span>${location.longitude}</span>
+                                            </strong>
+                                            <a href="https://www.google.com/maps/search/?api=1&query=${location.latitude}, ${location.longitude}"
+                                                 target="_blank" rel="noopener noreferrer">
+                                                 <i class="fas fa-map-marker-alt" style="color:red"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+                var marker = L.marker([location.latitude, location.longitude], {icon: truckIcon})
+                    .addTo(map)
+                    .bindPopup(popupContent, {maxWidth: 'auto'});
+
+                marker.on('click', function (e) {
+                    this.openPopup();
+                });
+            });
+        });
+    </script>
 
     {% include 'fragments/delete.html' %}
     <script>

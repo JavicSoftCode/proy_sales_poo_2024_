@@ -70,12 +70,6 @@
                                 </div>
 
                                 <div class="mb-8">
-                                    <label for="{{ form.address.id_for_label }}"
-                                           class="dark:text-blue-300 font-black uppercase text-lg">{{ form.address.label }}</label>
-                                    {{ form.address }}
-                                </div>
-
-                                <div class="mb-8">
                                     <label for="{{ form.representative.id_for_label }}"
                                            class="dark:text-blue-300 font-black uppercase text-lg">{{ form.representative.label }}</label>
                                     {{ form.representative }}
@@ -97,6 +91,12 @@
                                     <label for="{{ form.email.id_for_label }}"
                                            class="dark:text-blue-300 font-black uppercase text-lg">{{ form.email.label }}</label>
                                     {{ form.email }}
+                                </div>
+                                
+                                <div class="mb-8">
+                                    <label for="{{ form.address.id_for_label }}"
+                                           class="dark:text-blue-300 font-black uppercase text-lg">{{ form.address.label }}</label>
+                                    {{ form.address }}
                                 </div>
                             </div>
 
@@ -136,6 +136,18 @@
                                            class="dark:text-blue-300 font-black uppercase text-lg">{{ form.economic_activity_code.label }}</label>
                                     {{ form.economic_activity_code }}
                                 </div>
+
+                                <div class="mb-8">
+                                    <label for="{{ form.latitude.id_for_label }}"
+                                           class="dark:text-blue-300 font-black uppercase text-lg">{{ form.latitude.label }}</label>
+                                    {{ form.latitude }}
+                                </div>
+
+                                <div class="mb-8">
+                                    <label for="{{ form.longitude.id_for_label }}"
+                                           class="dark:text-blue-300 font-black uppercase text-lg">{{ form.longitude.label }}</label>
+                                    {{ form.longitude }}
+                                </div>
                             </div>
                         </div>
 
@@ -152,10 +164,152 @@
                             </a>
                         </div>
                     </div>
+                    <!-- Columna final mapa-->
+                    <div class="bg-white dark:bg-secundario rounded-3xl flex flex-col justify-center items-center p-8"
+                         data-aos="fade-right" data-aos-delay="200" style="margin-left: 740px">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h3>Nuestras Sucursales</h3>
+                                <p class="lead dark:text-blue-300 font-black uppercase text-lg">
+                                    {{ encabezado }}
+                                </p>
+                            </div>
+                            <div class="col-md-8">
+                                <div id="map" style="height: 400px; width: 1100px"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
     </section>
+
+    <!-- Incluye FontAwesome para los iconos todo esto para que funcione el mapa en el form -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" integrity="..." crossorigin=""/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js" integrity="..." crossorigin=""></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+          integrity="sha512-1ycn6IcaQQ40/MKB4Imkb9Mnv5b1D2y5fE54G1DibEN5tr4m7Xx69GwpLjtNMte8yu4Z8tfgS1SJz3tkP4X3g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const latField = document.getElementById('{{ form.latitude.id_for_label }}');
+            const lngField = document.getElementById('{{ form.longitude.id_for_label }}');
+            const addressField = document.getElementById('{{ form.address.id_for_label }}');
+            const nameField = document.getElementById('{{ form.name.id_for_label }}');
+            const imageField = document.getElementById('{{ form.logo.id_for_label }}');
+
+            let providerName = nameField.value || 'Empresa';
+            let imageUrl = imageField.value ? URL.createObjectURL(imageField.files[0]) : '{% static "img/default_Company.jpg" %}';
+
+            function updatePopupContent(marker, address) {
+                const popupContent = `
+                    <div class="col-md-4">
+                        <div class="card" style="border-radius: 10px;">
+                            <div class="card-header d-flex align-items-center" style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6;">
+                                <img src="${imageUrl}" alt="Imagen de la Empresa" style="width: 50px; height: 50px; border-radius: 5px; margin-left: 10px; float: right" />
+                                <div>
+                                    <strong class="card-title">
+                                        <h2 style="font-weight: bold; margin-bottom: 0;">Empresa:</h2>
+                                        <span>${providerName}</span>
+                                    </strong>
+                                    <i class="fa-solid fa-building"></i>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="location text-sm-center d-flex align-items-center">
+                                    <div style="margin-left: 10px;">
+                                        <strong>
+                                            <h2 style="font-weight: bold; margin-bottom: 0;">Dirección:</h2>
+                                            <span>${address}</span>
+                                        </strong>
+                                        <i class="fa fa-map-marker"></i>
+                                    </div>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                marker.bindPopup(popupContent, {offset: [0, -30]});
+            }
+
+            nameField.addEventListener('input', function () {
+                providerName = this.value || 'Empresa';
+                if (marker) {
+                    updatePopupContent(marker, addressField.value);
+                    marker.openPopup();
+                }
+            });
+
+            imageField.addEventListener('change', function () {
+                if (this.files && this.files[0]) {
+                    imageUrl = URL.createObjectURL(this.files[0]);
+                } else {
+                    imageUrl = '{% static "img/default_Company.jpg" %}';
+                }
+                if (marker) {
+                    updatePopupContent(marker, addressField.value);
+                    marker.openPopup();
+                }
+            });
+
+            const mapElement = document.getElementById('map');
+            if (mapElement) {
+                const mapInstance = L.map(mapElement).setView([-2.129896, -79.593256], 14);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                }).addTo(mapInstance);
+
+                let marker;
+
+                function handleMapClick(e) {
+                    const lat = e.latlng.lat.toFixed(6);
+                    const lng = e.latlng.lng.toFixed(6);
+
+                    latField.value = lat;
+                    lngField.value = lng;
+
+                    if (marker) {
+                        mapInstance.removeLayer(marker);
+                    }
+                    const icon = L.divIcon({
+                        html: '<i class="fa-solid fa-building fa-lg" style="font-size: 24px; color: #007bff;"></i>',
+                        className: 'custom-icon',
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 30]
+                    });
+                    marker = L.marker(e.latlng, {icon: icon, draggable: false}).addTo(mapInstance);
+
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            addressField.value = data.display_name;
+                            updatePopupContent(marker, data.display_name);
+                            marker.openPopup();
+                        })
+                        .catch(error => {
+                            console.error('Error al obtener detalles de la ubicación:', error);
+                        });
+                }
+
+                mapInstance.on('click', handleMapClick);
+
+                mapInstance.on('click', function (e) {
+                    if (marker) {
+                        marker.openPopup();
+                    }
+                });
+
+                mapInstance.on('mouseout', function (e) {
+                    if (marker) {
+                        marker.closePopup();
+                    }
+                });
+            }
+        });
+    </script>
 
     <script>
         const logoInput = document.getElementById('{{ form.logo.id_for_label }}');

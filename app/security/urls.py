@@ -3,6 +3,7 @@ from app.security.views import auth, groupModulePermissions, menus, modulos, use
 from django.conf import settings
 from django.conf.urls.static import static
 from app.core.views.home import HomeTemplateView
+from app.security.views.groupModulePermissions import get_group_permissions
 
 app_name = "security"
 urlpatterns = []
@@ -39,12 +40,15 @@ urlpatterns += [
                       name='groupmodulepermission_list'),
                  path('groupmodulepermission_create/', groupModulePermissions.GroupModulePermissionCreateView.as_view(),
                       name='groupmodulepermission_create'),
-                 path('groupmodulepermission_update/<int:pk>/',
-                      groupModulePermissions.GroupModulePermissionUpdateView.as_view(),
-                      name='groupmodulepermission_update'),
-                 path('groupmodulepermission_delete/<int:pk>/',
-                      groupModulePermissions.GroupModulePermissionDeleteView.as_view(),
-                      name='groupmodulepermission_delete'),
+                 # path('groupmodulepermission_update/<int:pk>/',
+                 #      groupModulePermissions.GroupModulePermissionUpdateView.as_view(),
+                 #      name='groupmodulepermission_update'),
+                 # path('groupmodulepermission_delete/<int:pk>/',
+                 #      groupModulePermissions.GroupModulePermissionDeleteView.as_view(),
+                 #      name='groupmodulepermission_delete'),
+                 path('get_group_permissions/<int:group_id>/', get_group_permissions, name='get_group_permissions'),
+                 path('groupmodulepermission-suggestions/', groupModulePermissions.GroupModulePermissionSuggestionsView.as_view(), name='groupmodulepermission_suggestions'),
+
                  # path('group_module_permission_list/', groupModulePermissions.GroupModulePermissionListView.as_view(),
                  #      name='group_module_permission_list'),
                  # path('group_module_permission_add/', groupModulePermissions.GroupModulePermissionCreateView.as_view(),

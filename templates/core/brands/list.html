@@ -162,7 +162,7 @@
             const searchTerm = this.value.trim();
 
             if (searchTerm === '') {
-                showAllRows(); 
+                showAllRows();
                 suggestionsContainer.innerHTML = '';
                 suggestionsContainer.style.display = 'none';
                 return;
@@ -182,8 +182,8 @@
                     suggestionsContainer.style.display = 'block';
                 })
                 .catch(error => {
-                    console.error('Error al buscar sugerencias de proveedores:', error);
-                    suggestionsContainer.innerHTML = '<div>Error al buscar sugerencias de proveedores.</div>';
+                    console.error('Error al buscar sugerencias de marca:', error);
+                    suggestionsContainer.innerHTML = '<div>Error al buscar sugerencias de marca.</div>';
                     suggestionsContainer.style.display = 'block';
                 });
         }
@@ -210,10 +210,10 @@
                 tableRows.forEach(row => {
                     const rowData = row.textContent.trim();
                     if (rowData.includes(description)) {
-                        row.style.display = 'table-row'; 
+                        row.style.display = 'table-row';
                         found = true;
                     } else {
-                        row.style.display = 'none'; 
+                        row.style.display = 'none';
                     }
                 });
 

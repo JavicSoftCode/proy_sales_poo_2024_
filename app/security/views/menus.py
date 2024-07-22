@@ -5,29 +5,46 @@ from django.urls import reverse_lazy
 from django.db.models import Q
 from django.contrib import messages
 from app.security.forms.menu import MenuForm
+from django.http import JsonResponse
+
+
+# vista para el buscadador dinamico
+class MenuSuggestionsView(ListView):
+  def get(self, request, *args, **kwargs):
+    term = request.GET.get('term', '')
+    suggestions = Menu.objects.filter(name__icontains=term).values('icon', 'name')[
+                  :10]
+    suggestions_list = list(suggestions)
+    return JsonResponse(suggestions_list, safe=False)
 
 
 # Presentar todos los modulos
 class MenuListView(PermissionMixin, ListViewMixin, ListView):
-  template_name = 'security/menu/list.html'
   model = Menu
+  template_name = 'security/menu/list.html'
   context_object_name = 'menus'
   permission_required = 'view_menu'
 
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    for menu in context['object_list']:
+      menu.can_be_deleted = not menu.has_related_objects()
+    return context
+
   def get_queryset(self):
     q1 = self.request.GET.get('q')
-    queryset = super().get_queryset()  # Obtener el queryset inicial
-
     if q1:
-      queryset = queryset.filter(name__icontains=q1)
+      query = Q(name__icontains=q1)
+    else:
+      query = Q()
 
-    return queryset.order_by('id')
+    return self.model.objects.filter(query).order_by('id')
 
 
 class MenuCreateView(PermissionMixin, CreateViewMixin, CreateView):
   model = Menu
-  template_name = 'security/menu/form.html'
   form_class = MenuForm
+  template_name = 'security/menu/form.html'
   success_url = reverse_lazy('security:menus_list')
   permission_required = 'add_menu'
 
@@ -40,8 +57,8 @@ class MenuCreateView(PermissionMixin, CreateViewMixin, CreateView):
 
 class MenuUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
   model = Menu
-  template_name = 'security/menu/form.html'
   form_class = MenuForm
+  template_name = 'security/menu/form.html'
   success_url = reverse_lazy('security:menus_list')
   permission_required = 'change_menu'
 
@@ -51,12 +68,6 @@ class MenuUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
     messages.success(self.request, f"Éxito al actualizar el menu {menu.name}.")
     return response
 
-
-# class MenuDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
-#   model = Menu
-#   template_name = 'core/delete.html'
-#   success_url = reverse_lazy('core:menus_list')
-#   permission_required = 'delete_menu'
 
 class MenuDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
   model = Menu
@@ -68,16 +79,11 @@ class MenuDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
     super().__init__(*args, **kwargs)
     self.object = None
 
-  # def get_context_data(self, **kwargs):
-  #   context = super().get_context_data(**kwargs)
-  #   context['title'] = 'Eliminar Marca'
-  #   context['description'] = f"¿Desea eliminar la marca: {self.object.description}?"
-  #   context['back_url'] = self.success_url
-  #   return context
-
   def delete(self, request, *args, **kwargs):
-    self.object = self.get_object()
-    success_message = f"Éxito al eliminar la marca {self.object.name}."
-    self.object.delete()
-    messages.success(self.request, success_message)
+    menu = self.get_object()
+
+    if menu.has_related_objects():
+      messages.error(request, 'Este menú está relacionado con otros objetos y no puede ser eliminado.')
+      return redirect(self.success_url)
+
     return super().delete(request, *args, **kwargs)

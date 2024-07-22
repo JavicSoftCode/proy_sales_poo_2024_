@@ -1,9 +1,75 @@
 {% extends 'components/base.html' %}
 {% block content %}
     {% load static %}
+    <style>
+
+        /* Para alinear los botones horizontalmente */
+        .flex {
+            display: flex;
+            align-items: center;
+        }
+
+        .space-x-4 > * + * {
+            margin-left: 1rem; /* Ajusta el espaciado según sea necesario */
+        }
+
+        /* Opcional: estilo para los iconos y botones */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .icon-linkk {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            cursor: default; /* ya que no se puede hacer clic */
+        }
+
+        .icon-labell {
+            margin-left: 0.5rem;
+        }
+
+
+        .icon-containerr {
+            position: relative;
+            display: inline-block;
+        }
+
+        .icon-labell {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #050812;
+            color: #ff0000;
+            border: 3px solid #2D64BD;
+            padding: 2px 5px;
+            border-radius: 5px;
+            opacity: 0;
+            font-size: 15px;
+            font-family: "Times New Roman", cursive;
+            transition: opacity 0.3s ease-out;
+            pointer-events: none;
+        }
+
+        .icon-linkk:hover .icon-labell {
+            opacity: 1;
+        }
+
+    </style>
+
     <title>{% block title %}{{ title2 }}{% endblock title %}</title>
     <section class="dark:bg-principal">
         <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+
+            <!-- Cabecera -->
             <div class="sm:pt-28 lg:pt-24">
                 <div class="flex flex-col items-center justify-center">
                     <span class="rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
@@ -14,114 +80,227 @@
                     {{ title2 }}
                 </h1>
             </div>
-            <div class="lg:p-4 rounded-3xl" data-aos="fade-up" data-aos-delay="200">
-                <!-- Barra de búsqueda -->
-                <div class="p-4 flex justify-center">
-                    <label for="table-search" class="sr-only">Search</label>
-                    <div class="relative mt-1">
-                        <div
-                                class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                      stroke-width="2"
-                                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"></path>
-                            </svg>
-                        </div>
-                        <form method="GET" action="{% url 'security:menus_list' %}">
-                            <input type="text" name="q" id="table-search"
-                                   class="text-center pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                                   placeholder="Búsqueda sin límites" value="{{ request.GET.q }}">
-                        </form>
+
+            <!-- Barra de búsqueda -->
+            <div class="p-4 flex justify-center">
+                <label for="table-search" class="sr-only">Search</label>
+                <div class="relative mt-1">
+                    <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg"
+                             fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"></path>
+                        </svg>
                     </div>
-                </div>
-                <!-- Tabla de modulos -->
-                <div class="overflow-x-auto">
-                    <table class="w-full text-center text-lg">
-                        <thead class="uppercase font-Tiny5 bg-gray-50 dark:bg-secundario dark:text-blue-300">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">ID</th>
-                            <th scope="col" class="px-6 py-3">nombre</th>
-                            <th scope="col" class="px-6 py-3">icono</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for item in menus %}
-                            <tr class="dark:text-gray-400 bg-white border-b dark:bg-[#0b1121] dark:border-secundario hover:bg-gray-50 dark:hover:bg-[#121c33]">
-                                <td class="px-6 py-4">{{ item.id }}</td>
-                                <td class="px-6 py-4">{{ item.name }}</td>
-                                {#                                <td class="px-6 py-4">{{ item.icon }}</td>#}
-                                <td class="px-6 py-4">
-                                    <i class="{{ item.icon }}"></i> <!-- Aquí item.icon es "fas fa-lock" por ejemplo -->
-                                </td>
-                                <td class="px-6 py-4">
-                                    {% if permissions.change_menu %}
-                                        <a href="{% url 'security:menus_update' item.id %}"
-                                           class="text-blue-600 dark:text-blue-500">
-                                            <i class="ri-edit-fill"></i>
-                                        </a>
-                                    {% endif %}
-                                    {% if permissions.delete_menu %}
-                                        <a href="#"
-                                           class="text-red-600 dark:text-red-500"
-                                           onclick="openDeleteModal('{{ item.id }}', '{{ item.name }}')">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </a>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Paginación -->
-                <div class="flex justify-center mt-4">
-                    <nav aria-label="Page navigation example">
-                        <ul class="inline-flex -space-x-px">
-                            {% if page_obj.has_previous %}
-                                <li>
-                                    <a href="?page=1"
-                                       class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-[#0b1121] dark:border-secundario dark:text-gray-400 dark:hover:bg-[#121c33] dark:hover:text-white">Anterior</a>
-                                </li>
-                            {% endif %}
-                            {% for num in page_obj.paginator.page_range %}
-                                <li>
-                                    <a href="?page={{ num }}"
-                                       class="flex items-center justify-center px-3 h-8 leading-tight {% if num == page_obj.number %}text-blue-600 bg-blue-50 border border-gray-300 hover:bg-blue-100 hover:text-blue-700 dark:bg-secundario dark:border-principal dark:text-blue-300{% else %}text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-[#0b1121] dark:border-secundario dark:text-gray-400 dark:hover:bg-[#121c33] dark:hover:text-white{% endif %}">
-                                        {{ num }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                            {% if page_obj.has_next %}
-                                <li>
-                                    <a href="?page={{ page_obj.next_page_number }}"
-                                       class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-[#0b1121] dark:border-secundario dark:text-gray-400 dark:hover:bg-[#121c33] dark:hover:text-white">Siguiente</a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </nav>
-                </div>
-
-                <!-- Enlaces adicionales -->
-                <div class="flex flex-col md:flex-row justify-center form-group text-center p-4">
-                    {% if permissions.add_menu %}
-                        <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full mr-0 md:mr-2 mb-2 md:mb-0 flex items-center justify-center"
-                           href="{% url 'security:menus_create' %}">
-                            <i class="fa-solid fa-plus mr-2"></i> Nuevo Menú
-                        </a>
-                    {% endif %}
-                    <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full flex items-center justify-center"
-                       href="{% url 'modulos' %}">
-                        <i class="fa-solid fa-house"></i>
-                    </a>
+                    <form method="GET" action="{% url 'security:menus_list' %}">
+                        <input type="text" name="q" id="table-search"
+                               class="text-center pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                               placeholder="Buscar Nombre Menú" value="{{ request.GET.q }}" autocomplete="off">
+                    </form>
                 </div>
             </div>
+
+            <!-- Contenedor de sugerencias -->
+            <div id="suggestions-container" style="background-color: #050812; border: 3px solid #2D64BD; color :#7D838F"
+                 class="absolute left-1/2 transform -translate-x-1/2 mt-2 z-10 bg-white border border-gray-300 text-gray-900 rounded-lg shadow-lg max-h-80 overflow-y-auto">
+            </div>
+        </div>
+
+        <!-- Tabla -->
+        <div class="overflow-x-auto" >
+            <table class="w-full text-center text-lg" >
+                <thead class="uppercase font-Tiny5 bg-gray-50 dark:bg-secundario dark:text-blue-300">
+                <tr >
+                    <th scope="col" class="px-6 py-3">ID</th>
+                    <th scope="col" class="px-6 py-3">Nombre Menú</th>
+                    <th scope="col" class="px-6 py-3">icono</th>
+                    <th scope="col" class="px-6 py-3">Opc.</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in menus %}
+                    <tr class="dark:text-gray-400 bg-white border-b dark:bg-[#0b1121] dark:border-secundario hover:bg-gray-50 dark:hover:bg-[#121c33]">
+                        <td class="px-6 py-4">{{ item.id }}</td>
+                        <td class="px-6 py-4">{{ item.name }}</td>
+                        <td class="px-6 py-4">
+                            <i class="{{ item.icon }}"></i>
+                        </td>
+                        <td class="px-6 py-4 flex space-x-4" style="margin-left: 35%">
+                            {% if permissions.change_menu %}
+                                <a href="{% url 'security:menus_update' item.id %}"
+                                   class="text-blue-600 dark:text-blue-500">
+                                    <i class="ri-edit-fill"></i>
+                                </a>
+                            {% endif %}
+
+                            {% if permissions.delete_menu %}
+                                <div class="delete-button-container flex space-x-4"
+                                     data-can-be-deleted="{{ item.can_be_deleted }}" data-id="{{ item.id }}"
+                                     data-description="{{ item.name }}">
+                                    <!-- Botón de eliminación dinámico se insertará aquí -->
+                                </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginación -->
+        <div class="flex justify-center mt-4">
+            <nav aria-label="Page navigation example">
+                <ul class="inline-flex -space-x-px">
+
+                    {% if page_obj.has_previous %}
+                        <li>
+                            <a href="?page=1"
+                               class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-[#0b1121] dark:border-secundario dark:text-gray-400 dark:hover:bg-[#121c33] dark:hover:text-white">Anterior</a>
+                        </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        <li>
+                            <a href="?page={{ num }}"
+                               class="flex items-center justify-center px-3 h-8 leading-tight {% if num == page_obj.number %}text-blue-600 bg-blue-50 border border-gray-300 hover:bg-blue-100 hover:text-blue-700 dark:bg-secundario dark:border-principal dark:text-blue-300{% else %}text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-[#0b1121] dark:border-secundario dark:text-gray-400 dark:hover:bg-[#121c33] dark:hover:text-white{% endif %}">
+                                {{ num }}
+                            </a>
+                        </li>
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li>
+                            <a href="?page={{ page_obj.next_page_number }}"
+                               class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-[#0b1121] dark:border-secundario dark:text-gray-400 dark:hover:bg-[#121c33] dark:hover:text-white">Siguiente</a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Enlaces adicionales -->
+        <div class="flex flex-col md:flex-row justify-center form-group text-center p-4">
+            {% if permissions.add_menu %}
+                <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full mr-0 md:mr-2 mb-2 md:mb-0 flex items-center justify-center"
+                   href="{% url 'security:menus_create' %}">
+                    <i class="fa-solid fa-plus mr-2"></i> Nuevo Menú
+                </a>
+            {% endif %}
+            <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full flex items-center justify-center"
+               href="{% url 'modulos' %}">
+                <i class="fa-solid fa-house"></i>
+            </a>
         </div>
     </section>
 
-    {% include 'core/delete.html' %}
+    {#    script buscador dinamico #}
     <script>
+        const searchInput = document.getElementById('table-search');
+        const suggestionsContainer = document.getElementById('suggestions-container');
+        const tableRows = document.querySelectorAll('#supplier-table tbody tr');
+
+        searchInput.addEventListener('input', function () {
+            const searchTerm = this.value.trim();
+
+            if (searchTerm === '') {
+                showAllRows();
+                suggestionsContainer.innerHTML = '';
+                suggestionsContainer.style.display = 'none';
+                return;
+            }
+            fetchSuggestions(searchTerm);
+        });
+
+        function fetchSuggestions(searchTerm) {
+            fetch(`/security/menus-suggestions/?term=${encodeURIComponent(searchTerm)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const suggestionsHTML = data.map(item => {
+                        {#const activeStatus = item.active ? '<i class="fa-solid fa-check text-green-500"></i>' : '<i class="fa-solid fa-square-minus text-red-500"></i>';#}
+                        return `<div class="suggestion-item" style="cursor: pointer; padding: 5px" data-name="${item.name}"><i class="${item.icon}"></i>  -  ${item.name}</div>`;
+                    }).join('');
+                    suggestionsContainer.innerHTML = suggestionsHTML;
+                    suggestionsContainer.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error al buscar sugerencias del menú:', error);
+                    suggestionsContainer.innerHTML = '<div>Error al buscar sugerencias del menú.</div>';
+                    suggestionsContainer.style.display = 'block';
+                });
+        }
+
+        function showAllRows() {
+            tableRows.forEach(row => {
+                row.style.display = 'table-row';
+            });
+        }
+
+        document.addEventListener('click', function (event) {
+            if (!suggestionsContainer.contains(event.target) && event.target !== searchInput) {
+                suggestionsContainer.style.display = 'none';
+            }
+        });
+
+        suggestionsContainer.addEventListener('click', function (event) {
+            if (event.target.classList.contains('suggestion-item')) {
+                const name = event.target.getAttribute('data-name');
+
+                searchInput.value = name;
+
+                let found = false;
+                tableRows.forEach(row => {
+                    const rowData = row.textContent.trim();
+                    if (rowData.includes(name)) {
+                        row.style.display = 'table-row';
+                        found = true;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                if (!found) {
+                    showAllRows();
+                }
+
+                suggestionsContainer.style.display = 'none';
+
+                searchInput.form.submit();
+            }
+        });
+    </script>
+
+    {% include 'core/delete.html' %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteButtonContainers = document.querySelectorAll('.delete-button-container');
+
+            deleteButtonContainers.forEach(container => {
+                const canBeDeleted = container.getAttribute('data-can-be-deleted') === 'True';
+                const id = container.getAttribute('data-id');
+                const description = container.getAttribute('data-description');
+
+                if (canBeDeleted) {
+                    container.innerHTML = `
+                    <button type="button" class="btn btn-danger" onclick="openDeleteModal('${id}', '${description}')">
+                        <i class="fa-solid fa-trash" style="color:red;"></i>
+                    </button>
+                `;
+                } else {
+                    container.innerHTML = `
+<div class="icon-containerr">
+                    <a href="#" class="icon-linkk" style="cursor: none">
+                        <i class="fa-solid fa-trash" style="color:red;"></i>
+                        <span class="icon-labell">Menú Relacionado</span>
+                    </a>
+</div>
+                `;
+                }
+            });
+        });
+
         function openDeleteModal(id, name) {
             const deleteForm = document.getElementById('deleteForm');
             deleteForm.action = `{% url 'security:menus_delete' 0 %}`.replace('0', id);
@@ -133,4 +312,6 @@
             document.getElementById('deleteModal').classList.add('hidden');
         }
     </script>
+
+
 {% endblock %}

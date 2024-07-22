@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Anular Venta</h2>
+
+<form method="post" action="{% url 'sales:sales_cancel' invoice_id %}">
+    {% csrf_token %}
+    <p>¿Está seguro de que desea anular la venta con ID: {{ invoice_id }}?</p>
+    <button type="submit" class="btn btn-danger">Anular Venta</button>
+    <a href="{% url 'sales:sales_list' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

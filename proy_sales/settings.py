@@ -55,7 +55,7 @@ MIDDLEWARE = [
   'django.middleware.clickjacking.XFrameOptionsMiddleware',
   # 'app.core.middleware.LoginRequiredMiddleware',
   'crum.CurrentRequestUserMiddleware',
-  'livereload.middleware.LiveReloadScript',
+  # 'livereload.middleware.LiveReloadScript',
 ]
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Usar base de datos para sesiones
 SESSION_COOKIE_NAME = 'sessionid'
@@ -100,7 +100,7 @@ DATABASES = {
     'PASSWORD': os.environ.get("DB_PASSWORD", ""),
     'HOST': os.environ.get("DB_SOCKET", ""),
     'PORT': os.environ.get("DB_PORT", "5432"),
-    'ATOMIC_REQUESTS': True
+    # 'ATOMIC_REQUESTS': True
   }
 }
 AUTH_PASSWORD_VALIDATORS = [

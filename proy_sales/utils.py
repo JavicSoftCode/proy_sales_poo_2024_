@@ -7,18 +7,17 @@ import string
 from django.utils.translation import gettext_lazy as _
 from datetime import date
 import datetime
+from decimal import Decimal
 
 
 def get_current_datetime(value):
-  current_date = timezone.now().date()
-  if value.date() != current_date:
-    raise ValidationError('La fecha de emisión debe ser el día actual.')
+  pass
 
 
 def validate_expiration_date(value):
-    # Esta función valida si la fecha de expiración proporcionada es válida
-    if value <= timezone.now():
-        raise ValidationError(_('La fecha de caducidad no puede ser en el pasado. Debe ser una fecha futura.'))
+  # Esta función valida si la fecha de expiración proporcionada es válida
+  if value <= timezone.now():
+    raise ValidationError(_('La fecha de caducidad no puede ser en el pasado. Debe ser una fecha futura.'))
 
 
 def validate_date_of_birth(value):
@@ -165,3 +164,11 @@ def ip_client_address(request):
     client_address = request.META['REMOTE_ADDR']
 
   return client_address
+
+
+def custom_serializer(obj):
+  if isinstance(obj, Decimal):
+    return str(obj)
+  if isinstance(obj, datetime):
+    return obj.isoformat()
+  raise TypeError(f"Type {type(obj)} not serializable")

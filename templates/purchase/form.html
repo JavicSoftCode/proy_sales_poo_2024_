@@ -1,0 +1,308 @@
+{% extends 'components/base.html' %}
+{% load static %}
+{% block content %}
+    <title>{% block title %} {{ title1 }} {% endblock title %}</title>
+
+    <section class="dark:bg-principal">
+        <div class="max-w-7xl mx-auto bg-white dark:bg-secundario shadow-lg rounded-lg overflow-hidden">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                <div class="sm:pt-28 lg:pt-4 mt-10">
+                    <div class="flex flex-col items-center justify-center">
+                    <span class="rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
+                        {{ title1 }}
+                    </span>
+                    </div>
+                    <h1 class="dark:text-white text-4xl text-center mt-6 font-Pacifico">
+                        {{ title2 }}
+                    </h1>
+                </div>
+            </div>
+            <form id="frmSale" method="POST" class="bg-white dark:bg-secundario shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                {% csrf_token %}
+                {{ form.media }}
+
+                <div class="flex">
+                    <!-- Columna de Inputs (ocupa el 25% del ancho) -->
+                    <div class=">
+
+
+                    <div class=" grid grid-cols-2 gap-4 mb-6
+                    ">
+                    <div class="mb-6">
+                        <label for="{{ form.supplier.id_for_label }}"
+                               class="block dark:text-blue-300 text-sm font-bold mb-2">{{ form.supplier.label }}</label>
+                        {{ form.supplier }}
+                    </div>
+                    <div class="mb-6">
+                        <label for="{{ form.issue_date.id_for_label }}"
+                               class="block dark:text-blue-300 text-sm font-bold mb-2">{{ form.issue_date.label }}</label>
+                        {{ form.issue_date }}
+                    </div>
+                    <label class="block dark:text-blue-300 text-sm font-bold mb-2">Búsqueda de productos:</label>
+                    <select id="product" name="product"
+                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">
+                        {% for prod in products %}
+                            <option data-id="{{ prod.id }}" data-des="{{ prod.description }}"
+                                    data-price="{{ prod.price }}" data-stock="{{ prod.stock }}"
+                                    data-iva="{{ prod.iva__value }}" value="{{ prod.id }}"
+                                    {% if forloop.first %}selected{% endif %}>{{ prod.description }}</option>
+                        {% endfor %}
+                    </select>
+                    <input id="price" name="price" type="text" placeholder="Precio"
+                           class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light mt-2">
+                    <input id="quantify" name="quantify" type="number" placeholder="Cantidad"
+                           class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light mt-2">
+                    <div class="flex items-center justify-between mt-2">
+                        <button id="btnAdd" type="button"
+                                class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full flex items-center justify-center text-sm transition duration-200">
+                            <i class="fas fa-plus mr-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4 mb-6" style="margin-left: 20px">
+                    <div>
+                        <label for="{{ form.subtotal.id_for_label }}"
+                               class="block dark:text-blue-300 text-sm font-bold mb-2">{{ form.subtotal.label }}</label>
+                        {{ form.subtotal }}
+                    </div>
+                    <div>
+                        <label for="{{ form.iva.id_for_label }}" style="margin-top: -30px"
+                               class="block dark:text-blue-300 text-sm font-bold mb-2">{{ form.iva.label }}</label>
+                        {{ form.iva }}
+                    </div>
+                    <div>
+                        <label for="{{ form.total.id_for_label }}" style="margin-top: -20px"
+                               class="block dark:text-blue-300 text-sm font-bold mb-2">{{ form.total.label }}</label>
+                        {{ form.total }}
+                    </div>
+                      <div>
+                        <label for="{{ form.change.id_for_label }}" style="margin-top: -20px"
+                               class="block dark:text-blue-300 text-sm font-bold mb-2">{{ form.change.label }}</label>
+                        {{ form.change }}
+                    </div>
+                    <!-- Contenedor para alinear el botón y el enlace horizontalmente -->
+                    <div class="flex items-center space-x-2.5">
+                        <button id="btnSave" type="submit"
+                                class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-hand-holding-dollar"></i> Realizar Compra
+                        </button>
+                        <a class="bg-blue-700 hover:bg-blue-800 text-white py-1 px-2 rounded-full flex items-center justify-center text-sm w-24 pt-4 pb-4"
+                           href="{% url 'purcharse:purchase_list' %}">
+                            <i class="fa-solid fa-house"></i>
+                        </a>
+                    </div>
+
+                </div>
+
+        </div>
+
+        <!-- Columna de la Tabla (ocupa el 75% del ancho) -->
+        <div class="w-3/4 p-4" style="margin-left:45%; width: 60%">
+            <div class="overflow-x-auto mb-6" style="margin-top: -63%">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Código</th>
+                        <th scope="col" class="px-6 py-3">Producto</th>
+                        <th scope="col" class="px-6 py-3">Precio</th>
+                        <th scope="col" class="px-6 py-3">Cantidad</th>
+                        <th scope="col" class="px-6 py-3">Iva</th>
+                        <th scope="col" class="px-6 py-3">Total</th>
+                        <th scope="col" class="px-6 py-3">Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody id="detalle">
+                    <!-- Los detalles del carrito se insertarán aquí dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="flex items-center justify-between">
+
+            </div>
+        </div>
+        </div>
+
+        </form>
+        </div>
+    </section>
+
+    <script>
+        var save_url = "{{ save_url }}";
+        var detail_purchases = JSON.parse("{{ detail_purchases|escapejs }}");
+    </script>
+    <script>
+        // Variable de objetos
+        let d = document, c = console.log;
+
+        // ------------------- carga inicial de la pagina ------------------------
+        d.addEventListener('DOMContentLoaded', function (e) {
+            // Declaracion de variables
+            let $supplier = d.getElementById("id_supplier");
+            $supplier.selectedIndex = 1;
+            let $detailBody = d.getElementById('detalle');
+            let $product = d.getElementById('product');
+            let $btnAdd = d.getElementById("btnAdd");
+            let $btnGrabar = d.getElementById("btnSave");
+            let $form = d.getElementById("frmSale");
+            let detailPurchase = [];
+            let sub = 0;
+
+            c("detalle= ", detail_purchases);
+            if (detail_purchases.length > 0) {
+                detailPurchase = detail_purchases.map(item => {
+                    let {
+                        product: id,
+                        product__description: description,
+                        quantify: quantify,
+                        cost: price,
+                        subtotal: sub,
+                        iva
+                    } = item;
+                    price = parseFloat(price);
+                    quantify = parseFloat(quantify);
+                    iva = parseFloat(iva);
+                    sub = parseFloat(sub);
+                    return {id, description, price, quantify, iva, sub};
+                });
+                present();
+                totals();
+            }
+
+            // Declaracion de metodos
+            const calculation = (id, description, iva, price, quantify) => {
+                const product = detailPurchase.find(prod => prod.id == id);
+                if (product) {
+                    if (!confirm(`¿Ya existe ingresado ${product.description} => Desea actualizarlo?`)) return;
+                    quantify += product.quantify;
+                    detailPurchase = detailPurchase.filter(prod => prod.id !== id);
+                }
+                iva = iva > 0 ? ((price * quantify) * (iva / 100)).toFixed(2) : "0";
+                iva = parseFloat(iva);
+                sub = (price * quantify + iva).toFixed(2);
+                sub = parseFloat(sub);
+                detailPurchase.push({id, description, price, quantify, iva, sub});
+                present();
+                totals();
+            }
+
+            const productChange = (e) => {
+                c("entro al changeproduct");
+                const selectedOption = e.target.selectedOptions[0];
+                const price = selectedOption.getAttribute('data-price');
+                d.getElementById('price').value = price;
+            };
+
+            $product.addEventListener('change', productChange);
+            productChange({target: $product});
+
+            const deleteproduct = (id) => {
+                detailPurchase = detailPurchase.filter((item) => item.id !== id);
+                present();
+                totals();
+            }
+
+            function present() {
+                c("estoy en present()");
+                let detalle = d.getElementById('detalle');
+                detalle.innerHTML = "";
+                detailPurchase.forEach((product) => {
+                    detalle.innerHTML += `<tr class="dark:text-gray-400 bg-white border-b dark:bg-[#0b1121] dark:border-secundario hover:bg-gray-50 dark:hover:bg-[#121c33]">
+            <td>${product.id}</td>
+            <td>${product.description}</td>
+            <td>${product.price}</td>
+            <td>${product.quantify}</td>
+            <td>${product.iva}</td>
+            <td>${product.sub}</td>
+            <td class="text-center">
+                <button rel="rel-delete" data-id="${product.id}" class="text-red-600 dark:text-red-500"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          </tr>`;
+                });
+            }
+
+            function totals() {
+                const result = detailPurchase.reduce((acc, product) => {
+                    acc.iva += product.iva;
+                    acc.sub += product.sub;
+                    return acc;
+                }, {iva: 0, sub: 0});
+                d.getElementById('id_subtotal').value = (result.sub - result.iva).toFixed(2)
+                d.getElementById('id_iva').value = result.iva.toFixed(2)
+                d.getElementById('id_total').value = (result.sub).toFixed(2)
+            }
+
+            async function savePurchase(urlPost, urlSuccess) {
+                const formData = new FormData($form);
+                formData.append("detail", JSON.stringify(detailPurchase));
+
+                let csrf = d.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                c('FormData antes de enviar:');
+                c(`csrf=${csrf}`);
+                for (let [name, value] of formData.entries()) {
+                    c(`${name}: ${value}`);
+                }
+
+                try {
+                    const res = await fetch(urlPost, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': csrf,
+                        },
+                        body: formData
+                    });
+                    c(res);
+                    if (!res.ok) {
+                        const text = await res.text();
+                        c("error=> " + text);
+                        throw new Error(`HTTP error! Status: ${res.status}, Response: ${text}`);
+                    }
+
+                    const post = await res.json();
+                    c("Server message:", post.msg);
+                    alert(post.msg);
+                    window.location.href = urlSuccess;
+                } catch (error) {
+                    c("Fetch error:", error);
+                    alert("Fetch error: " + error);
+                }
+            }
+
+            $form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (parseFloat(d.getElementById('id_total').value) > 0.00) {
+                    await savePurchase(save_url, '/purcharse/purchase_list/');
+                } else {
+                    alert("!!!Faltan datos de productos para grabar la compra!!!");
+                }
+            });
+
+            $btnAdd.addEventListener('click', (e) => {
+                let quantify = parseInt(d.getElementById('quantify').value);
+                let stock = parseInt($product.options[$product.selectedIndex].dataset.stock);
+                c(quantify);
+                if (quantify > 0 && quantify <= stock) {
+                    let idProd = parseInt($product.value);
+                    let price = d.getElementById('price').value;
+                    price = parseFloat(price.replace(',', '.'));
+                    let iva = $product.options[$product.selectedIndex].dataset.iva;
+                    iva = parseFloat(iva.replace(',', '.'));
+                    let description = $product.options[$product.selectedIndex].text;
+                    calculation(idProd, description, iva, price, quantify);
+                } else {
+                    alert(`Cantidad negativa o superior al stock:[${stock}]`);
+                }
+            });
+
+            $detailBody.addEventListener('click', (e) => {
+                const fil = e.target.closest('button[rel=rel-delete]');
+                c(fil);
+                if (fil) deleteproduct(parseInt(fil.getAttribute('data-id')));
+            });
+        });
+    </script>
+    {#    <script src="{% static 'js/invoices/purchase.js' %}"></script>#}
+{% endblock %}

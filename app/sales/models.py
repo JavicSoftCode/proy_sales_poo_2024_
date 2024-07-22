@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from app.core.models import Customer, PaymentMethod, Product
+from decimal import Decimal
 
 
 class Invoice(models.Model):
@@ -15,8 +16,8 @@ class Invoice(models.Model):
   total = models.DecimalField(verbose_name='Total', default=0, max_digits=16, decimal_places=2)
   payment = models.DecimalField(verbose_name='Pago', default=0, max_digits=16, decimal_places=2)
   change = models.DecimalField(verbose_name='Cambio', default=0, max_digits=16, decimal_places=2)
-  state = models.CharField(verbose_name='Estado', max_length=1,
-                           choices=(('N', 'Normal'), ('A', 'Anulada'), ('M', 'Modificada')), default='N')
+  state = models.CharField(verbose_name='Estado', max_length=1, choices=(('N', 'Normal'), ('A', 'Anulada')),
+                           default='N')
   active = models.BooleanField(verbose_name='Activo', default=True)
 
   class Meta:
@@ -30,7 +31,7 @@ class Invoice(models.Model):
     self.save()
 
   def __str__(self):
-    return f"{self.id} - {self.customer.get_full_name()}"
+    return f"{self.id} - {self.customer.first_name}"
 
 
 class InvoiceDetail(models.Model):

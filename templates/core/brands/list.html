@@ -2,7 +2,6 @@
 {% block content %}
     {% load static %}
     <title>{% block title %}{{ title1 }}{% endblock title %}</title>
-
     <section class="dark:bg-principal">
         <div class="text-center" data-aos="fade-up" data-aos-delay="200">
 
@@ -60,7 +59,7 @@
                 </thead>
                 <tbody>
 
-                {% for item in brands %}}
+                {% for item in brands %}
                     <tr class="dark:text-gray-400 bg-white border-b dark:bg-[#0b1121] dark:border-secundario hover:bg-gray-50 dark:hover:bg-[#121c33]">
 
                         <td class="w-4 p-4">{{ item.id }}</td>

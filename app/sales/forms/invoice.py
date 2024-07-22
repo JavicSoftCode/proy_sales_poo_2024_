@@ -1,12 +1,13 @@
 from app.sales.models import Invoice
 from django import forms
+from app.core.models import Customer, PaymentMethod
+from decimal import Decimal
 
 
 class InvoiceForm(forms.ModelForm):
   class Meta:
     model = Invoice
-    fields = ["customer", "payment_method", "issue_date", "subtotal", "iva", "discount", "total", "payment", "change",
-              "state"]
+    fields = ["customer", "payment_method", "issue_date", "subtotal", "iva", "discount", "total", "payment", "change"]
     widgets = {
       "customer": forms.Select(
         attrs={
@@ -22,10 +23,12 @@ class InvoiceForm(forms.ModelForm):
         attrs={
           "type": "date",
           "class": "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light",
-        }
+        },
+        format='%Y-%m-%d'
       ),
       "subtotal": forms.NumberInput(
         attrs={
+          "readonly": "readonly",
           "placeholder": "Ingrese subtotal",
           "class": "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light",
         }
@@ -33,6 +36,7 @@ class InvoiceForm(forms.ModelForm):
       "iva": forms.NumberInput(
         attrs={
           "placeholder": "Ingrese IVA",
+          "readonly": "readonly",
           "class": "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light",
         }
       ),
@@ -44,6 +48,7 @@ class InvoiceForm(forms.ModelForm):
       ),
       "total": forms.NumberInput(
         attrs={
+          "readonly": "readonly",
           "placeholder": "Ingrese total",
           "class": "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light",
         }
@@ -56,16 +61,13 @@ class InvoiceForm(forms.ModelForm):
       ),
       "change": forms.NumberInput(
         attrs={
+          "readonly": "readonly",
           "placeholder": "Ingrese cambio",
           "class": "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light",
         }
       ),
-      "state": forms.CheckboxInput(
-        attrs={
-          "class": "mt-1 block px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        }
-      ),
     }
+
     labels = {
       "customer": "Cliente",
       "payment_method": "Método de Pago",
@@ -76,5 +78,9 @@ class InvoiceForm(forms.ModelForm):
       "total": "Total",
       "payment": "Pago",
       "change": "Cambio",
-      "state": "Estado",
     }
+
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    self.fields['customer'].queryset = Customer.objects.filter(active=True)
+    self.fields['payment_method'].queryset = PaymentMethod.objects.filter(active=True)

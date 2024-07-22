@@ -10,6 +10,17 @@ from django.contrib import messages
 from django.db.models.deletion import ProtectedError
 from django.shortcuts import redirect
 from django.http import HttpResponseRedirect
+from django.http import JsonResponse
+
+
+# vista para el buscadador dinamico
+class ModuleSuggestionsView(ListView):
+  def get(self, request, *args, **kwargs):
+    term = request.GET.get('term', '')
+    suggestions = Module.objects.filter(name__icontains=term).values('icon', 'name')[
+                  :10]
+    suggestions_list = list(suggestions)
+    return JsonResponse(suggestions_list, safe=False)
 
 
 class ModuloTemplateView(PermissionMixin, TemplateView):
@@ -29,6 +40,12 @@ class ModuleListView(PermissionMixin, ListViewMixin, ListView):
   model = Module
   context_object_name = 'modules'
   permission_required = 'view_modules'
+
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    for module in context['object_list']:
+      module.can_be_deleted = not module.has_related_objects_Modules()
+    return context
 
   def get_queryset(self):
     q1 = self.request.GET.get('q')

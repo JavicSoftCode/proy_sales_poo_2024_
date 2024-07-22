@@ -97,7 +97,7 @@ class GroupModulePermissionCreateView(PermissionMixin, CreateViewMixin, CreateVi
       permissions_selected = self.request.POST.getlist(f'permissions_{module_id}[]')
       new_group_module_permission.permissions.set(permissions_selected)
 
-    messages.success(self.request, "Grupo Módulos Permisos creados.")
+    messages.success(self.request, "Grupo Módulos Permisos EXITOSO !!!.")
     print(modules_selected)
     print(redirect(self.success_url))
     return redirect(self.success_url)

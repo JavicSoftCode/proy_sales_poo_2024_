@@ -6,6 +6,18 @@ from django.db.models.query import QuerySet
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.db.models import Q
+from django.http import JsonResponse
+
+
+# vista para el buscadador dinamico
+class ProductPriceSuggestionsView(ListView):
+    def get(self, request, *args, **kwargs):
+        term = request.GET.get('term', '')
+        suggestions = ProductPrice.objects.filter(
+            Q(product__description__icontains=term)  # Aquí suponemos que 'name' es el campo relevante en 'Product'
+        ).values('product__name', 'active')[:10]
+        suggestions_list = list(suggestions)
+        return JsonResponse(suggestions_list, safe=False)
 
 
 class ProductPriceListView(PermissionMixin, ListViewMixin, ListView):
@@ -17,7 +29,7 @@ class ProductPriceListView(PermissionMixin, ListViewMixin, ListView):
   def get_queryset(self):
     q1 = self.request.GET.get('q')
     if q1:
-      query = Q(line__description__icontains=q1)
+      query = Q(product__description__icontains=q1)  # Aquí ajustamos la búsqueda
     else:
       query = Q(active=True)
 

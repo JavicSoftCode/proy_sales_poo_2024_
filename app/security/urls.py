@@ -28,12 +28,14 @@ urlpatterns += [
                  path('modules_create/', modulos.ModuleCreateView.as_view(), name='modules_create'),
                  path('modules_update/<int:pk>/', modulos.ModuleUpdateView.as_view(), name='modules_update'),
                  path('modules_delete/<int:pk>/', modulos.ModuleDeleteView.as_view(), name='modules_delete'),
+                 path('modules-suggestions/', modulos.ModuleSuggestionsView.as_view(), name='modules_suggestions'),
 
                  # URLS de menu
                  path('menus_list/', menus.MenuListView.as_view(), name='menus_list'),
                  path('menus_create/', menus.MenuCreateView.as_view(), name='menus_create'),
                  path('menus_update/<int:pk>/', menus.MenuUpdateView.as_view(), name='menus_update'),
                  path('menus_delete/<int:pk>/', menus.MenuDeleteView.as_view(), name='menus_delete'),
+                 path('menus-suggestions/', menus.MenuSuggestionsView.as_view(), name='menus_suggestions'),
 
                  # URLS de grupo modulos permios
                  path('groupmodulepermission_list/', groupModulePermissions.GroupModulePermissionListView.as_view(),
@@ -47,7 +49,9 @@ urlpatterns += [
                  #      groupModulePermissions.GroupModulePermissionDeleteView.as_view(),
                  #      name='groupmodulepermission_delete'),
                  path('get_group_permissions/<int:group_id>/', get_group_permissions, name='get_group_permissions'),
-                 path('groupmodulepermission-suggestions/', groupModulePermissions.GroupModulePermissionSuggestionsView.as_view(), name='groupmodulepermission_suggestions'),
+                 path('groupmodulepermission-suggestions/',
+                      groupModulePermissions.GroupModulePermissionSuggestionsView.as_view(),
+                      name='groupmodulepermission_suggestions'),
 
                  # path('group_module_permission_list/', groupModulePermissions.GroupModulePermissionListView.as_view(),
                  #      name='group_module_permission_list'),

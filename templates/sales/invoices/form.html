@@ -1,142 +1,474 @@
 {% extends 'components/base.html' %}
 {% block content %}
-    <title>{% block title %}Registrar Venta{% endblock title %}</title>
-    <section class="dark:bg-principal ">
-        <div class="text-center" data-aos="fade-up" data-aos-delay="200">
-            <div class="sm:pt-28 lg:pt-24">
-                
-                <h1 class="dark:text-white text-4xl text-center mt-6 font-Pacifico">
-                    Registrar Venta
-                </h1>
+    {% load static %}
+    <style>
+        .flex {
+            display: flex;
+        }
+
+        .justify-end {
+            justify-content: flex-end;
+        }
+
+        .space-x-5 > * + * {
+            margin-left: 20px;
+        }
+
+        .pr-5 {
+            padding-right: 20px;
+        }
+
+        .bg-blue-700 {
+            background-color: #1D4ED8;
+        }
+
+        .hover\:bg-blue-800:hover {
+            background-color: #1E40AF;
+        }
+
+        .text-white {
+            color: #FFFFFF;
+        }
+
+        .py-2 {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .px-4 {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .rounded-full {
+            border-radius: 9999px;
+        }
+
+        .flex.items-center {
+            display: flex;
+            align-items: center;
+        }
+
+        .justify-center {
+            justify-content: center;
+        }
+
+        .mr-2 {
+            margin-right: 0.5rem;
+        }
+
+        .text-sm {
+            font-size: 0.875rem;
+        }
+
+        .transition {
+            transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+        }
+
+        .duration-200 {
+            transition-duration: 200ms;
+        }
+
+    </style>
+    <title>{% block title %} {{ title2 }} {% endblock title %}</title>
+
+    <section class="dark:bg-principal">
+        <div class="max-w-7xl mx-auto bg-white dark:bg-secundario shadow-lg rounded-lg overflow-hidden">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                <div class="sm:pt-28 lg:pt-4 mt-10">
+                    <div class="flex flex-col items-center justify-center">
+                    <span class="rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
+                        {{ title1 }}
+                    </span>
+                    </div>
+                    <h1 class="dark:text-white text-4xl text-center mt-6 font-Pacifico">
+                        {{ title2 }}
+                    </h1>
+                </div>
             </div>
-            <div class="lg:p-4 rounded-3xl" data-aos="fade-up" data-aos-delay="200">
-                <!-- Formulario de Venta -->
-                <form id="frmSale" method="POST" action="{% url 'sales:sales_create' %}" class="space-y-6">
-                    {% csrf_token %}
-                    {{ form.media }}
-                    <div class="p-4 space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <label for="{{ form.customer.id_for_label }}" class="dark:text-blue-300 font-black uppercase text-lg">{{ form.customer.label }}</label>
-                                {{ form.customer }}
-                            </div>
-                            <div>
-                                <label for="{{ form.payment_method.id_for_label }}" class="dark:text-blue-300 font-black uppercase text-lg">{{ form.payment_method.label }}</label>
-                                {{ form.payment_method }}
-                            </div>
-                            <div>
-                                <label for="{{ form.issue_date.id_for_label }}" class="dark:text-blue-300 font-black uppercase text-lg">{{ form.issue_date.label }}</label>
-                                {{ form.issue_date }}
-                            </div>
+
+            <form id="frmSale" method="POST" class="p-6">
+                {% csrf_token %}
+                {{ form.media }}
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div>
+                        <label for="{{ form.customer.id_for_label }}"
+                               class="block dark:text-blue-300 text-sm font-bold mb-2">{{ form.customer.label }}</label>
+                        {{ form.customer }}
+                    </div>
+                    <div>
+                        <label for="{{ form.issue_date.id_for_label }}"
+                               class="block dark:text-blue-300 text-sm font-bold mb-2">{{ form.issue_date.label }}</label>
+                        {{ form.issue_date }}
+                    </div>
+                    <div>
+                        <label for="{{ form.payment_method.id_for_label }}"
+                               class="block dark:text-blue-300 text-sm font-bold mb-2">{{ form.payment_method.label }}</label>
+                        {{ form.payment_method }}
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block dark:text-blue-300 text-sm font-bold mb-2">Búsqueda de productos:</label>
+                    <div class="flex items-center space-x-2">
+                        <select id="product" name="product"
+                                class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">
+                            {% for prod in products %}
+                                <option data-id="{{ prod.id }}" data-des="{{ prod.description }}"
+                                        data-price="{{ prod.price }}" data-stock="{{ prod.stock }}"
+                                        data-iva="{{ prod.iva__value }}" value="{{ prod.id }}"
+                                        {% if forloop.first %}selected{% endif %}>{{ prod.description }}</option>
+                            {% endfor %}
+                        </select>
+                        <div>
+                            <input id="price" name="price" type="text" placeholder="Precio"
+                                   class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                           <div>
-                                <label for="{{ form.subtotal.id_for_label }}" class="dark:text-blue-300 font-black uppercase text-lg">{{ form.subtotal.label }}</label>
+                        <div>
+                            <input id="quantify" name="quantify" type="number" placeholder="Cantidad"
+                                   class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">
+                        </div>
+                        <button id="btnAdd" type="button"
+                                class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full flex items-center justify-center text-sm transition duration-200">
+                            <i class="fas fa-plus mr-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row mb-6">
+                    <div class="w-full md:w-1/2 pr-4">
+                        <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="{{ form.subtotal.id_for_label }}"
+                                       class="block dark:text-blue-300 text-sm font-bold mb-2">{{ form.subtotal.label }}</label>
                                 {{ form.subtotal }}
                             </div>
-                             <div>
-                                <label for="{{ form.discount.id_for_label }}" class="dark:text-blue-300 font-black uppercase text-lg">{{ form.discount.label }}</label>
+                            <div>
+                                <label for="{{ form.discount.id_for_label }}"
+                                       class="block dark:text-blue-300 text-sm font-bold mb-2">{{ form.discount.label }}</label>
                                 {{ form.discount }}
                             </div>
-                             <div>
-                                <label for="{{ form.iva.id_for_label }}" class="dark:text-blue-300 font-black uppercase text-lg">{{ form.iva.label }}</label>
+                            <div>
+                                <label for="{{ form.iva.id_for_label }}"
+                                       class="block dark:text-blue-300 text-sm font-bold mb-2">{{ form.iva.label }}</label>
                                 {{ form.iva }}
                             </div>
-                             <div>
-                                <label for="{{ form.total.id_for_label }}" class="dark:text-blue-300 font-black uppercase text-lg">{{ form.total.label }}</label>
+                            <div>
+                                <label for="{{ form.total.id_for_label }}"
+                                       class="block dark:text-blue-300 text-sm font-bold mb-2">{{ form.total.label }}</label>
                                 {{ form.total }}
                             </div>
-                        </div>
-                       
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                           
                             <div>
-                                <label for="{{ form.payment.id_for_label }}" class="dark:text-blue-300 font-black uppercase text-lg">{{ form.payment.label }}</label>
+                                <label for="{{ form.payment.id_for_label }}"
+                                       class="dark:text-blue-300 font-black uppercase text-lg">{{ form.payment.label }}</label>
                                 {{ form.payment }}
                             </div>
                             <div>
-                                <label for="{{ form.change.id_for_label }}" class="dark:text-blue-300 font-black uppercase text-lg">{{ form.change.label }}</label>
+                                <label for="{{ form.change.id_for_label }}"
+                                       class="dark:text-blue-300 font-black uppercase text-lg">{{ form.change.label }}</label>
                                 {{ form.change }}
                             </div>
                             <div>
-                                <label for="{{ form.state.id_for_label }}" class="dark:text-blue-300 font-black uppercase text-lg">{{ form.state.label }}</label>
+                                <label for="{{ form.state.id_for_label }}"
+                                       class="dark:text-blue-300 font-black uppercase text-lg">{{ form.state.label }}</label>
                                 {{ form.state }}
                             </div>
                         </div>
-                      
                     </div>
-                    <div class="">
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
-                            <div>
-                                <label for="product" class="dark:text-blue-300 font-black uppercase text-lg">Producto</label>
-                               <select name="type_hours" id="product" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">
-                                {% for prod in products%}
-                                    <option data-id="{{prod.id}}" data-des="{{prod.description}}" data-price="{{prod.price}}" data-stock="{{prod.stock}}" data-iva="{{prod.iva__value}}" value="{{prod.id}}">{{prod.description}}</option>
-                                {% endfor %}
-                               </select>
-                            </div>
-                            <div>
-                                <label for="price" class="dark:text-blue-300 font-black uppercase text-lg">Precio</label>
-                               <input name="price" id="price" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">
-                               
-                            </div>
-                           
-                            <div>
-                                <label for="quantify" class="dark:text-blue-300 font-black uppercase text-lg">Cantidad</label>
-                               <input name="quantify" id="quantify" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">
-                            </div>
-                            <div class="m-8">
-                                <button id="btnAdd" type="button" class="py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-500">
-                                Add Producto
-                                </button>
-                            </div>
-                        </div>
-                                           
-                        <div class="flex justify-end">
-                            <button id="btnSave" type="submit" class="py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-500">
-                            Registrar Venta
-                            </button>
+                    <div class="w-full md:w-1/2">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Código</th>
+                                    <th scope="col" class="px-6 py-3">Producto</th>
+                                    <th scope="col" class="px-6 py-3">Precio</th>
+                                    <th scope="col" class="px-6 py-3">Cantidad</th>
+                                    <th scope="col" class="px-6 py-3">Iva</th>
+                                    <th scope="col" class="px-6 py-3">Total</th>
+                                    <th scope="col" class="px-6 py-3">Acciones</th>
+                                </tr>
+                                </thead>
+                                <tbody id="detalle" class="divide-y divide-gray-200 dark:divide-gray-700">
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                </form>
-            </div>
-            <!-- Tabla de ventas -->
-                <div class="overflow-x-auto">
-                    <div class="border-b border-blue-400 dark:text-white text-xl text-center font-Pacifico">Detalle de la venta</div>
-                    <table class="w-full text-center text-lg">
-                        <thead class="uppercase font-Tiny5 bg-gray-50 dark:bg-secundario dark:text-blue-300">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">Id</th>
-                                <th scope="col" class="px-6 py-3">Producto</th>
-                                <th scope="col" class="px-6 py-3">Precio</th>
-                                <th scope="col" class="px-6 py-3">Cantidad</th>
-                                <th scope="col" class="px-6 py-3">Iva</th>
-                                <th scope="col" class="px-6 py-3">Subtotal</th>
-                                <th scope="col" class="px-6 py-3">Eliminar</th>
-
-                            </tr>
-                        </thead>
-                        <tbody id="detalle">
-                            <tr class="dark:text-gray-400 bg-white border-b dark:bg-[#0b1121] dark:border-secundario hover:bg-gray-50 dark:hover:bg-[#121c33]">
-                                <td class="px-6 py-4">1</td>
-                                <td class="px-6 py-4">Aceite Girasol</td>
-                                <td class="px-6 py-4">2.5</td>
-                                <td class="px-6 py-4">2</td>
-                                <td class="px-6 py-4">1.2</td>
-                                <td class="px-6 py-4">11.2</td>
-                                <td class="px-6 py-4">                               
-                                    <a href="#"
-                                        class="text-red-600 dark:text-red-500"
-                                        >
-                                        <i class="fa-solid fa-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
-            {% comment %} fin de tabla de detalle de productos {% endcomment %}
-       </div>
-   </section>
-   {% comment %} <script src="{% static 'js/invoices/sales.js' %}"></script> {% endcomment %}
+
+                <div class="flex justify-end space-x-5 pr-5">
+                    <button id="btnSave" type="submit"
+                            class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full flex items-center justify-center">
+                        <i class="fa-solid fa-cash-register mr-2"></i> Realizar Venta
+                    </button>
+                    <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full flex items-center justify-center text-sm transition duration-200"
+                       href="{% url 'sales:sales_list' %}">
+                        <i class="fa-solid fa-house mr-2"></i>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        var save_url = "{{save_url}}";
+        var detail_sales = JSON.parse("{{ detail_sales|escapejs }}");
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const paymentField = document.getElementById('{{ form.payment.id_for_label }}');
+            const totalField = document.getElementById('{{ form.total.id_for_label }}');
+            const changeField = document.getElementById('{{ form.change.id_for_label }}');
+            const discountField = document.getElementById('{{ form.discount.id_for_label }}');
+            const subtotalField = document.getElementById('{{ form.subtotal.id_for_label }}'); 
+
+            function updateChange() {
+                let payment = parseFloat(paymentField.value) || 0;
+
+                const total = parseFloat(totalField.value) || 0;
+
+                let change = payment - total;
+
+                changeField.value = change.toFixed(2);
+
+                changeField.style.color = change < 0 ? 'red' : '#9299AA';
+            }
+
+            function updateTotal() {
+                const discount = parseFloat(discountField.value) || 0;
+                let subtotal = parseFloat(subtotalField.value) || 0; 
+
+                if (discount > subtotal) {
+                    alert('El descuento no puede ser mayor que el subtotal.');
+                    discountField.value = 0; 
+                    return;
+                }
+
+                let total = subtotal - discount;
+                total = Math.max(total, 0); 
+                totalField.value = total.toFixed(2);
+
+                updateChange();
+            }
+
+            function validatePayment() {
+                const payment = parseFloat(paymentField.value) || 0;
+                const total = parseFloat(totalField.value) || 0;
+
+                if (payment !== total) {
+                    alert('Realizar Pago Correspondiente');
+                    return false; 
+                }
+                return true; 
+            }
+
+            paymentField.addEventListener('input', updateChange);
+            discountField.addEventListener('input', updateTotal);
+
+            const saveButton = document.getElementById('btnSave');
+            saveButton.addEventListener('click', function (event) {
+                if (!validatePayment()) {
+                    event.preventDefault(); 
+                }
+            });
+
+            totalField.setAttribute('data-subtotal', parseFloat(subtotalField.value) || 0); 
+
+            updateTotal();
+            updateChange();
+        });
+    </script>
+
+    <script>
+
+        let d = document, c = console.log
+        d.addEventListener('DOMContentLoaded', function (e) {
+            let $customer = d.getElementById("id_customer")
+            let $payment_method = d.getElementById("id_payment_method")
+            $customer.selectedIndex = 1
+            $payment_method.selectedIndex = 1
+            let $detailBody = d.getElementById('detalle')
+            let $product = d.getElementById('product')
+            let $btnAdd = d.getElementById("btnAdd")
+            c($btnAdd)
+            let $btnGrabar = d.getElementById("btnGrabar")
+            let $form = d.getElementById("frmSale")
+            let detailSale = []
+            let sub = 0
+            let $discount = d.getElementById("id_discount")
+
+            console.log("detalle= ", detail_sales)
+            if (detail_sales.length > 0) {
+                detailSale = detail_sales.map(item => {
+                    let {
+                        product: id,
+                        product__description: description,
+                        quantity: quantify,
+                        price,
+                        subtotal: sub,
+                        iva
+                    } = item
+                    price = parseFloat(price)
+                    quantify = parseFloat(quantify)
+                    iva = parseFloat(iva)
+                    sub = parseFloat(sub)
+                    return {id, description, price, quantify, iva, sub}
+                })
+                present()
+                totals()
+            }
+
+            const calculation = (id, description, iva, price, quantify) => {
+                const product = detailSale.find(prod => prod.id == id)
+                if (product) {
+                    if (!confirm(`¿Ya existe ingresado ${product.description} =>  Desea actualizarlo?`)) return
+                    quantify += product.quantify
+                    detailSale = detailSale.filter(prod => prod.id !== id)
+                }
+                iva = iva > 0 ? ((price * quantify) * (iva / 100)).toFixed(2) : "0"
+                iva = parseFloat(iva)
+                sub = (price * quantify).toFixed(2)
+                sub = parseFloat(sub)
+                detailSale.push({id, description, price, quantify, iva, sub})
+                present()
+                totals()
+            }
+
+            const productChange = (e) => {
+                c("entro al changeproduct")
+                const selectedOption = e.target.selectedOptions[0];
+                const price = selectedOption.getAttribute('data-price');
+                d.getElementById('price').value = price
+                // reCalculation(id)
+            };
+            $product.addEventListener('change', productChange);
+            productChange({target: $product});
+            const deleteproduct = (id) => {
+                detailSale = detailSale.filter((item) => item.id !== id)
+                present()
+                totals()
+            }
+
+            function present() {
+                c("estoy en present()")
+                let detalle = d.getElementById('detalle')
+                detalle.innerHTML = ""
+                detailSale.forEach((product) => {
+                    detalle.innerHTML += `<tr class=dark:text-gray-400 bg-white border-b dark:bg-[#0b1121] dark:border-secundario hover:bg-gray-50 dark:hover:bg-[#121c33]>
+            <td>${product.id}</td>
+            <td>${product.description}</td>
+            <td>${product.price}</td>
+            <td>${product.quantify}</td>
+            <td>${product.iva}</td>
+            <td>${product.sub}</td>
+            <td class="text-center ">
+                <button rel="rel-delete" data-id="${product.id}" class="text-red-600 dark:text-red-500"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          </tr>`
+                });
+            }
+
+            function totals() {
+                const result = detailSale.reduce((acc, product) => {
+                    acc.iva += product.iva;
+                    acc.sub += product.sub;
+                    return acc;
+                }, {iva: 0, sub: 0});
+
+                let discount = parseFloat(d.getElementById('id_discount').value) || 0;
+                if (discount > result.sub) {
+                    alert("DESCUENTO NO PUEDE SER MAYOR AL SUBTOTAL");
+                    discount = result.sub; 
+                    d.getElementById('id_discount').value = discount.toFixed(2); 
+                }
+                if (discount < 0) {
+                    alert("DESCUENTO NO PUEDE ESTAR CON VALORES NEGATIVOS");
+                    discount = 0; 
+                    d.getElementById('id_discount').value = discount.toFixed(2); 
+                }
+
+                let subtotal = result.sub - discount;
+                d.getElementById('id_subtotal').value = subtotal.toFixed(2)
+                d.getElementById('id_iva').value = result.iva.toFixed(2)
+                d.getElementById('id_total').value = (subtotal + result.iva).toFixed(2)
+            }
+
+            // Actualiza los totales cuando cambia el descuento
+            $discount.addEventListener('input', totals);
+
+            async function saveSale(urlPost, urlSuccess) {
+                const formData = new FormData($form);
+                formData.append("detail", JSON.stringify(detailSale));
+
+                let csrf = d.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                console.log('FormData antes de enviar:');
+                c(`csrf=${csrf}`)
+                for (let [name, value] of formData.entries()) {
+                    console.log(`${name}: ${value}`);
+                }
+
+                try {
+                    const res = await fetch(urlPost, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': csrf,
+                        },
+                        body: formData
+                    });
+                    c(res)
+                    if (!res.ok) {
+                        const text = await res.text();
+                        c("error=> " + text)
+                        throw new Error(`HTTP error! Status: ${res.status}, Response: ${text}`);
+                    }
+
+                    const post = await res.json();
+                    console.log("Server message:", post.msg); 
+                    alert(post.msg);
+                    window.location.href = urlSuccess;
+                } catch (error) {
+                    console.error("Fetch error:", error);
+                    alert("Fetch error: " + error);
+                }
+            }
+
+            $form.addEventListener('submit', async (e) => {
+                e.preventDefault()
+                if (parseFloat(d.getElementById('id_total').value) > 0.00) {
+                    await saveSale(save_url, '/sales/sales_list/')
+                } else {
+                    alert("!!!Faltan datos de productos para grabar la venta!!!")
+                }
+            });
+
+            $btnAdd.addEventListener('click', (e) => {
+                debugger;
+                let quantify = parseInt(d.getElementById('quantify').value)
+                let stock = parseInt($product.options[$product.selectedIndex].dataset.stock);
+                c(quantify)
+                if (quantify > 0 && quantify <= stock) {
+                    let idProd = parseInt($product.value)
+                    let price = d.getElementById('price').value
+                    price = parseFloat(price.replace(',', '.'))
+                    let iva = $product.options[$product.selectedIndex].dataset.iva;
+                    iva = parseFloat(iva.replace(',', '.'))
+                    let description = $product.options[$product.selectedIndex].text
+                    calculation(idProd, description, iva, price, quantify)
+                } else {
+                    alert(`Cantidad negativa o superior al stock:[${stock}]`)
+                }
+            });
+
+            $detailBody.addEventListener('click', (e) => {
+                const fil = e.target.closest('button[rel=rel-delete]')
+                c(fil)
+                if (fil) deleteproduct(parseInt(fil.getAttribute('data-id')))
+            });
+        });
+    </script>
+
 {% endblock %}

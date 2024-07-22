@@ -49,7 +49,6 @@
             margin: 0;
             box-sizing: border-box;
         }
-
     </style>
     <title>{% block title %}{{ title1 }}{% endblock title %}</title>
     <section class="dark:bg-principal">
@@ -109,15 +108,17 @@
                     <tr class="dark:text-gray-400 bg-white border-b dark:bg-[#0b1121] dark:border-secundario hover:bg-gray-50 dark:hover:bg-[#121c33]">
                         <td class="px-6 py-4">{{ item.group.name }}</td>
                         <td class="px-6 py-4">{{ item.module.name }}</td>
-
-                        <td class="px-2 py-4">
-                                                        <span class="authorization-icon"
-                                                              onclick="openAuthorizationModal(`  <h2>{{ item.group.name }} </h2>
-                                                              <br>
-                                                                      {% for permission in item.permissions.all %}{{ permission.name }}{% if not forloop.last %}<br>{% endif %}{% endfor %}`)">
-                                                                    <i class="fa-solid fa-user-lock"
-                                                                       style="color: #9CA3AF; cursor: pointer"></i>
-                                                        </span>
+                        <style>strong u {
+                            font-size: 18px;
+                        }</style>
+                        <td class="px-6 py-4">
+                                          <span class="authorization-icon"
+                                                onclick="openAuthorizationModal(`<strong><u>Grupo:</u></strong> {{ item.group.name }} <br> <strong><u>Módulo:</u></strong> {{ item.module.name }}
+                                           <br><br> 
+                                                        {% for permission in item.permissions.all %}{{ permission.name }}{% if not forloop.last %}<br>{% endif %}{% endfor %}`)">
+                                            <i class="fa-solid fa-user-lock"
+                                               style="color: #9CA3AF; cursor: pointer"></i>
+                                            </span>
                         </td>
                     </tr>
                 {% endfor %}
@@ -212,18 +213,19 @@
 
     {#    modal para ver todos los permisos#}
     <script>
-        function openAuthorizationModal(authorizationNumber) {
+        function openAuthorizationModal(menuName) {
             // Crear el contenido del modal
             const modalHTML = `
-                <div class="modal" id="authorizationModal">
-                    <div class="modal-content">
-                        <span class="modal-close" onclick="closeAuthorizationModal()">&times;</span>
-                        <div class="modal-body">
-                            ${authorizationNumber}
-                        </div>
+            <div class="modal" id="authorizationModal">
+                <div class="modal-content">
+                    <span class="modal-close" onclick="closeAuthorizationModal()">&times;</span>
+                    <div class="modal-body">
+                        <h2>${menuName}</h2>
+                        <br>
                     </div>
                 </div>
-            `;
+            </div>
+        `;
 
             document.body.insertAdjacentHTML('beforeend', modalHTML);
 
@@ -238,18 +240,18 @@
         }
     </script>
 
-{#    {% include 'fragments/delete.html' %}#}
-{#    <script>#}
-{#        function openDeleteModal(id, description) {#}
-{#            const deleteForm = document.getElementById('deleteForm');#}
-{#            deleteForm.action = `{% url 'security:groupmodulepermission_delete' 0 %}`.replace('0', id);#}
-{#            document.getElementById('Description').textContent = `ID: ${id}`;#}
-{#            document.getElementById('deleteModal').classList.remove('hidden');#}
-{#        }#}
-{##}
-{#        function closeModal() {#}
-{#            document.getElementById('deleteModal').classList.add('hidden');#}
-{#        }#}
-{#    </script>#}
+    {#    {% include 'fragments/delete.html' %}#}
+    {#    <script>#}
+    {#        function openDeleteModal(id, description) {#}
+    {#            const deleteForm = document.getElementById('deleteForm');#}
+    {#            deleteForm.action = `{% url 'security:groupmodulepermission_delete' 0 %}`.replace('0', id);#}
+    {#            document.getElementById('Description').textContent = `ID: ${id}`;#}
+    {#            document.getElementById('deleteModal').classList.remove('hidden');#}
+    {#        }#}
+    {##}
+    {#        function closeModal() {#}
+    {#            document.getElementById('deleteModal').classList.add('hidden');#}
+    {#        }#}
+    {#    </script>#}
 
 {% endblock %}

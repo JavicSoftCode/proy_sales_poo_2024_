@@ -8,6 +8,27 @@ from django.forms import model_to_dict
 
 
 # ficha,prestamos,nomina
+# class Menu(models.Model):
+#   name = models.CharField(verbose_name='Nombre', max_length=150, unique=True)
+#   icon = models.CharField(verbose_name='Icono', max_length=100)
+#
+#   def __str__(self):
+#     return self.name
+#
+#   def get_model_to_dict(self):
+#     item = model_to_dict(self)
+#     return item
+#
+#   def get_icon(self):
+#     if self.icon:
+#       return self.icon
+#     return 'bi bi-calendar-x-fill'
+#
+#   class Meta:
+#     verbose_name = 'Menu'
+#     verbose_name_plural = 'Menus'
+#     ordering = ['-name']
+
 class Menu(models.Model):
   name = models.CharField(verbose_name='Nombre', max_length=150, unique=True)
   icon = models.CharField(verbose_name='Icono', max_length=100)
@@ -23,6 +44,13 @@ class Menu(models.Model):
     if self.icon:
       return self.icon
     return 'bi bi-calendar-x-fill'
+
+  def has_related_objects(self):
+    # Verificar si existen módulos relacionados
+    if Module.objects.filter(menu=self).exists():
+      return True
+    # Agrega aquí más verificaciones si hay otras relaciones
+    return False
 
   class Meta:
     verbose_name = 'Menu'
@@ -57,6 +85,13 @@ class Module(models.Model):
   def get_model_to_dict(self):
     item = model_to_dict(self)
     return item
+
+  def has_related_objects_Modules(self):
+    # Implementación según sea necesario
+    if GroupModulePermission.objects.filter(module=self).exists():
+      return True
+    # Verifica otras relaciones según sea necesario
+    return False
 
   def get_icon(self):
     if self.icon:

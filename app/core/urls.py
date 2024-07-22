@@ -1,4 +1,5 @@
-from app.core.views import brand, category, company, customer, iva, line, supplier, product, paymentMethod, price
+from app.core.views import brand, category, company, customer, iva, line, supplier, product, paymentMethod, price, \
+  statistics
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.conf import settings
@@ -57,19 +58,22 @@ urlpatterns = [
                      name='paymentMethod_update'),
                 path('paymentMethod_delete/<int:pk>/', paymentMethod.PaymentMethodDeleteView.as_view(),
                      name='paymentMethod_delete'),
-                path('paymentMethod-suggestions/', paymentMethod.PaymentMethodSuggestionsView.as_view(), name='paymentMethod_suggestions'),
+                path('paymentMethod-suggestions/', paymentMethod.PaymentMethodSuggestionsView.as_view(),
+                     name='paymentMethod_suggestions'),
 
                 # URLS de precios
                 path("price_list/", price.ProductPriceListView.as_view(), name="price_list"),
                 path("price_create/", price.ProductPriceCreateView.as_view(), name="price_create"),
                 path("price_update/<int:pk>/", price.ProductPriceUpdateView.as_view(), name="price_update"),
                 path("price_delete/<int:pk>/", price.ProductPriceDeleteView.as_view(), name="price_delete"),
+                path('price-suggestions/', price.ProductPriceSuggestionsView.as_view(), name='price_suggestions'),
 
                 # URLs de productos
                 path('product_list/', product.ProductListView.as_view(), name='product_list'),
                 path('product_create/', product.ProductCreateView.as_view(), name='product_create'),
                 path('product_update/<int:pk>/', product.ProductUpdateView.as_view(), name='product_update'),
                 path('product_delete/<int:pk>/', product.ProductDeleteView.as_view(), name='product_delete'),
+                path('product-suggestions/', product.ProductSuggestionsView.as_view(), name='product_suggestions'),
 
                 # URLs de proveedores
                 path('supplier_list/', supplier.SupplierListView.as_view(), name='supplier_list'),
@@ -77,5 +81,8 @@ urlpatterns = [
                 path('supplier_update/<int:pk>/', supplier.SupplierUpdateView.as_view(), name='supplier_update'),
                 path('supplier_delete/<int:pk>/', supplier.SupplierDeleteView.as_view(), name='supplier_delete'),
                 path('supplier-suggestions/', supplier.SupplierSuggestionsView.as_view(), name='supplier_suggestions'),
+
+                # URLs de estadisticas
+                path('statistics_list/', statistics.StatisticsListView.as_view(), name='statistics_list'),
 
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

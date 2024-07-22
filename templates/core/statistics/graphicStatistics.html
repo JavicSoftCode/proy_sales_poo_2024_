@@ -1,0 +1,102 @@
+{% extends 'components/base.html' %}
+{% block content %}
+    {% load static %}
+    <title>{% block title %}{{ title1 }}{% endblock title %}</title>
+
+    <section class="dark:bg-principal">
+        <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+            <!-- Cabecera -->
+            <div class="sm:pt-28 lg:pt-24">
+                <div class="flex flex-col items-center justify-center">
+                    <span class="rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
+                        {{ title1 }}
+                    </span>
+                </div>
+                <h1 class="dark:text-white text-4xl text-center mt-6 font-Pacifico">
+                    {{ title2 }}
+                </h1>
+            </div>
+
+            <!-- Gráfico de Productos -->
+            <canvas id="productChart" width="400" height="200"></canvas>
+            
+            <!-- Gráfico de Proveedores -->
+            <canvas id="supplierChart" width="400" height="200"></canvas>
+            
+            <!-- Gráfico de Métodos de Pago -->
+            <canvas id="paymentMethodChart" width="400" height="200"></canvas>
+
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                $(document).ready(function() {
+                    $.ajax({
+                        url: '{% url "core:statistics_list" %}',
+                        method: 'GET',
+                        success: function(response) {
+                            // Obtener datos del contexto
+                            const productsData = response.products;
+                            const suppliersData = response.suppliers;
+                            const paymentMethodsData = response.payment_methods;
+
+                            // Crear o actualizar gráficos
+                            // Gráfico de Productos
+                            const ctxProduct = document.getElementById('productChart').getContext('2d');
+                            new Chart(ctxProduct, {
+                                type: 'bar',
+                                data: {
+                                    labels: productsData.map(p => p.description),
+                                    datasets: [{
+                                        label: 'Precio de Productos',
+                                        data: productsData.map(p => p.price),
+                                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                        borderColor: 'rgba(75, 192, 192, 1)',
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+
+                            // Gráfico de Proveedores
+                            const ctxSupplier = document.getElementById('supplierChart').getContext('2d');
+                            new Chart(ctxSupplier, {
+                                type: 'pie',
+                                data: {
+                                    labels: suppliersData.map(s => s.name),
+                                    datasets: [{
+                                        label: 'Proveedores',
+                                        data: suppliersData.map(() => 1), // Puedes ajustar esto para una visualización más relevante
+                                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+                                    }]
+                                }
+                            });
+
+                            // Gráfico de Métodos de Pago
+                            const ctxPaymentMethod = document.getElementById('paymentMethodChart').getContext('2d');
+                            new Chart(ctxPaymentMethod, {
+                                type: 'doughnut',
+                                data: {
+                                    labels: paymentMethodsData.map(pm => pm.description),
+                                    datasets: [{
+                                        label: 'Métodos de Pago',
+                                        data: paymentMethodsData.map(() => 1), // Puedes ajustar esto para una visualización más relevante
+                                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+                                    }]
+                                }
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error al obtener los datos:', error);
+                        }
+                    });
+                });
+            </script>
+        </div>
+    </section>
+{% endblock %}

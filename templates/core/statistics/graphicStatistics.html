@@ -1,9 +1,12 @@
 {% extends 'components/base.html' %}
 {% block content %}
     {% load static %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/3.2.7/tailwind.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>{% block title %}{{ title1 }}{% endblock title %}</title>
 
     <section class="dark:bg-principal">
+
         <div class="text-center" data-aos="fade-up" data-aos-delay="200">
             <!-- Cabecera -->
             <div class="sm:pt-28 lg:pt-24">
@@ -17,86 +20,508 @@
                 </h1>
             </div>
 
-            <!-- Gráfico de Productos -->
-            <canvas id="productChart" width="400" height="200"></canvas>
-            
-            <!-- Gráfico de Proveedores -->
-            <canvas id="supplierChart" width="400" height="200"></canvas>
-            
-            <!-- Gráfico de Métodos de Pago -->
-            <canvas id="paymentMethodChart" width="400" height="200"></canvas>
+            <!-- Contenedor para las tablas y gráficos -->
+            <div class="container mx-auto p-4">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            <script>
-                $(document).ready(function() {
-                    $.ajax({
-                        url: '{% url "core:statistics_list" %}',
-                        method: 'GET',
-                        success: function(response) {
-                            // Obtener datos del contexto
-                            const productsData = response.products;
-                            const suppliersData = response.suppliers;
-                            const paymentMethodsData = response.payment_methods;
+                    <!-- Tabla de Ventas -->
+                    <div class="mb-6">
+                        <h2 class="text-xl font-semibold mb-4" style="color:white;font-weight: bold">Ventas</h2>
+                        <div class="flex items-center mb-4" style="margin-left: 70px">
+                            <input
+                                    type="text"
+                                    id="dniSearch"
+                                    placeholder="Buscar por DNI"
+                                    class="border px-4 py-2 rounded mr-4"
+                                    style="width: 200px;background-color: black; color: white"
+                                    maxlength="10"
+                            />
+                            <button id="filterTopSales" class="px-4 py-2 bg-green-400 text-white rounded mr-2"><i
+                                    class="fa-solid fa-arrow-trend-up"></i>
+                                Mayor Ventas
+                            </button>
+                            <button id="filterLowSales" class="px-4 py-2 bg-red-500 text-white rounded"><i
+                                    class="fa-solid fa-arrow-trend-down"></i>
+                                Menor Ventas
+                            </button>
+                        </div>
+                        <table class="w-full text-center bg-white shadow rounded-lg"
+                               style="color:white;font-weight: bold; background-color: black">
+                            <thead class="bg-gray-200">
+                            <tr style="background-color: darkgrey; color: black">
+                                <th class="px-4 py-2">Dni</th>
+                                <th class="px-4 py-2">Cant. Ventas</th>
+                                <th class="px-4 py-2">Cliente Nombre</th>
+                                <th class="px-4 py-2">Cliente Apellido</th>
+                                <th class="px-4 py-2">Fecha</th>
+                            </tr>
+                            </thead>
+                            <tbody id="salesTableBody">
+                            </tbody>
+                        </table>
+                    </div>
 
-                            // Crear o actualizar gráficos
-                            // Gráfico de Productos
-                            const ctxProduct = document.getElementById('productChart').getContext('2d');
-                            new Chart(ctxProduct, {
-                                type: 'bar',
-                                data: {
-                                    labels: productsData.map(p => p.description),
-                                    datasets: [{
-                                        label: 'Precio de Productos',
-                                        data: productsData.map(p => p.price),
-                                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                        borderColor: 'rgba(75, 192, 192, 1)',
-                                        borderWidth: 1
-                                    }]
+                    <!-- Tabla de Compras -->
+                    <div class="mb-6">
+                        <h2 class="text-xl font-semibold mb-4" style="color:white;font-weight: bold">Compras</h2>
+                        <div class="flex items-center mb-4" style="margin-left: 40px">
+                            <input
+                                    type="text"
+                                    id="rucSearch"
+                                    placeholder="Buscar por RUC"
+                                    class="border px-4 py-2 rounded mr-4"
+                                    style="width: 200px;background-color: black; color: white"
+                                    maxlength="13"
+                            />
+                            <button id="filterTopPurchases" class="px-4 py-2 bg-green-400 text-white rounded mr-2"><i
+                                    class="fa-solid fa-arrow-trend-up"></i>
+                                Mayores Compras
+                            </button>
+                            <button id="filterLowPurchases" class="px-4 py-2 bg-red-500 text-white rounded"><i
+                                    class="fa-solid fa-arrow-trend-down"></i>
+                                Menores Compras
+                            </button>
+                        </div>
+                        <table class="w-full text-center bg-white shadow rounded-lg"
+                               style="color:white;font-weight: bold; background-color: black">
+                            <thead style="background-color: darkgrey; color: black">
+                            <tr>
+                                <th class="px-4 py-2">Ruc</th>
+                                <th class="px-4 py-2">Cant. Compras</th>
+                                <th class="px-4 py-2">Proveedor</th>
+                                <th class="px-4 py-2">Fecha</th>
+                            </tr>
+                            </thead>
+                            <tbody id="purchasesTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="mb-6">
+                        <h2 class="text-xl font-semibold mb-4" style="color: white; font-weight: bold">Gráfico de
+                            Ventas</h2>
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                    <div class="mb-6">
+                        <h2 class="text-xl font-semibold mb-4" style="color: white; font-weight: bold">Gráfico de
+                            Compras</h2>
+                        <canvas id="purchasesChart"></canvas>
+                    </div>
+                    <div class="mb-6">
+                        <h2 class="text-xl font-semibold mb-4" style="color: white; font-weight: bold">Productos Más
+                            Vendidos</h2>
+                        <canvas id="invoiceChart"></canvas>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        {#            async function fetchSalesData() {#}
+        <script>
+            document.addEventListener('DOMContentLoaded', async function () {
+                async function fetchSalesData() {
+                    try {
+                        const response = await fetch('{% url "core:sales_data" %}');
+                        if (!response.ok) throw new Error('Network response was not ok.');
+                        return await response.json();
+                    } catch (error) {
+                        console.error('Error fetching sales data:', error);
+                        return []; // Devolver un array vacío en caso de error
+                    }
+                }
+
+                function formatDate(dateString) {
+                    if (!dateString) return 'N/A';
+                    const date = new Date(dateString);
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    return `${year}-${month}-${day}`;
+                }
+
+                function renderTable(data) {
+                    const salesTableBody = document.getElementById('salesTableBody');
+                    salesTableBody.innerHTML = data.map(sale => `
+                <tr>
+                    <td class="px-4 py-2">${sale.customer_dni || 'N/A'}</td>
+                    <td class="px-4 py-2">${sale.total_sales}</td>
+                    <td class="px-4 py-2">${sale.customer || 'N/A'}</td>
+                    <td class="px-4 py-2">${sale.customer_last || 'N/A'}</td>
+                    <td class="px-4 py-2">${formatDate(new Date()) || 'N/A'}</td> <!-- Fecha actual como ejemplo -->
+                </tr>
+            `).join('');
+                }
+
+                async function initialize() {
+                    const salesData = await fetchSalesData();
+
+                    if (!salesData) return;
+
+                    const salesCount = salesData.reduce((acc, sale) => {
+                        const key = `${sale.customer_dni}-${sale.customer}-${sale.customer_last}`;
+                        if (!acc[key]) {
+                            acc[key] = {
+                                customer_dni: sale.customer_dni,
+                                customer: sale.customer,
+                                customer_last: sale.customer_last,
+                                total_sales: 0
+                            };
+                        }
+                        acc[key].total_sales += 1;
+                        return acc;
+                    }, {});
+
+                    const salesCountArray = Object.values(salesCount);
+
+                    renderTable(salesCountArray);
+
+                    document.getElementById('filterTopSales').addEventListener('click', () => {
+                        const sortedBySales = [...salesCountArray].sort((a, b) => b.total_sales - a.total_sales);
+                        renderTable(sortedBySales);
+                    });
+
+                    document.getElementById('filterLowSales').addEventListener('click', () => {
+                        const sortedBySales = [...salesCountArray].sort((a, b) => a.total_sales - b.total_sales);
+                        renderTable(sortedBySales);
+                    });
+
+                    document.getElementById('dniSearch').addEventListener('input', function () {
+                        const searchTerm = this.value.trim();
+                        const filteredData = salesCountArray.filter(sale =>
+                            sale.customer_dni && sale.customer_dni.includes(searchTerm)
+                        );
+                        renderTable(filteredData);
+                    });
+                }
+
+                initialize();
+            });
+        </script>
+
+
+        {#            async function fetchPurchasesData() {#}
+        <script>
+            document.addEventListener('DOMContentLoaded', async function () {
+                async function fetchPurchasesData() {
+                    try {
+                        const response = await fetch('{% url "core:purchases_data" %}');
+                        if (!response.ok) throw new Error('Network response was not ok.');
+                        return await response.json();
+                    } catch (error) {
+                        console.error('Error fetching purchases data:', error);
+                        return []; // Devolver un array vacío en caso de error
+                    }
+                }
+
+                function formatDate(dateString) {
+                    if (!dateString) return 'N/A';
+                    const date = new Date(dateString);
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    return `${year}-${month}-${day}`;
+                }
+
+                function filterByRUC(purchasesData, ruc) {
+                    return purchasesData.filter(purchase => purchase.supplier_ruc.startsWith(ruc));
+                }
+
+                function sortPurchasesData(purchasesData, order = 'desc') {
+                    return purchasesData.sort((a, b) => {
+                        if (order === 'asc') {
+                            return a.total_purchases - b.total_purchases;
+                        }
+                        return b.total_purchases - a.total_purchases;
+                    });
+                }
+
+                function updatePurchasesTable(purchasesData) {
+                    const purchasesTableBody = document.getElementById('purchasesTableBody');
+                    purchasesTableBody.innerHTML = purchasesData.map(purchase => `
+                <tr>
+                    <td class="px-4 py-2">${purchase.supplier_ruc || 'N/A'}</td>
+                    <td class="px-4 py-2">${purchase.total_purchases}</td>
+                    <td class="px-4 py-2">${purchase.supplier_name || 'N/A'}</td>
+                    <td class="px-4 py-2">${formatDate(purchase.issue_date) || 'N/A'}</td>
+                </tr>
+            `).join('');
+                }
+
+                async function initialize() {
+                    let purchasesData = await fetchPurchasesData();
+
+                    if (!purchasesData) return;
+
+                    const purchasesCount = purchasesData.reduce((acc, purchase) => {
+                        const key = `${purchase.supplier_ruc}-${purchase.supplier_name}`;
+                        if (!acc[key]) {
+                            acc[key] = {
+                                supplier_ruc: purchase.supplier_ruc,
+                                supplier_name: purchase.supplier_name,
+                                total_purchases: 0,
+                                issue_date: purchase.issue_date
+                            };
+                        }
+                        acc[key].total_purchases += 1;
+                        return acc;
+                    }, {});
+
+                    const purchasesCountArray = Object.values(purchasesCount);
+
+                    updatePurchasesTable(purchasesCountArray);
+
+                    const rucSearch = document.getElementById('rucSearch');
+                    const filterTopPurchases = document.getElementById('filterTopPurchases');
+                    const filterLowPurchases = document.getElementById('filterLowPurchases');
+
+                    rucSearch.addEventListener('input', function () {
+                        const filteredData = filterByRUC(purchasesCountArray, rucSearch.value);
+                        updatePurchasesTable(filteredData);
+                    });
+
+                    filterTopPurchases.addEventListener('click', function () {
+                        const sortedData = sortPurchasesData([...purchasesCountArray], 'desc');
+                        updatePurchasesTable(sortedData);
+                    });
+
+                    filterLowPurchases.addEventListener('click', function () {
+                        const sortedData = sortPurchasesData([...purchasesCountArray], 'asc');
+                        updatePurchasesTable(sortedData);
+                    });
+                }
+
+                initialize();
+            });
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{#        graficas#}
+        <script>
+            document.addEventListener('DOMContentLoaded', async function () {
+
+                // Función para obtener datos de ventas
+                async function fetchSalesData() {
+                    try {
+                        const response = await fetch('{% url "core:sales_data" %}');
+                        if (!response.ok) throw new Error('Network response was not ok.');
+                        return await response.json();
+                    } catch (error) {
+                        console.error('Error fetching sales data:', error);
+                        return []; 
+                    }
+                }
+
+                // Función para obtener datos de compras
+                async function fetchPurchasesData() {
+                    try {
+                        const response = await fetch('{% url "core:purchases_data" %}');
+                        if (!response.ok) throw new Error('Network response was not ok.');
+                        return await response.json();
+                    } catch (error) {
+                        console.error('Error fetching purchases data:', error);
+                        return []; 
+                    }
+                }
+                
+                // Función para formatear fechas
+                function formatDate(dateString) {
+                    if (!dateString) return 'N/A';
+                    const date = new Date(dateString);
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    return `${year}-${month}-${day}`;
+                }
+
+                // Función para inicializar las gráficas
+                async function initialize() {
+                    const salesData = await fetchSalesData();
+                    const purchasesData = await fetchPurchasesData();
+
+                    // Configuración de la gráfica de ventas
+                    const salesChartCtx = document.getElementById('salesChart').getContext('2d');
+
+                    function getTopSalesDay(sales) {
+                        const currentMonth = new Date().getMonth();
+                        const currentYear = new Date().getFullYear();
+                        const filteredSales = sales.filter(sale => {
+                            const saleDate = new Date(sale.issue_date);
+                            return saleDate.getMonth() === currentMonth && saleDate.getFullYear() === currentYear;
+                        });
+
+                        if (filteredSales.length === 0) return null;
+
+                        return filteredSales.reduce((max, sale) => (sale.total > max.total ? sale : max), filteredSales[0]);
+                    }
+
+                    const sortedSales = salesData.sort((a, b) => new Date(a.issue_date) - new Date(b.issue_date));
+                    const topSalesDay = getTopSalesDay(salesData);
+
+                    const backgroundColors = sortedSales.map(sale => {
+                        if (topSalesDay && new Date(sale.issue_date).toDateString() === new Date(topSalesDay.issue_date).toDateString() && topSalesDay.total >= 1000) {
+                            return 'rgba(255, 99, 132, 0.2)'; 
+                        } else {
+                            return 'rgba(75, 192, 192, 0.2)';
+                        }
+                    });
+
+                    const borderColors = sortedSales.map(sale => {
+                        if (topSalesDay && new Date(sale.issue_date).toDateString() === new Date(topSalesDay.issue_date).toDateString() && topSalesDay.total >= 1000) {
+                            return 'rgba(255, 99, 132, 1)'; 
+                        } else {
+                            return 'rgba(75, 192, 192, 1)';
+                        }
+                    });
+
+                    new Chart(salesChartCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: sortedSales.length > 0 ? sortedSales.map(sale => `${sale.customer} ${sale.customer_last} ${formatDate(sale.issue_date)}`) : ['Sin datos'],
+                            datasets: [{
+                                label: 'Ventas',
+                                data: sortedSales.length > 0 ? sortedSales.map(sale => sale.total) : [0],
+                                backgroundColor: backgroundColors,
+                                borderColor: borderColors,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                x: {beginAtZero: true},
+                                y: {beginAtZero: true}
+                            }
+                        }
+                    });
+
+                    // Configuración de la gráfica de compras
+                    const purchasesChartCtx = document.getElementById('purchasesChart').getContext('2d');
+
+                    function getHighlightedPurchase(purchases) {
+                        const currentYear = new Date().getFullYear();
+                        const filteredPurchases = purchases.filter(purchase => {
+                            const purchaseDate = new Date(purchase.issue_date);
+                            return purchaseDate.getFullYear() === currentYear;
+                        });
+
+                        if (filteredPurchases.length === 0) return null;
+
+                        return filteredPurchases.reduce((max, purchase) => (purchase.total > max.total ? purchase : max), filteredPurchases[0]);
+                    }
+
+                    const sortedPurchases = purchasesData.sort((a, b) => new Date(a.issue_date) - new Date(b.issue_date));
+                    const highlightedPurchase = getHighlightedPurchase(purchasesData);
+
+                    new Chart(purchasesChartCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: sortedPurchases.length > 0 ? sortedPurchases.map(purchase => `${purchase.supplier_name} ${formatDate(purchase.issue_date)}`) : ['Sin datos'],
+                            datasets: [{
+                                label: 'Compras',
+                                data: sortedPurchases.length > 0 ? sortedPurchases.map(purchase => purchase.total) : [0],
+                                backgroundColor: sortedPurchases.map(purchase => {
+                                    if (highlightedPurchase && purchase.id === highlightedPurchase.id) {
+                                        return 'rgba(255, 99, 132, 0.2)'; 
+                                    } else {
+                                        return 'rgba(153, 102, 255, 0.2)';
+                                    }
+                                }),
+                                borderColor: sortedPurchases.map(purchase => {
+                                    if (highlightedPurchase && purchase.id === highlightedPurchase.id) {
+                                        return 'rgba(255, 99, 132, 1)'; 
+                                    } else {
+                                        return 'rgba(153, 102, 255, 1)';
+                                    }
+                                }),
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                x: {beginAtZero: true},
+                                y: {beginAtZero: true}
+                            }
+                        }
+                    });
+
+                    async function fetchInvoiceDetails() {
+                        try {
+                            const response = await fetch(`{% url "core:invoice_details" %}`);
+                            if (!response.ok) throw new Error('Network response was not ok.');
+                            return await response.json();
+                        } catch (error) {
+                            console.error('Error fetching invoice details:', error);
+                            return []; 
+                        }
+                    }
+
+                    async function renderInvoiceChart() {
+                        const invoiceDetails = await fetchInvoiceDetails();
+                        const invoiceChartCtx = document.getElementById('invoiceChart').getContext('2d');
+
+                        new Chart(invoiceChartCtx, {
+                            type: 'bar',
+                            data: {
+                                labels: invoiceDetails.length > 0 ? invoiceDetails.map(detail => detail.product_name) : ['Sin datos'],
+                                datasets: [{
+                                    label: 'Cantidad de Productos',
+                                    data: invoiceDetails.length > 0 ? invoiceDetails.map(detail => detail.total_quantity) : [0],
+                                    backgroundColor: invoiceDetails.length > 0 ? invoiceDetails.map(() => 'rgba(75, 192, 192, 0.2)') : ['rgba(75, 192, 192, 0.2)'],
+                                    borderColor: invoiceDetails.length > 0 ? invoiceDetails.map(() => 'rgba(75, 192, 192, 1)') : ['rgba(75, 192, 192, 1)'],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                indexAxis: 'y', 
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'top',
+                                    },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function (tooltipItem) {
+                                                const label = tooltipItem.label;
+                                                const value = tooltipItem.raw;
+                                                return `${label}: ${value} unidades`;
+                                            }
+                                        }
+                                    }
                                 },
-                                options: {
-                                    scales: {
-                                        y: {
-                                            beginAtZero: true
+                                scales: {
+                                    x: {
+                                        beginAtZero: true,
+                                        title: {
+                                            display: true,
+                                            text: 'Cantidad'
+                                        }
+                                    },
+                                    y: {
+                                        title: {
+                                            display: true,
+                                            text: 'Producto'
                                         }
                                     }
                                 }
-                            });
+                            }
+                        });
+                    }
+                    await renderInvoiceChart();
+                }
 
-                            // Gráfico de Proveedores
-                            const ctxSupplier = document.getElementById('supplierChart').getContext('2d');
-                            new Chart(ctxSupplier, {
-                                type: 'pie',
-                                data: {
-                                    labels: suppliersData.map(s => s.name),
-                                    datasets: [{
-                                        label: 'Proveedores',
-                                        data: suppliersData.map(() => 1), // Puedes ajustar esto para una visualización más relevante
-                                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
-                                    }]
-                                }
-                            });
+                await initialize();
+            });
+        </script>
 
-                            // Gráfico de Métodos de Pago
-                            const ctxPaymentMethod = document.getElementById('paymentMethodChart').getContext('2d');
-                            new Chart(ctxPaymentMethod, {
-                                type: 'doughnut',
-                                data: {
-                                    labels: paymentMethodsData.map(pm => pm.description),
-                                    datasets: [{
-                                        label: 'Métodos de Pago',
-                                        data: paymentMethodsData.map(() => 1), // Puedes ajustar esto para una visualización más relevante
-                                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
-                                    }]
-                                }
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error al obtener los datos:', error);
-                        }
-                    });
-                });
-            </script>
         </div>
     </section>
 {% endblock %}

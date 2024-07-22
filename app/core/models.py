@@ -9,7 +9,7 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from proy_sales.utils import phone_regex, valida_cedula, valida_numero_flotante_positivo, valida_numero_entero_positivo, \
   ecuador_landline_regex, valida_ruc, generate_random_authorization_number, generate_establishment_code, \
-  validate_date_of_birth, validate_expiration_date,  get_current_datetime
+  validate_date_of_birth, validate_expiration_date, get_current_datetime
 from django.core.validators import RegexValidator, EmailValidator, URLValidator
 import os
 
@@ -97,7 +97,7 @@ class Brand(models.Model):
 
 class Supplier(models.Model):
   name = models.CharField(verbose_name='Nombres', max_length=100, unique=True)
-  ruc = models.CharField(verbose_name='Dni', max_length=10, validators=[valida_cedula], unique=True)
+  ruc = models.CharField(verbose_name='Dni', max_length=13, validators=[valida_ruc], unique=True)
   image = models.ImageField(verbose_name='Imagen', upload_to='suppliers/', blank=True, null=True)
   phone = models.CharField(verbose_name='Telefono', max_length=15, validators=[phone_regex], unique=True)
   address = models.CharField(verbose_name='Direccion', max_length=200)
@@ -188,12 +188,14 @@ class ActiveProductManager(models.Manager):
 class Product(models.Model):
   description = models.CharField(verbose_name='Nombre', max_length=100, unique=True, db_index=True)
   brand = models.ForeignKey(Brand, on_delete=models.PROTECT, related_name='product_brands', verbose_name='Marca')
-  cost = models.DecimalField(verbose_name='Costo Producto', max_digits=10, decimal_places=2, validators=[valida_numero_flotante_positivo], default=Decimal('0.0'))
+  cost = models.DecimalField(verbose_name='Costo Producto', max_digits=10, decimal_places=2,
+                             validators=[valida_numero_flotante_positivo], default=Decimal('0.0'))
   price = models.DecimalField(verbose_name='Precio', max_digits=10, decimal_places=2,
                               validators=[valida_numero_flotante_positivo])
   stock = models.IntegerField(verbose_name='Stock', default=100, validators=[valida_numero_entero_positivo])
   iva = models.ForeignKey(Iva, on_delete=models.PROTECT, related_name='product_iva', verbose_name='Iva')
-  expiration_date = models.DateTimeField(verbose_name='Caducidad', default=timezone.now() + datetime.timedelta(days=30), validators=[validate_expiration_date])
+  expiration_date = models.DateTimeField(verbose_name='Caducidad', default=timezone.now() + datetime.timedelta(days=30),
+                                         validators=[validate_expiration_date])
   line = models.ForeignKey(Line, on_delete=models.PROTECT, related_name='product_lines', verbose_name='Linea')
   categories = models.ManyToManyField('Category', related_name="products_categories", verbose_name='Categoria')
   image = models.ImageField(verbose_name='Imagen', upload_to='products/', blank=True, null=True)
@@ -247,27 +249,69 @@ class ProductPrice(models.Model):
   type_increment = models.CharField(verbose_name='Tipo de Aumento', max_length=1,
                                     choices=(('P', 'Porcentaje'), ('V', 'Valor Fijo')), default='P')
   value = models.DecimalField(verbose_name='Incremento', default=0, max_digits=11, decimal_places=2)
-  # issue_date = models.DateTimeField(verbose_name='Fecha Emision', default=timezone.now, default=get_current_datetime, db_index=True)
   issue_date = models.DateTimeField(verbose_name='Fecha Emision', validators=[get_current_datetime], db_index=True)
-  observaciones = models.TextField(verbose_name='Obervacion', blank=True, null=True)
+  observaciones = models.TextField(verbose_name='Observacion', blank=True, null=True)
   created = models.DateTimeField(default=timezone.now, editable=False)
   updated = models.DateTimeField(auto_now=True)
   active = models.BooleanField(verbose_name='Activo', default=True)
 
   class Meta:
-    verbose_name = 'Precios Producto'
+    verbose_name = 'Precio Producto'
     verbose_name_plural = 'Precios Productos'
     ordering = ('issue_date',)
+
+  def save(self, *args, **kwargs):
+    super().save(*args, **kwargs)
+    self.update_product_price()
+
+  def update_product_price(self):
+    if self.product:
+      if self.type_increment == 'P':
+        new_price = self.product.price * (1 + self.value / 100)
+      elif self.type_increment == 'V':
+        new_price = self.product.price + self.value
+      self.product.price = new_price
+      self.product.save()
 
   def delete(self, *args, **kwargs):
     self.active = False
     self.save()
 
   def __str__(self):
-    return "{} - {:%d-%m-%Y}".format(self.value, self.issue_date)
-
-  def __str__(self):
     return f"{self.product} - {', '.join([str(cat) for cat in self.category.all()])} - {self.value} - {self.issue_date.strftime('%d-%m-%Y')}"
+
+
+# class ProductPrice(models.Model):
+#   line = models.ForeignKey(Line, on_delete=models.PROTECT, related_name='productPrice_lines', null=True, blank=True,
+#                            verbose_name='Linea')
+#   category = models.ManyToManyField('Category', related_name="productPrice_categories", blank=True,
+#                                     verbose_name='Categoria')
+#   product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='productPrice', null=True, blank=True,
+#                               verbose_name='Producto Precio')
+#   type_increment = models.CharField(verbose_name='Tipo de Aumento', max_length=1,
+#                                     choices=(('P', 'Porcentaje'), ('V', 'Valor Fijo')), default='P')
+#   value = models.DecimalField(verbose_name='Incremento', default=0, max_digits=11, decimal_places=2)
+#   # issue_date = models.DateTimeField(verbose_name='Fecha Emision', default=timezone.now, default=get_current_datetime, db_index=True)
+#   issue_date = models.DateTimeField(verbose_name='Fecha Emision', validators=[get_current_datetime], db_index=True)
+#   observaciones = models.TextField(verbose_name='Obervacion', blank=True, null=True)
+#   created = models.DateTimeField(default=timezone.now, editable=False)
+#   updated = models.DateTimeField(auto_now=True)
+#   active = models.BooleanField(verbose_name='Activo', default=True)
+#
+#   class Meta:
+#     verbose_name = 'Precios Producto'
+#     verbose_name_plural = 'Precios Productos'
+#     ordering = ('issue_date',)
+#
+#   def delete(self, *args, **kwargs):
+#     self.active = False
+#     self.save()
+#
+#   def __str__(self):
+#     return "{} - {:%d-%m-%Y}".format(self.value, self.issue_date)
+#
+#   def __str__(self):
+#     return f"{self.product} - {', '.join([str(cat) for cat in self.category.all()])} - {self.value} - {self.issue_date.strftime('%d-%m-%Y')}"
 
 
 class ProductPriceDetail(models.Model):

@@ -83,6 +83,8 @@ urlpatterns = [
                 path('supplier-suggestions/', supplier.SupplierSuggestionsView.as_view(), name='supplier_suggestions'),
 
                 # URLs de estadisticas
-                path('statistics_list/', statistics.StatisticsListView.as_view(), name='statistics_list'),
-
+                path('sales_data/', statistics.sales_data, name='sales_data'),
+                path('purchases_data/', statistics.purchases_data, name='purchases_data'),
+                path('statistics_list/', statistics.StatisticsListView.as_view(), name='statistics'),
+                path('invoice_details/', statistics.invoice_details, name='invoice_details'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

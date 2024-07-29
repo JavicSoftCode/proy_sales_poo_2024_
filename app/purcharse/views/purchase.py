@@ -292,10 +292,8 @@ class PurchaseListView(PermissionMixin, ListViewMixin, ListView):
     if q1 is not None:
       self.query.add(Q(id=q1), Q.OR)
       self.query.add(Q(supplier__name__icontains=q1), Q.OR)
-      # Incluir tanto activos como inactivos si hay una búsqueda
       return self.model.objects.filter(self.query).order_by('id')
     else:
-      # Solo incluye registros activos si no hay búsqueda
       return self.model.objects.filter(Q(active=True)).order_by('id')
 
   def get_context_data(self, **kwargs):
